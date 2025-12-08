@@ -17,10 +17,9 @@
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: #fff;
-            overflow: hidden; /* Prevent scrolling */
+            overflow: hidden;
         }
 
-        /* --- Header --- */
         header {
             position: absolute;
             top: 0;
@@ -69,7 +68,51 @@
             transform: scaleX(-1);
         }
 
-        /* --- Pro Banner --- */
+        /* --- Capture Button --- */
+        #capture-btn {
+            position: absolute;
+            bottom: 120px; /* Positioned above the controls */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 70px;
+            background: white;
+            border: 4px solid var(--primary);
+            border-radius: 50%;
+            z-index: 30;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        #capture-btn::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        /* --- Controls Interface (Moved up to make room for Capture button) --- */
+        #controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 20px;
+            padding-bottom: 30px; /* Extra padding for bottom safety */
+            z-index: 20;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
         .pro-banner {
             background: linear-gradient(90deg, #FFD700, #FFA500);
             color: #fff;
@@ -85,27 +128,11 @@
             cursor: pointer;
         }
 
-        /* --- Controls Interface --- */
-        #controls {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            padding: 20px;
-            z-index: 20;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-        }
-
         .style-carousel {
             display: flex;
             gap: 15px;
             overflow-x: auto;
-            padding-bottom: 15px;
+            padding-bottom: 5px;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -120,6 +147,7 @@
             cursor: pointer;
             position: relative;
             transition: transform 0.2s;
+            overflow: hidden; /* Ensure images are contained */
         }
 
         .style-option.selected {
@@ -145,6 +173,7 @@
             align-items: center;
             justify-content: center;
             font-size: 10px;
+            z-index: 5;
         }
 
         /* --- Modal for Pro --- */
@@ -189,7 +218,6 @@
             color: #888;
             cursor: pointer;
         }
-
     </style>
 </head>
 <body>
@@ -203,6 +231,8 @@
         <video id="video" playsinline autoplay muted></video>
         <canvas id="ar-canvas"></canvas>
     </div>
+    
+    <div id="capture-btn" onclick="takeSelfie()"></div>
 
     <div id="controls">
         <div class="pro-banner" onclick="openProModal()">
@@ -224,16 +254,21 @@
 
     <script>
         // --- 1. CONFIGURATION & DATA ---
+        // NOTE: The 'Custom Inspo' image is the placeholder for the hairstyle you uploaded.
+        // You MUST upload a *transparent PNG* of the hair style to a public host (like Imgur) 
+        // and replace the URL below for it to work correctly as an overlay.
+        const CUSTOM_INSPIRATION_URL = 'https://i.imgur.com/example-of-your-inspo-hair-png.png'; 
+
         const styles = [
-            { id: 1, name: 'Natural', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825038.png', isPro: false },
-            { id: 2, name: 'Bob', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825112.png', isPro: false },
-            { id: 3, name: 'Punk', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825066.png', isPro: true }, // Locked
-            { id: 4, name: 'Afro', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825046.png', isPro: true }, // Locked
-            { id: 5, name: 'Long', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825016.png', isPro: true }  // Locked
+            { id: 1, name: 'Custom Inspo', img: CUSTOM_INSPIRATION_URL, isPro: false }, 
+            { id: 2, name: 'Natural Waves', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825038.png', isPro: false },
+            { id: 3, name: 'Sharp Bob', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825112.png', isPro: false },
+            { id: 4, name: 'Punk Spikes', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825066.png', isPro: true },
+            { id: 5, name: 'Afro Puff', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825046.png', isPro: true } 
         ];
 
         let isProUser = false;
-        let currentStyle = null;
+        let currentStyle = styles[0]; // Set default style to the custom one
         let overlayImage = new Image();
 
         // --- 2. CAMERA SETUP ---
@@ -266,12 +301,18 @@
                 }
 
                 div.onclick = () => selectStyle(style, div);
+                
+                // Select the first style (Custom Inspo) by default
+                if (style.id === currentStyle.id) {
+                    div.classList.add('selected');
+                    overlayImage.src = currentStyle.img;
+                }
+                
                 list.appendChild(div);
             });
         }
 
         function selectStyle(style, element) {
-            // Check Pro Status
             if (style.isPro && !isProUser) {
                 openProModal();
                 return;
@@ -283,23 +324,24 @@
 
             // Set Current Style
             currentStyle = style;
-            overlayImage.src = style.img; // In a real app, this would be the high-res PNG
+            overlayImage.src = style.img; 
         }
-
-        // --- 4. AR RENDER LOOP (Simplified) ---
-        // Real AR requires TensorFlow.js/Mediapipe. 
-        // This simulates the overlay logic for the MVP.
+        
+        // --- 4. AR RENDER & CAPTURE ---
         const video = document.getElementById('video');
         const canvas = document.getElementById('ar-canvas');
         const ctx = canvas.getContext('2d');
 
         function drawOverlay() {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+            // Match canvas size to video size for proper scaling
+            canvas.width = video.videoWidth || window.innerWidth;
+            canvas.height = video.videoHeight || window.innerHeight;
+            
+            // Clear the canvas for the new frame
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             if (currentStyle && overlayImage.complete) {
-                // Simple Logic: Place hair in center-upper 1/3 of screen (simulated head position)
-                // In production, you would use face detection coordinates (x,y) here.
+                // Simplified Placement: Center-Upper position 
                 const size = canvas.width * 0.6; 
                 const x = (canvas.width - size) / 2;
                 const y = (canvas.height * 0.15); 
@@ -309,8 +351,39 @@
 
             requestAnimationFrame(drawOverlay);
         }
+        
+        function takeSelfie() {
+            // 1. Create a temporary canvas that will hold the final image
+            const finalCanvas = document.createElement('canvas');
+            finalCanvas.width = video.videoWidth || window.innerWidth;
+            finalCanvas.height = video.videoHeight || window.innerHeight;
+            const finalCtx = finalCanvas.getContext('2d');
+            
+            // 2. Draw the Video Frame (Mirrored)
+            // Draw the video frame, then flip it horizontally to correct the mirror effect
+            finalCtx.save();
+            finalCtx.scale(-1, 1);
+            finalCtx.drawImage(video, 0, 0, finalCanvas.width * -1, finalCanvas.height);
+            finalCtx.restore();
+            
+            // 3. Draw the AR Overlay (The hair)
+            // The hair overlay is already drawn correctly (mirrored) on the ar-canvas, 
+            // so we draw the ar-canvas content directly on top.
+            finalCtx.drawImage(canvas, 0, 0, finalCanvas.width, finalCanvas.height);
 
-        // --- 5. NANO BANANA PRO LOGIC ---
+            // 4. Trigger Download
+            const dataURL = finalCanvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = dataURL;
+            link.download = 'HairFlow_Selfie_' + new Date().getTime() + '.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert("Selfie captured and downloaded!");
+        }
+
+        // --- 5. NANO BANANA PRO LOGIC (Unchanged) ---
         function openProModal() {
             document.getElementById('pro-modal').style.display = 'flex';
         }
@@ -337,6 +410,8 @@
             renderStyles();
             video.addEventListener('play', () => {
                 drawOverlay();
+                // Select the first style on load
+                selectStyle(styles[0], document.querySelector('.style-option')); 
             });
         };
 
