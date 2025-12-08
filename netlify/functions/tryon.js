@@ -2,6 +2,10 @@
 
 const { GoogleGenAI } = require('@google/genai');
 
+// Initialize the GoogleGenAI instance with the API Key
+const ai = new GoogleGenAI({}); 
+// ... rest of the file
+
 // The SDK automatically looks for the GEMINI_API_KEY environment variable.
 const ai = new GoogleGenAI({});
 
