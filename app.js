@@ -79,14 +79,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- Call Netlify Function for AI Processing ---
-    tryOnBtn.addEventListener('click', async () => {
-        if (!capturedImageBase64 || !selectedPrompt) {
-            statusMessage.textContent = "Please take a selfie AND select a style!";
-            return;
-        }
+tryOnBtn.addEventListener('click', async () => {
+    // ... validation code ...
+    
+    // Get the spinner element
+    const spinner = document.getElementById('loading-spinner');
 
-        statusMessage.textContent = `Applying your selected style... This may take a moment.`;
-        tryOnBtn.disabled = true;
+    statusMessage.textContent = `Applying your selected style... This may take a moment.`;
+    tryOnBtn.disabled = true;
+    spinner.style.display = 'inline-block'; // SHOW SPINNER
+
+    try {
+        // ... (fetch logic) ...
+    } catch (error) {
+        // ... (error handling) ...
+    } finally {
+        tryOnBtn.disabled = false;
+        spinner.style.display = 'none'; // HIDE SPINNER
+    }
+});
 
         try {
             const response = await fetch('/.netlify/functions/tryon', {
