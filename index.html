@@ -139,13 +139,11 @@
             font-weight: 500;
             color: white;
             text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-            /* Added line to ensure visual separation for non-selected styles */
             box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
         }
 
         .style-option.selected {
             border-color: var(--primary);
-            /* Added visual distinction */
             box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.5); 
         }
 
@@ -237,23 +235,31 @@
 
     <script>
         // --- 1. CONFIGURATION & STATE ---
-        const CUSTOM_INSPIRATION_URL = 'https://i.imgur.com/example-of-your-inspo-hair-png.png'; // REPLACE WITH YOUR TRANSPARENT PNG URL
+        // NOTE: These URLs MUST be replaced with links to TRANSPARENT PNGs (hair only, no background).
+        // I have used the inspiration image as a placeholder for the thumbnails (thumb), 
+        // but the 'img' property needs your cropped, transparent PNGs for the generation step.
+        const INSPIRATION_IMAGE_URL = 'https://i.imgur.com/gK9qQ6A.jpg'; // Placeholder for the full inspiration grid (used for thumbnails)
 
         const styles = [
-            // Note: The 'thumb' URL is a thumbnail image for the selection screen. 
-            // The 'img' URL is the high-resolution, transparent PNG used for the final overlay.
-            { id: 1, name: 'Custom Inspo', img: CUSTOM_INSPIRATION_URL, isPro: false, thumb: 'https://cdn-icons-png.flaticon.com/512/4825/4825016.png' },
-            { id: 2, name: 'Natural Waves', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825038.png', isPro: false, thumb: 'https://cdn-icons-png.flaticon.com/512/4825/4825038.png' },
-            { id: 3, name: 'Sharp Bob', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825112.png', isPro: false, thumb: 'https://cdn-icons-png.flaticon.com/512/4825/4825112.png' },
-            { id: 4, name: 'Punk Spikes', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825066.png', isPro: true, thumb: 'https://cdn-icons-png.flaticon.com/512/4825/4825066.png' },
-            { id: 5, name: 'Afro Puff', img: 'https://cdn-icons-png.flaticon.com/512/4825/4825046.png', isPro: true, thumb: 'https://cdn-icons-png.flaticon.com/512/4825/4825046.png' }
+            // Top Row Styles
+            { id: 1, name: 'Slick Back', img: 'REPLACE_WITH_SLICK_BACK_PNG_URL', isPro: false, thumb: INSPIRATION_IMAGE_URL, thumb_pos: '0 0' },
+            { id: 2, name: 'Short Crop', img: 'REPLACE_WITH_SHORT_CROP_PNG_URL', isPro: false, thumb: INSPIRATION_IMAGE_URL, thumb_pos: '-33% 0' },
+            { id: 3, name: 'Side Part', img: 'REPLACE_WITH_SIDE_PART_PNG_URL', isPro: false, thumb: INSPIRATION_IMAGE_URL, thumb_pos: '-66% 0' },
+            // Middle Row Styles
+            { id: 4, name: 'Buzz Cut', img: 'REPLACE_WITH_BUZZ_CUT_PNG_URL', isPro: false, thumb: INSPIRATION_IMAGE_URL, thumb_pos: '0 -33%' },
+            { id: 5, name: 'Curly Look', img: 'REPLACE_WITH_CURLY_PNG_URL', isPro: true, thumb: INSPIRATION_IMAGE_URL, thumb_pos: '-33% -33%' }, // Pro Feature
+            { id: 6, name: 'Quiff', img: 'REPLACE_WITH_QUIFF_PNG_URL', isPro: false, thumb: INSPIRATION_IMAGE_URL, thumb_pos: '-66% -33%' },
+            // Bottom Row Styles
+            { id: 7, name: 'Long Bob', img: 'REPLACE_WITH_LONGBOB_PNG_URL', isPro: false, thumb: INSPIRATION_IMAGE_URL, thumb_pos: '0 -66%' },
+            { id: 8, name: 'Long Waves', img: 'REPLACE_WITH_LONGWAVES_PNG_URL', isPro: true, thumb: INSPIRATION_IMAGE_URL, thumb_pos: '-33% -66%' }, // Pro Feature
+            { id: 9, name: 'Afro', img: 'REPLACE_WITH_AFRO_PNG_URL', isPro: true, thumb: INSPIRATION_IMAGE_URL, thumb_pos: '-66% -66%' } // Pro Feature
         ];
 
         let appState = {
             step: 1,
             isProUser: false,
             selfieDataURL: null,
-            selectedStyle: styles[0] // Default to the first style
+            selectedStyle: styles[0] // Default to the first style (Slick Back)
         };
         
         const STEP_TITLES = {
@@ -345,15 +351,19 @@
             styles.forEach(style => {
                 const div = document.createElement('div');
                 div.className = `style-option`;
-                div.style.backgroundImage = `url(${style.thumb})`;
                 
+                // Set the background image and position to display the correct style from the grid
+                div.style.backgroundImage = `url(${style.thumb})`;
+                div.style.backgroundPosition = style.thumb_pos;
+                div.style.backgroundSize = '300% 300%'; // Ensures the grid is tiled 3x3
+
                 // Set lock status
                 if (style.isPro && !appState.isProUser) {
                     div.classList.add('locked');
                     div.innerHTML = '<div class="lock-icon">🔒 Pro</div>';
                 }
 
-                // FIX: Apply 'selected' class based on current state
+                // Apply 'selected' class based on current state
                 if (style.id === appState.selectedStyle.id) {
                     div.classList.add('selected');
                 }
@@ -372,7 +382,7 @@
             // Update state
             appState.selectedStyle = style;
 
-            // FIX: Ensure visual selection updates
+            // Ensure visual selection updates
             document.querySelectorAll('.style-option').forEach(el => el.classList.remove('selected'));
             element.classList.add('selected');
         }
@@ -407,7 +417,6 @@
 
                 // Load the hair overlay image
                 hairImg.onload = () => {
-                    // ** NOTE: This is where the magic (and complexity) happens **
                     // Current simplified placement:
                     const headWidth = canvas.width * 0.7; // 70% of canvas width
                     const x = (canvas.width - headWidth) / 2;
@@ -449,17 +458,3 @@
             btn.innerText = "Processing...";
             
             setTimeout(() => {
-                appState.isProUser = true;
-                closeProModal();
-                alert("Welcome to Nano Banana Pro! 🍌 All styles unlocked.");
-                renderStyles();
-            }, 1500);
-        }
-
-        // --- INITIALIZATION ---
-        window.onload = () => {
-            goToStep(1);
-        };
-    </script>
-</body>
-</html>
