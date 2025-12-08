@@ -9,43 +9,179 @@
     --gallery-gap: 15px; 
 }
 
-/* ... (body, header, layout containers remain the same) ... */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    /* Prevent text selection and zooming, often good for mobile web apps */
+    -webkit-user-select: none;
+    user-select: none;
+}
 
-/* --- Camera and Buttons (Remaining the same) --- */
-/* ... (styles for #video-feed, #take-selfie-btn, #try-on-btn remain the same) ... */
+/* --- Header and Logo Styling --- */
+#app-header {
+    padding: 10px 0;
+    background-color: var(--primary-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px; /* Reduced margin for mobile space */
+}
+#main-logo {
+    max-width: 150px; /* Slightly smaller logo for mobile headers */
+    height: auto;
+}
 
+/* --- Layout Containers (Desktop Default) --- */
+#main-app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 10px; /* Reduced padding for mobile space */
+}
 
-/* --- Hairstyle Gallery (Remaining the same) --- */
-/* ... (styles for #hairstyle-gallery and .style-option remain the same) ... */
+#camera-and-controls {
+    flex: 1;
+    min-width: 300px;
+}
 
-
-/* --- Loading Indicator Styling (Remaining the same) --- */
-/* ... (styles for #try-on-btn-content and .loading-indicator remain the same) ... */
-
-
-/* --- Results Area --- */
 #results {
     flex: 1;
     min-width: 300px;
     text-align: center;
 }
 
-/* REMOVED: .image-comparison and the result-box wrapper */
+/* --- Camera and Buttons --- */
+#camera-container {
+    margin-bottom: 15px;
+}
+
+#video-feed {
+    width: 90vw; /* CRITICAL: Fluid width for camera feed */
+    max-width: 400px;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #000;
+}
+
+#take-selfie-btn, #try-on-btn {
+    padding: 14px 28px; /* Generous touch target padding */
+    margin-top: 10px;
+    cursor: pointer;
+    background-color: var(--primary-color); 
+    color: var(--text-on-dark); 
+    border: none;
+    border-radius: 8px; /* Slightly rounder for better mobile feel */
+    font-size: 18px; /* Slightly larger text */
+    transition: background-color 0.2s;
+    width: 90vw; /* Match camera width for consistency */
+    max-width: 400px;
+}
+
+#try-on-btn {
+    margin-top: 20px; /* More spacing before the main action button */
+}
+
+#try-on-btn:disabled {
+    background-color: #555c63; 
+    cursor: not-allowed;
+}
+
+
+/* --- Hairstyle Gallery: Scroll Snapping (Mobile Ready) --- */
+#hairstyle-gallery {
+    display: flex;
+    white-space: nowrap; 
+    overflow-x: scroll; 
+    overflow-y: hidden; 
+
+    scroll-snap-type: x mandatory;
+    justify-content: flex-start;
+    align-items: center;
+    
+    padding: 15px 5%; /* Padding on sides so the first/last item is centered when snapped */
+    margin: 10px auto;
+    background-color: white; 
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    
+    width: 100%; /* Take full width on mobile */
+    max-width: 500px; 
+    
+    margin-left: auto;
+    margin-right: auto;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+#hairstyle-gallery::-webkit-scrollbar {
+    display: none;
+}
+
+.style-option {
+    cursor: pointer;
+    border: 3px solid transparent;
+    border-radius: 8px;
+    padding: 5px;
+    text-align: center;
+    transition: all 0.2s;
+    
+    /* Optimized calculation for 3 items to be visible */
+    flex: 0 0 calc(33.333% - var(--gallery-gap)); 
+    margin-right: var(--gallery-gap); 
+    
+    scroll-snap-align: center; 
+    
+    display: inline-flex; 
+    flex-direction: column;
+    align-items: center;
+}
+
+.style-thumbnail {
+    width: var(--thumbnail-size);
+    height: var(--thumbnail-size); 
+    object-fit: cover; 
+    border-radius: 5px;
+}
+
+.style-option.selected {
+    border-color: var(--highlight-color); 
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+    transform: scale(1.05);
+}
+
+/* --- Loading Indicator Styling (Remaining the same) --- */
+/* ... */
+
+/* --- Results Area --- */
+#results {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+    padding-top: 10px;
+}
 
 .result-box img {
-    max-width: 100%;
+    max-width: 95vw; /* Fluid image size for results */
     height: auto;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* --- Mobile Optimization (Adjusted Media Query) --- */
-/* Only need to stack the main app container for better flow */
+/* ======================================================= */
+/* ====== MEDIA QUERY: FORCE STACKING ON SMALL SCREENS ====== */
+/* ======================================================= */
 @media (max-width: 600px) {
+    /* Main Layout Stacking */
     #main-app-container {
         flex-direction: column; 
         gap: 15px;
+        padding: 0; /* Remove padding to maximize space */
     }
     
     #camera-and-controls, #results {
@@ -53,11 +189,31 @@
         width: 100%;
     }
     
-    #video-feed {
-        width: 100%; /* Maximize camera preview */
+    /* Center the Camera and Buttons */
+    #camera-container, #controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     
+    /* Ensure Fluid Width for everything capture-related */
+    #video-feed, #take-selfie-btn, #try-on-btn {
+        width: 95%; /* Use 95% width on mobile for edge-to-edge look */
+        max-width: 95%;
+    }
+    
+    /* Result image takes nearly full width */
+    .result-box img {
+        max-width: 95%;
+    }
+    
+    /* Smaller font for title */
     .result-box h4 {
         font-size: 1.1em;
+    }
+    
+    /* Adjust margin on the bottom of the result box */
+    #results {
+        margin-bottom: 20px;
     }
 }
