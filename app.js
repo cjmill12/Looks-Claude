@@ -8,30 +8,51 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const spinner = document.getElementById('loading-spinner');
     
-    // REMOVED: const originalSelfieImg = document.getElementById('original-selfie');
     const aiResultImg = document.getElementById('ai-result');
     const statusMessage = document.getElementById('status-message');
     
     let capturedImageBase64 = null; 
     let selectedPrompt = null; 
+    let cameraStarted = false; // NEW FLAG: Track camera state
 
-    // --- Start Camera ---
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                videoFeed.srcObject = stream;
-                statusMessage.textContent = "Camera ready. Smile and click 'Take Selfie'!";
-            })
-            .catch(err => {
-                console.error("Camera access error:", err);
-                statusMessage.textContent = "Error: Cannot access camera. Check permissions.";
-            });
+    // --- NEW FUNCTION: CAMERA INITIALIZATION ---
+    function startCamera() {
+        if (cameraStarted) return; // Prevent multiple starts
+        
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            statusMessage.textContent = "Attempting to access camera...";
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    videoFeed.srcObject = stream;
+                    cameraStarted = true; // Set flag to true
+                    statusMessage.textContent = "Camera ready. Click 'Take Selfie'!";
+                })
+                .catch(err => {
+                    console.error("Camera access error:", err);
+                    statusMessage.textContent = "Error: Cannot access camera. Check browser permissions.";
+                });
+        } else {
+            statusMessage.textContent = "Error: Camera access not supported by your browser.";
+        }
     }
+    // --- END NEW FUNCTION ---
+    
+    // Set initial status message for the user to start
+    statusMessage.textContent = "Click 'Take Selfie' to start the camera and begin.";
+    
 
-    // --- Capture Selfie ---
+    // --- Capture Selfie/Camera Activation ---
     takeSelfieBtn.addEventListener('click', () => {
+        // Step 1: Check if camera needs to be started first
+        if (!cameraStarted) {
+            startCamera(); // Start the camera on the first click
+            return; // Exit the listener; the user must click again to take the photo
+        }
+        
+        // Step 2: If the camera is already started, proceed to take photo
         if (videoFeed.readyState !== 4) { 
-            statusMessage.textContent = "Camera not ready yet.";
+            statusMessage.textContent = "Camera feed not ready yet. Please wait a moment.";
             return;
         }
 
@@ -44,9 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
         capturedImageBase64 = dataUrl.split(',')[1]; 
 
-        // REMOVED: originalSelfieImg.src = dataUrl;
-        // REMOVED: originalSelfieImg.style.display = 'inline';
-        aiResultImg.style.display = 'none'; // Hide result until processing is done
+        aiResultImg.style.display = 'none';
 
         if (selectedPrompt) {
             tryOnBtn.disabled = false;
@@ -76,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = "Please take a selfie AND select a style!";
             return;
         }
-
+        // ... (rest of the tryOnBtn function remains the same) ...
         statusMessage.textContent = `Applying your selected style... This may take a moment.`;
         tryOnBtn.disabled = true;
         spinner.style.display = 'inline-block'; 
