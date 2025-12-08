@@ -1,7 +1,6 @@
 // netlify/functions/tryon.mjs
 
-// 🚨 FINAL FIX: Use ES Module syntax (import/export) which is the most reliable
-// way to get the correct constructor in modern environments.
+// 1. Use ES Module syntax for reliable import/export
 import { GoogleGenAI } from '@google/genai';
 
 // Helper function to create the Part object for image input
@@ -16,9 +15,14 @@ function base64ToGenerativePart(base64Data, mimeType) {
 
 // Handler must be exported as a named 'handler' function for Netlify
 export async function handler(event) {
-  // Initialize the AI client INSIDE the handler.
-  const ai = new GoogleGenAI({}); 
+  
+  // 2. FIX: Explicitly pass the API key from the environment to the constructor.
+  // This resolves the "Could not load the default credentials" error.
+  const ai = new GoogleGenAI({ 
+    apiKey: process.env.GEMINI_API_KEY 
+  }); 
 
+  // Basic method check
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
@@ -30,17 +34,19 @@ export async function handler(event) {
       return { statusCode: 400, body: 'Missing baseImage or prompt in request body.' };
     }
 
+    // Prepare the image part (Gemini 2.5 Flash supports inline Base64)
     const imagePart = base64ToGenerativePart(baseImage, "image/jpeg");
 
     // Call the Nano Banana (Gemini 2.5 Flash Image) model
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-image',
+      model: 'gemini-2.5-flash-image', // The model ID for image generation/editing
       contents: [
         imagePart,
-        { text: prompt },
+        { text: prompt }, // The instruction for the AI (apply new hairstyle)
       ],
     });
     
+    // Extract the generated image (Base64 data)
     const generatedImageBase64 = response.candidates[0].content.parts[0].inlineData.data;
 
     return {
@@ -53,9 +59,10 @@ export async function handler(event) {
 
   } catch (error) {
     console.error('AI Processing Error:', error);
+    // Return a 500 status with the error message
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: `Failed to process image with AI model: ${error.message}` }),
+      body: JSON.stringify({ error: `AI Processing Failed: ${error.message}. Check Netlify function logs for stack trace.` }),
     };
   }
 }
