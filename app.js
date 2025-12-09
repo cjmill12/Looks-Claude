@@ -13,44 +13,54 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let capturedImageBase64 = null; 
     let selectedPrompt = null; 
-    let cameraStarted = false; // NEW FLAG: Track camera state
+    let cameraStarted = false; 
 
-    // --- NEW FUNCTION: CAMERA INITIALIZATION ---
+    // --- NEW CONSTANT: THE NEGATIVE PROMPT (Remaining the same) ---
+    const NEGATIVE_PROMPT = "extra fingers, blurry, low resolution, bad hands, deformed face, mask artifact, bad blending, unnatural hair color, ugly, tiling, duplicate, abstract, cartoon, distorted pupils, bad lighting, cropped, grainy, noise, poor quality, bad anatomy.";
+    
+    // --- Camera Initialization Function ---
     function startCamera() {
-        if (cameraStarted) return; // Prevent multiple starts
+        if (cameraStarted) return;
         
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             statusMessage.textContent = "Attempting to access camera...";
+            takeSelfieBtn.disabled = true; // Disable button while loading
 
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(stream => {
                     videoFeed.srcObject = stream;
-                    cameraStarted = true; // Set flag to true
+                    cameraStarted = true;
+                    
+                    // 🚨 KEY CHANGE 1: Update button text when camera is ready
+                    takeSelfieBtn.textContent = "📸 Take Selfie"; 
+                    takeSelfieBtn.disabled = false;
                     statusMessage.textContent = "Camera ready. Click 'Take Selfie'!";
                 })
                 .catch(err => {
                     console.error("Camera access error:", err);
+                    takeSelfieBtn.disabled = false; // Re-enable on failure
+                    takeSelfieBtn.textContent = "Error: Camera Access Failed";
                     statusMessage.textContent = "Error: Cannot access camera. Check browser permissions.";
                 });
         } else {
             statusMessage.textContent = "Error: Camera access not supported by your browser.";
         }
     }
-    // --- END NEW FUNCTION ---
     
-    // Set initial status message for the user to start
-    statusMessage.textContent = "Click 'Take Selfie' to start the camera and begin.";
+    // 🚨 INITIAL STATE SETUP
+    takeSelfieBtn.textContent = "▶️ Start Camera"; // Set initial text
+    statusMessage.textContent = "Click 'Start Camera' to begin the virtual try-on.";
     
 
     // --- Capture Selfie/Camera Activation ---
     takeSelfieBtn.addEventListener('click', () => {
-        // Step 1: Check if camera needs to be started first
+        // Step 1: Handle Camera Initialization (First Click)
         if (!cameraStarted) {
-            startCamera(); // Start the camera on the first click
-            return; // Exit the listener; the user must click again to take the photo
+            startCamera(); 
+            return; 
         }
         
-        // Step 2: If the camera is already started, proceed to take photo
+        // Step 2: Handle Photo Capture (Second Click)
         if (videoFeed.readyState !== 4) { 
             statusMessage.textContent = "Camera feed not ready yet. Please wait a moment.";
             return;
@@ -95,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = "Please take a selfie AND select a style!";
             return;
         }
-        // ... (rest of the tryOnBtn function remains the same) ...
+
         statusMessage.textContent = `Applying your selected style... This may take a moment.`;
         tryOnBtn.disabled = true;
         spinner.style.display = 'inline-block'; 
@@ -106,7 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     baseImage: capturedImageBase64,
-                    prompt: `Edit the hair in this image using the following instruction: ${selectedPrompt}. Ensure the final result is photorealistic, seamlessly blended, and maintains the subject's face and original lighting.`
+                    prompt: `Edit the hair in this image using the following instruction: ${selectedPrompt}. Ensure the final result is photorealistic, seamlessly blended, and maintains the subject's face and original lighting.`,
+                    negativePrompt: NEGATIVE_PROMPT 
                 })
             });
 
