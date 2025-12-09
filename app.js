@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const NEGATIVE_PROMPT = "extra fingers, blurry, low resolution, bad hands, deformed face, mask artifact, bad blending, unnatural hair color, ugly, tiling, duplicate, abstract, cartoon, distorted pupils, bad lighting, cropped, grainy, noise, poor quality, bad anatomy.";
     
     
-    // --- Camera Initialization Function ---
+    // --- Camera Initialization Function (Includes Mobile Fix) ---
     function startCamera() {
         if (cameraStarted) return;
         
@@ -28,12 +28,19 @@ document.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = "Attempting to access camera...";
             takeSelfieBtn.disabled = true;
 
+            // 🚨 Mobile Compatibility: Ensure playsinline is set for iOS Safari
+            videoFeed.setAttribute('playsinline', ''); 
+
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(stream => {
                     videoFeed.srcObject = stream;
-                    cameraStarted = true;
                     
-                    // Show camera, hide result
+                    // 🚨 CRITICAL MOBILE FIX: Explicitly call play() to bypass auto-play restrictions
+                    return videoFeed.play(); 
+                })
+                .then(() => {
+                    // This block executes only after video playback successfully starts
+                    cameraStarted = true;
                     videoFeed.style.display = 'block'; 
                     aiResultImg.style.display = 'none'; 
                     
@@ -55,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     takeSelfieBtn.textContent = "▶️ Start Camera"; 
     statusMessage.textContent = "Click 'Start Camera' to begin the virtual try-on.";
     tryOnBtn.style.display = 'none'; 
-    videoFeed.style.display = 'none'; // Ensure video is off at load
+    videoFeed.style.display = 'none'; 
 
     // --- Capture Selfie/Camera Activation ---
     takeSelfieBtn.addEventListener('click', () => {
@@ -84,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tryOnBtn.style.display = 'block'; 
         videoFeed.style.display = 'none'; 
         
-        // 3. Display captured image in the viewport
+        // 3. Display captured image in the viewport (as the base for the AI output)
         aiResultImg.src = dataUrl;
         aiResultImg.style.display = 'block'; 
 
@@ -97,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Style Selection Logic ---
     styleOptions.forEach(option => {
         option.addEventListener('click', () => {
+            // Highlight selected style
             styleOptions.forEach(opt => opt.classList.remove('selected'));
             option.classList.add('selected');
             
@@ -150,13 +158,4 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('AI Processing Error:', error);
             statusMessage.textContent = `Error during AI try-on: ${error.message}. Please check your console/Netlify logs.`;
         } finally {
-            tryOnBtn.disabled = false;
-            spinner.style.display = 'none'; 
-            
-            // State Transition (Result -> Ready to Take New Selfie)
-            takeSelfieBtn.style.display = 'block';
-            takeSelfieBtn.textContent = "📸 Take New Selfie"; // Update text for next action
-            tryOnBtn.style.display = 'none';
-        }
-    });
-});
+            try
