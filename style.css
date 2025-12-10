@@ -22,7 +22,7 @@ body {
 
 /* --- Header and Logo Styling (MINIMAL BANNER) --- */
 #app-header {
-    /* 🚨 Minimal padding for maximum condensation */
+    /* Minimal padding for maximum condensation */
     padding: 0; 
     background-color: #FFFFFF;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
@@ -31,7 +31,6 @@ body {
 }
 #main-logo {
     max-width: 100px; 
-    /* Ensures the logo itself is not stretched and defines minimum header height */
     height: 35px; 
     object-fit: contain; 
 }
@@ -44,7 +43,6 @@ body {
     max-width: 600px;
     margin: 0 auto;
     padding: 0 10px; 
-    /* Adjust height calculation based on condensed header */
     height: calc(100vh - 38px); 
 }
 
@@ -60,7 +58,7 @@ body {
     flex-shrink: 0; 
     min-height: 250px; 
     max-height: 45vh; 
-    /* 🚨 Hide the viewport by default */
+    /* Hide the viewport by default */
     display: none; 
 }
 
@@ -264,6 +262,11 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 
+    /* Ensures the gallery section itself is visible when needed */
+    display: block; 
+}
+
+#hairstyle-gallery .filter-options-group {
     display: flex;
     white-space: nowrap; 
     overflow-x: scroll; 
@@ -271,11 +274,13 @@ body {
     scroll-snap-type: x mandatory;
     justify-content: flex-start;
     align-items: flex-start;
+    gap: var(--gallery-gap);
     
     -ms-overflow-style: none;
     scrollbar-width: none;
+    padding-bottom: 5px; /* Add space for scrollbar area */
 }
-#hairstyle-gallery::-webkit-scrollbar {
+#hairstyle-gallery .filter-options-group::-webkit-scrollbar {
     display: none;
 }
 
@@ -288,7 +293,6 @@ body {
     transition: all 0.2s;
     
     flex: 0 0 auto; 
-    margin-right: var(--gallery-gap); 
     
     scroll-snap-align: start; 
     
