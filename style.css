@@ -6,7 +6,9 @@
     --text-color: #333; 
     --highlight-color: #28a745; 
     --thumbnail-size: 60px;
-    --gallery-gap: 15px; 
+    --gallery-gap: 10px; /* Adjusted gap */
+    --sidebar-width: 200px; /* Fixed width for the sidebar */
+    --header-height: 40px;
 }
 
 body {
@@ -25,311 +27,225 @@ body {
     padding: 0; 
     background-color: #FFFFFF;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
-    margin-bottom: 2px; 
-    /* Force compact header size */
-    height: 40px; 
+    margin-bottom: 0; 
+    height: var(--header-height); 
     display: flex;
     align-items: center;
     justify-content: center;
+    position: sticky; /* Keep header at the top */
+    top: 0;
+    z-index: 100;
 }
 #main-logo {
-    /* Force the logo size to be small */
     max-width: 100px !important; 
     height: 35px !important; 
     object-fit: contain; 
 }
 
-/* --- NEW LAYOUT: Single Screen Focused --- */
-#single-screen-app {
+/* ================================================== */
+/* 🚨 NEW LAYOUT: TWO-COLUMN STRUCTURE */
+/* ================================================== */
+
+#two-column-layout {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 600px;
+    max-width: 1200px; /* Max overall width */
     margin: 0 auto;
-    padding: 0 10px; 
-    /* Use calc for height to prevent scrollbar flicker, adjusting for header height */
-    height: calc(100vh - 42px); 
+    height: calc(100vh - var(--header-height)); /* Full height minus header */
 }
 
-/* 1. Central Image/Video Viewport (Initially Hidden) */
-#central-viewport {
-    position: relative; 
-    width: 95vw;
-    max-width: 400px; 
-    margin-bottom: 10px; 
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #eee;
-    flex-shrink: 0; 
-    min-height: 250px; 
-    max-height: 45vh; 
-    display: none; /* Starts hidden */
+/* --- 1. Filter Sidebar (LEFT) --- */
+#filter-sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0; /* Prevents sidebar from shrinking */
+    background-color: #fff;
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    overflow-y: auto; /* Allows scrolling if steps are too long */
+    display: flex;
+    flex-direction: column;
 }
 
-/* Class to show the viewport when camera starts */
-#central-viewport.active {
-    display: block;
-}
-
-#video-feed, #ai-result {
-    width: 100%;
-    height: 100%; 
-    display: block;
-    object-fit: cover;
-}
-
-/* Status message overlay (Compact) */
-#status-message {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    padding: 8px 5px;
-    margin: 0;
-    font-size: 0.85em;
-    text-align: center;
-    z-index: 10;
-}
-
-/* 2. Controls Area (Scrollable if necessary) */
-#controls-and-gallery {
-    width: 100%;
+/* --- 2. Main Content (RIGHT) --- */
+#main-content {
+    flex-grow: 1;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-y: auto; 
-    padding-bottom: 20px;
+    overflow-y: auto; /* Allows content area to scroll */
 }
 
-/* Style for action buttons */
-.main-action-btn {
-    margin-bottom: 10px;
-    cursor: pointer;
-    border: none;
-    font-size: 16px; 
-    transition: all 0.2s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
-    transform: translateY(0);
-}
-
-/* Circular "Start Camera" button */
-#take-selfie-btn {
-    width: 70px; 
-    height: 70px;
-    padding: 0;
-    border-radius: 50%; 
-    background-color: var(--primary-color);
-    color: var(--text-on-dark);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px; 
-    line-height: 1;
-}
-
-/* Standard square style for the "Try On" button */
-#try-on-btn {
-    width: 95%; 
-    max-width: 400px;
-    padding: 12px 24px;
-    border-radius: 8px;
-    background-color: var(--primary-color);
-    color: var(--text-on-dark);
-}
-
-.main-action-btn:hover:not(:disabled) {
-    background-color: #33393e; 
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
-    transform: translateY(-1px);
-}
-
-#try-on-btn:disabled {
-    background-color: #555c63; 
-    cursor: not-allowed;
-    box-shadow: none;
-}
-
-/* --- Filter Section Styles (Always Expanded) --- */
+/* --- FILTER SECTION STYLES (Sidebar appearance) --- */
 
 .filter-section {
-    width: 95%;
-    max-width: 400px;
-    margin: 8px auto 8px; 
-    padding: 10px 15px; 
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    margin: 0 0 15px 0; 
+    padding: 10px 5px; 
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    box-shadow: none; /* Removed heavy box shadow for sidebar elements */
     text-align: left; 
 }
 
 .filter-section h3 {
-    font-size: 1em; 
+    font-size: 0.9em; 
+    font-weight: bold;
     color: var(--primary-color);
-    margin: 0; 
-    text-align: left; 
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-    pointer-events: none; 
+    margin-bottom: 8px; 
+    text-transform: uppercase;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
 }
 
-/* Filter options are always displayed */
+/* Filter options group */
 .filter-options-group {
     display: flex;
     flex-wrap: wrap; 
-    gap: 10px;
-    justify-content: center;
-    margin-top: 10px; 
+    gap: 8px; /* Reduced gap for small sidebar */
+    justify-content: flex-start; /* Start elements from the left */
+    margin-top: 5px; 
 }
 
-/* Gender/General Option Buttons */
+/* Gender/General Option Buttons (Adapted for sidebar) */
 .gender-option {
-    padding: 10px 20px;
-    border: 2px solid #ccc;
-    background-color: #f9f9f9;
-    color: var(--text-color);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    flex-grow: 1;
-    max-width: 190px;
+    padding: 8px 10px;
+    border: 1px solid #ccc; /* Thinner border */
+    font-size: 0.85em;
+    flex-grow: 1; /* Allows them to fill space better */
+    max-width: 100%; 
 }
+
 .gender-option.selected {
     background-color: var(--primary-color);
     color: var(--text-on-dark);
     border-color: var(--primary-color);
 }
 
-/* Complexion Tiles (Circular & Compact) - UPDATED FOR SMALLER SIZE */
+/* Complexion Tiles (Circular & Compact) */
 #complexion-options-group {
-    justify-content: center; 
-    gap: 8px; 
+    justify-content: flex-start; 
+    gap: 6px; /* Further reduced gap */
 }
 
 .complexion-tile {
-    /* Reduced Size */
-    width: 45px; 
-    height: 45px; 
-    aspect-ratio: 1 / 1; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; 
-    border: 3px solid transparent;
-    border-radius: 50%; 
-    cursor: pointer;
-    overflow: hidden;
-    position: relative;
-    box-sizing: border-box;
-    transition: border-color 0.2s;
-    flex-shrink: 1; 
+    width: 30px; /* Significantly reduced size */
+    height: 30px; 
+    border: 2px solid transparent; /* Thinner border */
+    flex-shrink: 0; /* Important: prevents shrinking */
 }
 
 .complexion-tile p {
-    /* Reduced label font size and repositioned */
-    color: #fff; 
-    font-size: 0.6em; 
-    font-weight: bold;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
-    margin-top: 30px; 
-    position: absolute;
-    width: 100px; 
+    display: none; /* Hide text label on very small tiles */
 }
 
 .complexion-tile.selected {
     border-color: var(--highlight-color);
-    box-shadow: 0 0 8px rgba(40, 167, 69, 0.5); 
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); 
 }
 
-/* --- Hairstyle Gallery: Scroll Snapping & Circular Thumbnails --- */
+/* --- Hairstyle Gallery (Adapted for sidebar) --- */
 #hairstyle-gallery {
-    width: 95%;
-    max-width: 400px;
-    margin: 10px auto;
-    padding: 15px 5%;
-    background-color: white; 
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-
-    display: block; 
+    padding: 10px 5px; /* Sidebar padding */
+    width: 100%;
 }
-
 #hairstyle-gallery .filter-options-group {
-    display: flex;
+    /* Retain horizontal scroll but keep items compact */
     white-space: nowrap; 
     overflow-x: scroll; 
     overflow-y: hidden; 
     scroll-snap-type: x mandatory;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: var(--gallery-gap);
-    
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    gap: 8px;
     padding-bottom: 5px; 
 }
-#hairstyle-gallery .filter-options-group::-webkit-scrollbar {
-    display: none;
-}
 
-.style-option {
-    cursor: pointer;
-    border-radius: 50%; 
-    border: 3px solid transparent; 
-    padding: 0; 
-    text-align: center;
-    transition: all 0.2s;
-    
-    flex: 0 0 auto; 
-    
-    scroll-snap-align: start; 
-    
-    display: inline-flex; 
-    flex-direction: column;
-    align-items: center;
+.style-thumbnail {
+    width: 45px; /* Reduced thumbnail size for sidebar */
+    height: 45px; 
 }
 
 .style-option p {
-    display: block; 
-    font-size: 0.8em;
-    margin-top: 5px;
-    color: var(--text-color);
+    font-size: 0.75em;
     white-space: normal;
+    word-break: break-word;
 }
 
+/* ================================================== */
+/* RIGHT COLUMN ELEMENTS (Viewport and Controls) */
+/* ================================================== */
 
-.style-thumbnail {
-    width: var(--thumbnail-size);
-    height: var(--thumbnail-size); 
-    object-fit: cover; 
-    border-radius: 50%;
-    border: 1px solid #ccc;
+#central-viewport {
+    width: 100%;
+    max-width: 500px; /* Increased max size for better viewing */
+    min-height: 350px; 
+    max-height: 60vh;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    
+    /* Removed display: none; from here, now controlled by .active class */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.style-option.selected {
-    border-color: var(--highlight-color); 
-    box-shadow: 0 0 5px rgba(40, 167, 69, 0.4); 
-    transform: none; 
+#central-viewport.active {
+    display: block; /* Show content when camera is active */
 }
 
-/* --- Media Query (Mobile Optimization) --- */
-@media (max-width: 600px) {
-    #single-screen-app {
-        padding: 0;
-    }
-    .filter-section {
-        border-radius: 0; 
+#controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+#take-selfie-btn, #try-on-btn {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* ================================================== */
+/* 📱 MOBILE MEDIA QUERY (Collapse sidebar below 768px) */
+/* ================================================== */
+
+@media (max-width: 768px) {
+    
+    #two-column-layout {
+        flex-direction: column; /* Stacks columns vertically */
+        height: auto;
     }
     
-    #video-feed, #ai-result {
+    #filter-sidebar {
         width: 100%;
-        max-width: 100%;
-        border-radius: 0; 
+        min-height: auto;
+        padding: 10px 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
     
-    .main-action-btn {
-        width: 95%; 
-        max-width: 95%;
+    #main-content {
+        padding: 10px;
+    }
+    
+    .filter-section {
+        margin: 8px auto;
+        padding: 10px 15px;
+        background-color: #fff;
+    }
+    
+    .complexion-tile {
+        width: 40px; /* Slightly larger on mobile when wide */
+        height: 40px;
+    }
+    
+    /* Re-show the label text for the complexion tiles on the stacked mobile layout */
+    .complexion-tile p {
+        display: block; 
+        font-size: 0.6em;
+        margin-top: 25px;
+    }
+    
+    /* Allow the hairstyle gallery to be full width and scrollable */
+    #hairstyle-gallery {
+        padding: 10px 15px;
     }
 }
