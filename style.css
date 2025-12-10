@@ -2,14 +2,12 @@
 :root {
     --primary-color: #1D2124; 
     --text-on-dark: #FFFFFF; 
-    --background-color: #f4f7f6;
+    --background-color: #FFFFFF; /* Use white for the app background */
+    --filter-background: #F0F0F0;
     --text-color: #333; 
-    --highlight-color: #28a745; 
-    --thumbnail-size: 60px;
-    --gallery-gap: 10px; 
-    --sidebar-width: 200px; 
+    --highlight-color: #007bff; /* Changed to a modern blue for highlight */
     --header-height: 40px;
-    --viewport-size: 300px; /* Desktop circular viewport size */
+    --app-padding: 15px;
 }
 
 body {
@@ -17,248 +15,96 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     margin: 0;
-    padding: 0; 
+    padding: 0;
     text-align: center;
     -webkit-user-select: none;
     user-select: none;
-    overflow-x: hidden; 
+    height: 100vh;
+    overflow: hidden; /* Control scrolling explicitly */
 }
 
-/* --- Header and Logo Styling (MINIMAL BANNER) --- */
-#app-header {
-    padding: 0; 
-    background-color: #FFFFFF;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
-    margin-bottom: 0; 
-    height: var(--header-height); 
+/* ================================================== */
+/* FULL SCREEN CONTAINER */
+/* ================================================== */
+
+#full-screen-container {
     display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 450px; /* Simulate a phone screen width */
+    margin: 0 auto;
+    background-color: #f4f4f4; /* Subtle background for the phone frame */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* --- 1. HEADER (Top of the screen) --- */
+#app-header {
+    background-color: var(--background-color);
+    padding: 10px var(--app-padding);
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
     align-items: center;
-    justify-content: center;
-    position: sticky; 
+    text-align: left;
+    height: auto;
+    box-shadow: none;
+    position: sticky;
     top: 0;
     z-index: 100;
 }
-#main-logo {
-    max-width: 100px !important; 
-    height: 35px !important; 
-    object-fit: contain; 
+
+#sparkle-logo {
+    font-size: 1.5em;
+    color: var(--highlight-color);
 }
 
-/* ================================================== */
-/* DESKTOP LAYOUT: TWO-COLUMN STRUCTURE */
-/* ================================================== */
-
-#two-column-layout {
-    display: flex;
-    width: 100%;
-    margin: 0; 
-    height: calc(100vh - var(--header-height)); 
+#header-center {
+    text-align: left;
+    margin-left: 10px;
+}
+#app-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+    color: var(--primary-color);
+}
+#app-subtitle {
+    font-size: 0.8em;
+    margin: 2px 0 0 0;
+    color: #666;
 }
 
-/* --- 1. Filter Sidebar (LEFT) --- */
-#filter-sidebar {
-    width: var(--sidebar-width);
-    flex-shrink: 0; 
-    background-color: #fff;
-    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
-    padding: 10px;
-    overflow-y: auto; 
-    display: flex;
-    flex-direction: column;
+#header-right {
+    text-align: right;
+}
+.icon-btn {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    color: var(--primary-color);
+    margin-left: 10px;
+    cursor: pointer;
 }
 
-/* --- 2. Main Content (RIGHT) --- */
+/* --- 2. MAIN CONTENT (Viewport) --- */
 #main-content {
     flex-grow: 1;
-    padding: 20px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-y: auto; 
+    justify-content: flex-start;
+    overflow-y: auto; /* Allows scrolling if content exceeds height */
 }
 
-/* --- FILTER SECTION STYLES (Larger Pill Buttons) --- */
-
-.filter-section {
-    width: 100%;
-    margin: 0 0 10px 0; 
-    padding: 0;
-    background-color: #fff;
-    border-radius: 6px;
-    text-align: left; 
-}
-
-/* Accordion Button/Header Style */
-.filter-section h3 {
-    font-size: 0.9em; 
-    font-weight: bold;
-    margin: 0; 
-    padding: 8px 10px;
-    text-transform: uppercase;
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-    cursor: pointer;
-    background-color: #fff;
-    border-radius: 6px;
-    transition: all 0.2s ease-in-out;
-}
-
-/* --- COLLAPSED (Pill Appearance) --- */
-.filter-section.collapsed h3 {
-    background-color: #f0f0f0; 
-    color: #666;
-    border-radius: 20px; 
-    
-    height: 40px; 
-    width: 90%; 
-    max-width: 180px; 
-    padding: 0 10px; 
-    
-    justify-content: center;
-    overflow: hidden; 
-    margin: 0 auto 10px auto; 
-}
-
-/* Ensure the full text is visible when collapsed */
-.filter-section.collapsed h3 span {
-    display: inline;
-    font-size: 1.0em; 
-    line-height: 40px; 
-}
-
-/* Hide the caret icon for collapsed buttons */
-.filter-section.collapsed h3::after {
-    content: none;
-}
-
-/* --- EXPANDED (Active Pill/Block Appearance) --- */
-.filter-section.expanded h3 {
-    background-color: var(--primary-color); 
-    color: var(--text-on-dark);
-    border-radius: 6px 6px 0 0; 
-    height: auto;
-    width: 100%;
-    padding: 8px 10px;
-    margin: 0;
-    justify-content: space-between; 
-}
-
-/* Caret Icon for Collapse/Expand */
-.filter-section h3::after {
-    content: '▶'; 
-    font-size: 0.8em;
-    margin-left: 5px;
-    transition: transform 0.2s;
-    line-height: 1;
-}
-
-.filter-section.expanded h3::after {
-    content: '▼'; 
-    color: var(--text-on-dark);
-}
-
-/* Hiding the content group when collapsed */
-.filter-content-group {
-    padding: 5px 10px 10px 10px;
-    background-color: #f9f9f9;
-    border-radius: 0 0 6px 6px;
-}
-
-.filter-section.collapsed .filter-content-group {
-    display: none;
-}
-
-
-/* Filter options group */
-.filter-options-group {
-    display: flex;
-    flex-wrap: wrap; 
-    gap: 8px; 
-    justify-content: flex-start; 
-    margin-top: 5px; 
-}
-
-/* Gender/General Option Buttons (Adapted for sidebar) */
-.gender-option {
-    padding: 8px 10px;
-    border: 1px solid #ccc; 
-    font-size: 0.85em;
-    flex-grow: 1; 
-    max-width: 100%; 
-}
-
-.gender-option.selected {
-    background-color: var(--primary-color);
-    color: var(--text-on-dark);
-    border-color: var(--primary-color);
-}
-
-/* Complexion Tiles (Circular & Compact) */
-#complexion-options-group {
-    justify-content: flex-start; 
-    gap: 6px; 
-}
-
-.complexion-tile {
-    width: 30px; 
-    height: 30px; 
-    border: 2px solid transparent; 
-    flex-shrink: 0; 
-}
-
-.complexion-tile p {
-    display: none; 
-}
-
-.complexion-tile.selected {
-    border-color: var(--highlight-color);
-    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); 
-}
-
-/* --- Hairstyle Gallery (INSPIRATION) --- */
-#hairstyle-gallery {
-    padding: 0;
-    width: 100%; 
-    margin-top: 20px; 
-}
-#hairstyle-gallery .filter-content-group {
-     padding: 10px 5px; 
-}
-#hairstyle-gallery .filter-options-group {
-    white-space: nowrap; 
-    overflow-x: scroll; 
-    overflow-y: hidden; 
-    scroll-snap-type: x mandatory;
-    gap: 8px;
-    padding-bottom: 5px; 
-}
-
-.style-thumbnail {
-    width: 45px; 
-    height: 45px; 
-}
-
-.style-option p {
-    font-size: 0.75em;
-    white-space: normal;
-    word-break: break-word;
-}
-
-/* ================================================== */
-/* RIGHT COLUMN ELEMENTS (Viewport and Controls) */
-/* ================================================== */
-
-/* Desktop Circular Viewport */
+/* CENTRAL VIEWPORT - Image Dominates Screen */
 #central-viewport {
     position: relative; 
-    width: var(--viewport-size); 
-    height: var(--viewport-size);
-    min-height: auto; 
-    max-width: none; 
-    max-height: none;
-    margin-bottom: 20px;
-    border-radius: 50%; 
+    width: 100%;
+    /* Use a fixed aspect ratio for the viewport on mobile */
+    aspect-ratio: 1 / 1.25; 
+    max-height: 70vh;
+    margin-bottom: 0;
+    border-radius: 0; 
     overflow: hidden;
     background-color: #eee;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
@@ -276,38 +122,59 @@ body {
 
 #status-message {
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    padding: 8px 5px;
-    margin: 0;
-    font-size: 0.85em;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--primary-color);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 1em;
     text-align: center;
-    z-index: 100; 
+    z-index: 10;
 }
 
-#controls {
+/* FLOATING OVERLAY CONTROLS */
+.floating-icon-btn {
+    background-color: rgba(255, 255, 255, 0.6);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.1em;
+    color: var(--primary-color);
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Top Right Group */
+#viewport-actions-top {
+    position: absolute;
+    top: 15px;
+    right: 15px;
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    z-index: 20;
+}
+
+/* Bottom Center Group */
+#viewport-actions-bottom {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
     align-items: center;
-    width: 100%;
-    max-width: 500px;
+    gap: 10px;
+    z-index: 20;
 }
 
-.main-action-btn {
-    margin-bottom: 10px;
-    cursor: pointer;
-    border: none;
-    font-size: 16px; 
-    transition: all 0.2s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
-    transform: translateY(0);
-}
-
+/* Central Action Button (Selfie/Try-On) */
 #take-selfie-btn {
-    width: 70px; 
-    height: 70px;
+    width: 60px; 
+    height: 60px;
     padding: 0;
     border-radius: 50%; 
     background-color: var(--primary-color);
@@ -315,116 +182,126 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 30px; 
-    line-height: 1;
+    font-size: 25px; 
+    border: 3px solid #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-#try-on-btn {
-    width: 100%; 
-    max-width: 400px;
-    padding: 12px 24px;
-    border-radius: 8px;
-    background-color: var(--primary-color);
-    color: var(--text-on-dark);
+/* Pro Feature Banner */
+#pro-feature-banner {
+    width: calc(100% - 2 * var(--app-padding));
+    background-color: #fff;
+    padding: 12px 15px;
+    margin-top: -30px; /* Overlap with the viewport */
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 30;
+}
+#pro-text {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 0.9em;
 }
 
-/* ================================================== */
-/* 📱 MOBILE MEDIA QUERY (Smaller Camera, Compact Filters) */
-/* ================================================== */
+/* --- 3. BOTTOM BAR (Filters and Gallery) --- */
+#bottom-bar {
+    width: 100%;
+    background-color: #fff;
+    padding-bottom: 20px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
 
+/* Placeholder for Gender/Complexion (Hidden in this design, used in JS flow) */
+#filter-selection-wrapper {
+    display: none; /* Hide the vertical filter steps for this design */
+}
+
+/* Hairstyle Gallery (Inspiration) */
+#hairstyle-gallery {
+    padding: 10px 0;
+    width: 100%;
+    margin: 0;
+}
+#hairstyle-gallery .filter-options-group {
+    display: flex;
+    white-space: nowrap; 
+    overflow-x: scroll; 
+    overflow-y: hidden; 
+    gap: 15px;
+    padding: 10px var(--app-padding);
+    
+    /* Hide scrollbar visually */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+#hairstyle-gallery .filter-options-group::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.style-option {
+    flex-shrink: 0;
+    text-align: center;
+    width: 70px; /* Fixed width for thumbnails */
+    cursor: pointer;
+}
+
+.style-thumbnail {
+    width: 70px; 
+    height: 70px;
+    object-fit: cover;
+    border-radius: 50%; /* Circular thumbnails */
+    border: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.style-option.selected .style-thumbnail {
+    border-color: var(--highlight-color);
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.7);
+}
+
+.style-option p {
+    font-size: 0.7em;
+    margin-top: 5px;
+    color: #666;
+    display: none; /* Hide text label for simplicity */
+}
+
+/* Pagination Dots */
+#gallery-pagination {
+    text-align: center;
+    margin-top: 10px;
+}
+.dot {
+    height: 6px;
+    width: 6px;
+    margin: 0 4px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+.dot.active {
+    background-color: var(--highlight-color);
+}
+
+/* --- 4. FOOTER --- */
+#app-footer {
+    padding: 5px;
+    font-size: 0.7em;
+    color: #aaa;
+    background-color: var(--background-color);
+}
+
+
+/* ================================================== */
+/* MOBILE MEDIA QUERY - Since the default is already mobile-optimized, this is minimal */
+/* ================================================== */
 @media (max-width: 768px) {
-    
-    #two-column-layout {
-        flex-direction: column; 
-        height: auto;
-        padding: 0; 
-        margin: 0;
-    }
-    
-    #filter-sidebar {
-        width: 100%; 
-        padding: 10px 0; 
-        box-shadow: none; 
-        order: 1; 
-    }
-
-    #main-content {
-        width: 100%;
-        padding: 10px 0; 
-        order: 0; 
-    }
-    
-    /* 🚨 MOBILE VIEWPORT OPTIMIZATION: Shrink the circle */
-    #central-viewport {
-        margin-left: auto;
-        margin-right: auto;
-        /* KEY CHANGE: Reduced size to 65vw */
-        width: 65vw; 
-        height: 65vw;
-        max-width: 300px; 
-        max-height: 300px;
-        margin-top: 10px;
-    }
-
-    /* MOBILE FILTER PILLS (Centering and using fixed percentage for compactness) */
-    .filter-section {
-        margin: 8px auto; 
-        padding: 0;
-        background-color: #fff;
-        /* Reduce max width for a more centralized/compact look */
-        width: 90%; 
-        max-width: 350px; 
-    }
-    
-    .filter-section.collapsed h3 {
-        /* Keep pill width constrained */
-        width: 95%; 
-        max-width: none; 
-        border-radius: 20px; 
-        margin: 0 auto;
-    }
-
-    /* Expanded Content Group within the filter section */
-    .filter-section.expanded .filter-content-group {
-        width: 100%;
-        box-sizing: border-box; 
-    }
-    
-    /* Complexion tiles must show text labels on mobile */
-    .complexion-tile {
-        width: 40px; 
-        height: 40px; /* Reduced size slightly */
-    }
-    .complexion-tile p {
-        display: block; 
-        font-size: 0.6em;
-        margin-top: 45px; /* Push label below the circle */
-        text-align: center;
-        width: 40px;
-        white-space: normal;
-    }
-    
-    /* INSPIRATION GALLERY OPTIMIZATION */
-    #hairstyle-gallery {
-        margin-top: 10px; 
-        padding-bottom: 20px;
-        width: 100%; 
-        max-width: none; 
-    }
-    
-    #hairstyle-gallery .filter-options-group {
-        overflow-x: scroll;
-        padding-bottom: 5px; 
-        padding-left: 10px; 
-        padding-right: 10px;
-    }
-
-    .style-thumbnail {
-        width: 65px; 
-        height: 65px; 
-    }
-
-    .style-option p {
-        font-size: 0.8em;
+    #full-screen-container {
+        /* On real devices, let it take up full screen */
+        max-width: 100%; 
     }
 }
