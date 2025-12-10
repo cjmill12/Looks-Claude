@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const genderSelector = document.getElementById('gender-selector');
     const complexionSelector = document.getElementById('complexion-selector');
     const complexionGroup = document.getElementById('complexion-options-group');
-    const galleryContainer = document.getElementById('hairstyle-gallery');
+    const galleryContainer = document.getElementById('hairstyle-gallery'); // Moved to main
     
     // State tracking variables
     let capturedImageBase64 = null; 
@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // --- Generic Toggle Handler for Collapsible Sections ---
+    // Note: Inspiration is handled separately during selection but can be manually opened/closed
     document.querySelectorAll('.filter-section h3').forEach(header => {
         header.addEventListener('click', (e) => {
             const section = e.currentTarget.parentElement;
@@ -120,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     cameraStarted = true;
                     takeSelfieBtn.textContent = "📸"; 
                     takeSelfieBtn.disabled = false;
-                    statusMessage.textContent = "Camera ready. Tap the camera icon to capture!";
+                    statusMessage.textContent = "Camera ready. Select your style and capture!";
                 })
                 .catch(err => {
                     console.error("Camera access error (getUserMedia or play failed):", err);
@@ -134,12 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- INITIAL STATE SETUP ---
     takeSelfieBtn.textContent = "▶️"; 
-    statusMessage.textContent = "1. Select your gender, 2. complexion, and 3. inspiration style, then take a selfie.";
+    statusMessage.textContent = "Select your Gender and Complexion to begin.";
     tryOnBtn.style.display = 'none'; 
     videoFeed.style.display = 'none'; 
     tryOnBtn.disabled = true;
 
-    // All steps start collapsed (stoplight circles)
+    // All steps start collapsed (stoplight pills)
     setFilterState(genderSelector, false); 
     setFilterState(complexionSelector, false); 
     setFilterState(galleryContainer, false); 
@@ -164,14 +165,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // Re-render Step 2 tiles (Complexion) to clear selection
             renderComplexionSelector(); 
             
-            // Re-render Step 3 gallery to clear old styles
-            renderFinalGallery();
-            
             // Action: Collapse Step 1, Expand Step 2
             setFilterState(genderSelector, false);
             setFilterState(complexionSelector, true);
+            setFilterState(galleryContainer, false); // Ensure inspiration is closed until ready
             
-            statusMessage.textContent = "1. Category selected. Now choose your 2. complexion.";
+            statusMessage.textContent = "1. Gender selected. Now choose your 2. complexion.";
         });
     });
 
@@ -186,7 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
             tile.setAttribute('data-complexion', c.id);
             tile.style.backgroundColor = c.color;
             
-            // Label is hidden in CSS but useful for debugging/accessibility
             const label = document.createElement('p');
             label.textContent = c.name;
             
@@ -202,11 +200,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // RENDER STEP 3 (Gallery) based on new selection
                 renderFinalGallery();
 
-                // Action: Collapse Step 2, Expand Step 3
+                // 🚨 KEY CHANGE: Collapse Step 2, Automatically Expand Inspiration (Step 3)
                 setFilterState(complexionSelector, false);
                 setFilterState(galleryContainer, true);
 
-                statusMessage.textContent = "2. Complexion selected. Now choose your 3. inspiration style.";
+                statusMessage.textContent = "2. Complexion selected. Now choose your 3. Inspiration style below!";
             });
         });
         
@@ -255,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
             optionDiv.addEventListener('click', handleStyleSelection);
         });
 
-        statusMessage.textContent = "3. Select your final style and click 'Try On Selected Hairstyle'.";
+        statusMessage.textContent = "3. Select your final style and click the Play icon to start your camera.";
     }
 
     // --- Style Selection Handler ---
@@ -317,22 +315,15 @@ document.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = "Selfie captured! Click 'Try On Selected Hairstyle' above.";
         } else {
             tryOnBtn.disabled = true; 
-            statusMessage.textContent = "Selfie captured! Now, complete steps 1, 2, and 3 to select your style.";
-            // If filters are not complete, expand the first uncompleted step
-            // Collapse all filters first
+            statusMessage.textContent = "Selfie captured! Now, please select your Inspiration style.";
+            
+            // Collapse other filters and expand Inspiration if the step is incomplete
             document.querySelectorAll('.filter-section').forEach(s => setFilterState(s, false));
-
-            if (!selectedGender) {
-                setFilterState(genderSelector, true);
-            } else if (!selectedComplexion) {
-                setFilterState(complexionSelector, true);
-            } else {
-                setFilterState(galleryContainer, true);
-            }
+            setFilterState(galleryContainer, true);
         }
     });
 
-    // --- CORRECTED TRY ON BUTTON LOGIC ---
+    // --- TRY ON BUTTON LOGIC ---
     tryOnBtn.addEventListener('click', async () => {
         if (!capturedImageBase64 || !selectedPrompt) {
             statusMessage.textContent = "Error: Please take a selfie AND select a style!";
