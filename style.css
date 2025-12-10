@@ -16,11 +16,13 @@ body {
     font-family: Arial, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
+    /* 🚨 MOBILE FIX 1: Ensure zero padding/margin on body */
     margin: 0;
-    padding: 0;
+    padding: 0; 
     text-align: center;
     -webkit-user-select: none;
     user-select: none;
+    overflow-x: hidden; /* 🚨 Prevent horizontal scrolling artifact */
 }
 
 /* --- Header and Logo Styling (MINIMAL BANNER) --- */
@@ -328,7 +330,7 @@ body {
 }
 
 /* ================================================== */
-/* 📱 MOBILE MEDIA QUERY (Optimized Stacking Layout) */
+/* 📱 MOBILE MEDIA QUERY (Final Edge-to-Edge Optimization) */
 /* ================================================== */
 
 @media (max-width: 768px) {
@@ -336,81 +338,94 @@ body {
     #two-column-layout {
         flex-direction: column; 
         height: auto;
+        padding: 0; /* 🚨 Ensure wrapper has no padding */
+        margin: 0;
     }
     
     #filter-sidebar {
-        /* PUSHED BELOW MAIN CONTENT */
         width: 100%; 
-        padding: 10px; 
+        padding: 10px 0; /* 🚨 Padding only top/bottom for full width sections */
         box-shadow: none; 
         order: 1; 
     }
 
     #main-content {
-        /* PUSHED ABOVE FILTERS */
         width: 100%;
-        padding: 10px;
+        padding: 10px 0; /* 🚨 Padding only top/bottom for max width camera */
         order: 0; 
     }
     
-    /* 🚨 MOBILE VIEWPORT OPTIMIZATION */
+    /* MOBILE VIEWPORT OPTIMIZATION */
     #central-viewport {
         margin-left: auto;
         margin-right: auto;
-        /* Maximize viewport size on small screens */
-        width: 95vw; 
-        height: 95vw;
-        max-width: 450px; /* Cap size on tablets */
+        /* Use a slightly smaller percentage for safety */
+        width: 90vw; 
+        height: 90vw;
+        max-width: 450px; 
         max-height: 450px;
         margin-top: 10px;
     }
 
 
-    /* 🚨 MOBILE FILTER PILLS (FULL WIDTH) */
+    /* MOBILE FILTER PILLS (Center and use fixed percentage) */
     .filter-section {
+        /* Centered block container */
         margin: 8px auto; 
         padding: 0;
         background-color: #fff;
-        max-width: 95%; /* Constrain to screen width */
-        width: 100%; /* Take up the maximum allowed width */
+        width: 98%; /* 🚨 Use 98% for container width */
+        max-width: 450px; /* Cap size on tablets */
     }
     
     .filter-section.collapsed h3 {
-        width: 100%; /* Pill takes full width of its container (95% of screen) */
-        max-width: none; /* Remove desktop max width constraint */
-        border-radius: 20px; /* Maintain pill shape */
+        /* Pill width relative to its 98% container */
+        width: 98%; 
+        max-width: none; 
+        border-radius: 20px; 
         margin: 0 auto;
+    }
+
+    /* Expanded Content Group within the 98% width container */
+    .filter-section.expanded .filter-content-group {
+        width: 100%;
+        box-sizing: border-box; /* Include padding in the width calculation */
     }
     
     /* Complexion tiles must show text labels on mobile */
     .complexion-tile {
-        width: 50px; /* Slightly larger targets */
+        width: 50px; 
         height: 50px;
     }
     .complexion-tile p {
         display: block; 
         font-size: 0.6em;
-        margin-top: 55px; /* Push label below the larger circle */
+        margin-top: 55px; 
         text-align: center;
         width: 50px;
         white-space: normal;
     }
     
-    /* 🚨 INSPIRATION GALLERY OPTIMIZATION (Horizontal Scroll is key) */
+    /* INSPIRATION GALLERY OPTIMIZATION */
     #hairstyle-gallery {
         margin-top: 10px; 
         padding-bottom: 20px;
+        width: 100%; 
+        max-width: none; /* Ensure it respects the container width */
     }
     
+    /* Ensure the horizontal scroll container is edge-to-edge if necessary, 
+       but its parent (.filter-section) handles the main width. */
     #hairstyle-gallery .filter-options-group {
-        /* This is already set correctly for horizontal scrolling, 
-           just ensuring mobile visibility */
         overflow-x: scroll;
         padding-bottom: 5px; 
+        /* 🚨 Add padding to the left and right of the scroll view itself */
+        padding-left: 10px; 
+        padding-right: 10px;
     }
 
     .style-thumbnail {
-        width: 65px; /* Larger tap targets */
+        width: 65px; 
         height: 65px; 
     }
 
