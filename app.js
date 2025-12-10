@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoFeed = document.getElementById('video-feed');
     const aiResultImg = document.getElementById('ai-result');
     const canvas = document.getElementById('hidden-canvas');
+    const centralViewport = document.getElementById('central-viewport'); // 🚨 Get the viewport element
     
     // Buttons and Controls
     const takeSelfieBtn = document.getElementById('take-selfie-btn');
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const statusMessage = document.getElementById('status-message');
     
-    // NEW: Filter elements
+    // Filter elements
     const genderSelector = document.getElementById('gender-selector');
     const complexionSelector = document.getElementById('complexion-selector');
     const complexionGroup = document.getElementById('complexion-options-group');
@@ -77,30 +78,33 @@ document.addEventListener('DOMContentLoaded', () => {
             optionsGroup.classList.toggle('collapsed', !isExpanded);
         }
         sectionElement.classList.toggle('expanded', isExpanded);
+        
+        // Hide/Show the entire section if it's the complexion or gallery container
+        if (sectionElement.id === 'complexion-selector' || sectionElement.id === 'hairstyle-gallery') {
+            sectionElement.style.display = isExpanded || optionsGroup && !optionsGroup.classList.contains('collapsed') ? 'block' : 'none';
+        }
     }
     
     // --- Generic Toggle Handler for Collapsible Sections ---
-    // Attaches to the whole filter section to allow expansion/collapse
     document.querySelectorAll('.filter-section').forEach(section => {
-        section.addEventListener('click', () => {
-            const optionsGroup = section.querySelector('.filter-options-group');
-            // If the content is currently visible (not collapsed), collapse it. Otherwise, expand it.
+        section.addEventListener('click', (e) => {
+            // Check if the actual options group is collapsed
             const isCurrentlyExpanded = section.classList.contains('expanded');
-
-            // Collapse all filter sections first, then expand the clicked one
+            
+            // Collapse all filter sections first
             document.querySelectorAll('.filter-section').forEach(s => setFilterState(s, false));
 
             // Only expand the clicked section if it was previously collapsed
             if (!isCurrentlyExpanded) {
                  setFilterState(section, true);
             }
+            e.stopPropagation(); // Stop event from propagating up
         });
     });
 
 
-    // --- Camera Initialization and Setup (No Change) ---
+    // --- Camera Initialization Function ---
     function startCamera() {
-        // ... (startCamera function logic remains the same) ...
         if (cameraStarted) return;
         
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -113,6 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(stream => {
                     videoFeed.srcObject = stream;
                     
+                    // 🚨 Show the entire viewport
+                    centralViewport.classList.add('active'); 
                     videoFeed.style.display = 'block'; 
                     aiResultImg.style.display = 'none'; 
                     
@@ -129,11 +135,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     takeSelfieBtn.disabled = false; 
                     takeSelfieBtn.textContent = "❌";
                     statusMessage.textContent = "Error: Cannot access camera. Check browser permissions.";
+                    centralViewport.classList.remove('active'); // Hide viewport on failure
                 });
         }
     }
 
-    // INITIAL STATE SETUP: Make sure only the first step is expanded on load
+    // 🚨 INITIAL STATE SETUP
+    // Set the initial state for the filter sections
     setFilterState(genderSelector, true); // Step 1 starts expanded
     setFilterState(complexionSelector, false); // Step 2 starts collapsed (and hidden)
     setFilterState(galleryContainer, false); // Step 3 starts collapsed (and hidden)
@@ -144,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     videoFeed.style.display = 'none'; 
     tryOnBtn.disabled = true;
 
+
     // --- FILTER STEP 1: Gender Selection Logic (Updated) ---
     document.querySelectorAll('.gender-option').forEach(button => {
         button.addEventListener('click', (e) => {
@@ -153,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedGender = e.currentTarget.getAttribute('data-gender');
             
             selectedComplexion = null;
-            galleryContainer.style.display = 'none';
+            // setFilterState will hide the gallery container if it was visible
             
             renderComplexionSelector();
             
@@ -167,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- FILTER STEP 2: Complexion Selector Generation (Updated) ---
     function renderComplexionSelector() {
         complexionGroup.innerHTML = '';
-        complexionSelector.style.display = 'block'; // Make Step 2 visible
+        setFilterState(complexionSelector, true); // Ensure selector is visible and expanded before rendering
 
         complexionData.forEach(c => {
             const tile = document.createElement('div');
@@ -211,8 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (filteredStyles.length === 0) {
             statusMessage.textContent = `No styles available for this selection yet. Please choose another option or contact the barbershop for more styles.`;
-            galleryContainer.style.display = 'block'; // Keep section visible but no gallery
             setFilterState(galleryContainer, true); // Keep expanded to show message
+            galleryContainer.querySelector('.filter-options-group').innerHTML = ''; // Clear options
             return;
         }
 
@@ -232,12 +241,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             optionDiv.appendChild(img);
             optionDiv.appendChild(p);
-            galleryContainer.appendChild(optionDiv);
+            galleryContainer.querySelector('.filter-options-group').appendChild(optionDiv); // Append to options group
             
             optionDiv.addEventListener('click', handleStyleSelection);
         });
 
-        galleryContainer.style.display = 'block'; // Make Step 3 visible
+        setFilterState(galleryContainer, true); // Ensure Step 3 is visible and expanded
         statusMessage.textContent = "3. Select your final style and click 'Try On Selected Hairstyle'.";
     }
 
@@ -264,21 +273,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- Capture Selfie/Camera Activation & AI Processing (No Change) ---
+    // --- Capture Selfie/Camera Activation & AI Processing (Updated) ---
     takeSelfieBtn.addEventListener('click', () => {
-        // ... (takeSelfieBtn logic remains the same) ...
+        // NEW LOGIC: If camera hasn't started, start it first.
         if (!cameraStarted) {
             takeSelfieBtn.textContent = "⏳"; 
             startCamera(); 
             return; 
         }
         
+        // Existing logic for taking a photo only runs if cameraStarted is true
         if (videoFeed.readyState !== 4) { 
             statusMessage.textContent = "Camera feed not ready yet. Please wait a moment.";
             return; 
         }
         
-        // Capture Logic
+        // 1. Capture Logic
         canvas.width = videoFeed.videoWidth;
         canvas.height = videoFeed.videoHeight;
         const context = canvas.getContext('2d');
@@ -286,12 +296,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
         capturedImageBase64 = dataUrl.split(',')[1]; 
         
-        // State Transition (Camera -> Captured Image)
+        // 2. State Transition (Camera -> Captured Image)
         takeSelfieBtn.style.display = 'none'; 
         tryOnBtn.style.display = 'block'; 
         videoFeed.style.display = 'none'; 
         
-        // Display captured image
+        // 3. Display captured image
         aiResultImg.src = dataUrl;
         aiResultImg.style.display = 'block'; 
 
@@ -350,6 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
             takeSelfieBtn.textContent = "▶️"; 
             cameraStarted = false; 
             tryOnBtn.style.display = 'none';
+            centralViewport.classList.remove('active'); // 🚨 Hide viewport after try-on
         }
     });
 });
