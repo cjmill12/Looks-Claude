@@ -157,7 +157,7 @@ body {
     z-index: 20;
 }
 
-/* 🚨 SIMPLIFIED BUTTONS CONTAINER */
+/* SIMPLIFIED BUTTONS CONTAINER */
 #viewport-actions-bottom-simplified {
     position: absolute;
     bottom: 15px;
@@ -165,7 +165,7 @@ body {
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 15px; /* Spacing between the two large buttons */
+    gap: 15px; 
     z-index: 20;
 }
 
@@ -185,12 +185,44 @@ body {
     cursor: pointer;
 }
 
-/* Style for the Generate/Try-On button if different */
 .generate-action {
-    background-color: var(--highlight-color); /* Use highlight color for Generate */
+    background-color: var(--highlight-color); 
 }
 
-/* Utility Class for hiding buttons */
+/* 🚨 NEW: LOADING OVERLAY STYLES */
+#loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 50; /* Ensure it's above everything else in the viewport */
+    color: white;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.loader-spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Utility Class for hiding elements */
 .hidden-btn {
     display: none !important;
 }
