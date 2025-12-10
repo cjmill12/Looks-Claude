@@ -6,14 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const centralViewport = document.getElementById('central-viewport');
     const statusMessage = document.getElementById('status-message');
     
-    // Controls
-    const takeSelfieBtn = document.getElementById('take-selfie-btn');
-    
+    // Controls (Updated)
+    const captureBtn = document.getElementById('capture-btn');
+    const generateBtn = document.getElementById('generate-btn');
+
     // Filter elements (Pills in viewport)
     const genderPill = document.getElementById('gender-button-mobile');
     const complexionPill = document.getElementById('complexion-button-mobile');
 
-    // Filter Content Wrappers (Bottom of screen)
+    // Filter Content Wrappers
     const filterWrapper = document.getElementById('filter-selection-wrapper');
     const genderContent = document.getElementById('gender-selector');
     const complexionContent = document.getElementById('complexion-selector');
@@ -29,12 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let cameraStarted = false; 
     let selectedGender = null;
     let selectedComplexion = null;
-    let activeFilterContent = null; // Tracks which content div is currently open
+    let activeFilterContent = null; 
 
-    // --- CONSTANTS ---
-    // Placeholder image paths
-    const SIMULATED_AI_RESULT_PATH = '/styles/simulated_ai_result.jpeg';
-    
     // --- Complexion Data and Prompt Database (Simplified for brevity) ---
     const complexionData = [
         { id: 'fair', name: 'Fair', color: '#F0E6D2' },
@@ -45,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'deep', name: 'Deep', color: '#442C2E' },
     ];
     
-    // NOTE: Replace '/styles/...' with actual image paths in your project
     const promptDatabase = {
         male: {
             fair: [
@@ -70,13 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Helper function to manage filter content visibility ---
     function toggleFilterContent(contentElement) {
-        // If the same content is clicked, close it.
         if (activeFilterContent === contentElement) {
             filterWrapper.style.display = 'none';
             contentElement.classList.add('hidden');
             activeFilterContent = null;
         } else {
-            // Hide all others, show the new one.
             document.querySelectorAll('.selector-content').forEach(c => c.classList.add('hidden'));
 
             filterWrapper.style.display = 'block';
@@ -84,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
             activeFilterContent = contentElement;
         }
         
-        // Ensure Inspiration gallery is collapsed when Gender/Complexion opens
         inspirationToggle.classList.add('collapsed');
         inspirationToggle.classList.remove('expanded');
         galleryContainer.style.display = 'none';
@@ -113,9 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             statusMessage.textContent = "Attempting to access camera...";
-            takeSelfieBtn.disabled = true;
+            captureBtn.disabled = true;
 
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } }) // Use front camera
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } }) 
                 .then(stream => {
                     videoFeed.srcObject = stream;
                     centralViewport.classList.add('active'); 
@@ -125,14 +118,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then(() => {
                     cameraStarted = true;
-                    takeSelfieBtn.textContent = "📸"; 
-                    takeSelfieBtn.disabled = false;
+                    captureBtn.textContent = "📸"; 
+                    captureBtn.disabled = false;
                     statusMessage.textContent = "Camera ready. Select your style and capture!";
                 })
                 .catch(err => {
                     console.error("Camera access error:", err);
-                    takeSelfieBtn.disabled = false; 
-                    takeSelfieBtn.textContent = "❌";
+                    captureBtn.disabled = false; 
+                    captureBtn.textContent = "❌";
                     statusMessage.textContent = "Error: Cannot access camera. Check browser permissions.";
                     centralViewport.classList.remove('active'); 
                 });
@@ -140,8 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- INITIAL STATE SETUP ---
-    // 🚨 Ensure initial states are set correctly
-    takeSelfieBtn.textContent = "▶️"; 
+    captureBtn.textContent = "▶️"; // Initial state: Play icon to start camera
+    generateBtn.classList.add('hidden-btn'); // Hide generate button initially
     statusMessage.textContent = "Select your Gender (M/F) and Complexion (🎨) to begin.";
     
     filterWrapper.style.display = 'none';
@@ -154,15 +147,13 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFinalGallery(); 
 
 
-    // --- 2. Floating Pill Click Handlers (Gender & Complexion) ---
+    // --- Filter Pill Click Handlers ---
 
-    // GENDER PILL
     genderPill.addEventListener('click', (e) => {
         toggleFilterContent(genderContent);
         statusMessage.textContent = "Select a style gender (Male or Female) below.";
     });
 
-    // COMPLEXION PILL
     complexionPill.addEventListener('click', (e) => {
         if (!selectedGender) {
             statusMessage.textContent = "Please select a Gender first!";
@@ -174,10 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- Filter Option Click Handlers (inside the expanded content) ---
+    // --- Filter Option Click Handlers ---
 
-    // GENDER OPTIONS
-    // 🚨 Attach listener to the correct parent, as the buttons are created statically
     genderContent.addEventListener('click', (e) => {
         if (e.target.classList.contains('gender-option')) {
             genderContent.querySelectorAll('.gender-option').forEach(btn => btn.classList.remove('selected'));
@@ -218,16 +207,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderFinalGallery();
 
                 toggleFilterContent(complexionContent);
-                inspirationToggle.click(); // Auto-expand Inspiration
+                inspirationToggle.click(); 
             });
         });
         
     }
 
 
-    // --- 5. INSPIRATION TOGGLE ---
+    // --- INSPIRATION TOGGLE ---
     inspirationToggle.addEventListener('click', () => {
-        // Only allow toggle if prerequisite filters are set
         if (!selectedGender || !selectedComplexion) {
             statusMessage.textContent = "Please select Gender (M/F) and Complexion (🎨) first!";
             return;
@@ -238,7 +226,9 @@ document.addEventListener('DOMContentLoaded', () => {
         inspirationToggle.classList.toggle('expanded', !isExpanded);
         inspirationToggle.classList.toggle('collapsed', isExpanded);
         
-        // Toggle gallery visibility
+        filterWrapper.style.display = 'none'; 
+        activeFilterContent = null;
+
         galleryContainer.style.display = isExpanded ? 'none' : 'block';
 
         if (!isExpanded) {
@@ -247,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- FINAL STEP: Render the Filtered Gallery ---
+    // --- Render the Filtered Gallery ---
     function renderFinalGallery() {
         const galleryOptionsGroup = galleryContainer.querySelector('.filter-options-group');
         galleryOptionsGroup.innerHTML = ''; 
@@ -280,7 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
             optionDiv.appendChild(img);
             galleryOptionsGroup.appendChild(optionDiv);
             
-            // 🚨 Attach style selection listener
             optionDiv.addEventListener('click', handleStyleSelection);
         });
         
@@ -300,34 +289,35 @@ document.addEventListener('DOMContentLoaded', () => {
         inspirationToggle.classList.add('collapsed');
         galleryContainer.style.display = 'none';
 
-        // Set button based on current camera state
-        const buttonText = (videoFeed.style.display === 'block') ? '📸' : '✨';
-        takeSelfieBtn.textContent = buttonText;
-        takeSelfieBtn.style.display = 'flex'; 
+        // Show the Capture/Restart button and hide the Generate button
+        captureBtn.classList.remove('hidden-btn');
+        captureBtn.textContent = cameraStarted ? '📸' : '▶️';
+        generateBtn.classList.add('hidden-btn');
         
-        statusMessage.textContent = `Style selected: ${e.currentTarget.getAttribute('data-name')}. Tap the button to capture your selfie.`;
+        statusMessage.textContent = `Style selected: ${e.currentTarget.getAttribute('data-name')}. Tap the camera button to capture your selfie.`;
     }
 
 
-    // --- 4. Capture Selfie/Camera Activation & AI Processing ---
-    takeSelfieBtn.addEventListener('click', () => {
-        // State Check 1: Must have a style selected
+    // --- 4. BUTTON LISTENERS ---
+
+    // 1. CAPTURE / START CAMERA / RESTART
+    captureBtn.addEventListener('click', () => {
         if (!selectedPrompt) {
             statusMessage.textContent = "Please select a style from the Inspiration gallery first!";
             inspirationToggle.click(); 
             return;
         }
 
-        // State Check 2: If camera hasn't started (Initial 'Play' button)
+        // State A: Initial Load -> Start Camera (▶️ button)
         if (!cameraStarted) {
             startCamera(); 
             return; 
         }
         
-        // State Check 3: Live Camera -> Capture Selfie ('📸' button)
-        if (videoFeed.style.display === 'block') {
+        // State B: Live Camera -> Capture Selfie (📸 button)
+        if (videoFeed.style.display === 'block' && captureBtn.textContent === '📸') {
             
-            // 1. Capture Logic
+            // Capture Logic
             canvas.width = videoFeed.videoWidth;
             canvas.height = videoFeed.videoHeight;
             const context = canvas.getContext('2d');
@@ -335,46 +325,61 @@ document.addEventListener('DOMContentLoaded', () => {
             const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
             capturedImageBase64 = dataUrl.split(',')[1]; 
             
-            // 2. State Transition (Live Camera -> Captured Image)
-            takeSelfieBtn.textContent = '✨'; // Change to Try On icon
+            // State Transition: Captured Image
             videoFeed.style.display = 'none'; 
             aiResultImg.src = dataUrl; // Show the captured image
             aiResultImg.style.display = 'block'; 
             
-            statusMessage.textContent = "Selfie captured! Tap the sparkle button to 'Try On' the hairstyle.";
+            captureBtn.textContent = '🔄'; // Capture button becomes Restart
+            generateBtn.classList.remove('hidden-btn'); // Show Generate button
+            
+            statusMessage.textContent = "Selfie captured! Tap the sparkle button (✨) to 'Try On'.";
             
         } 
-        // State Check 4: Captured Image -> AI Processing ('✨' button)
-        else if (aiResultImg.style.display === 'block' && takeSelfieBtn.textContent === '✨') {
-             
-            statusMessage.textContent = `Applying your selected style... This may take a moment.`;
-            takeSelfieBtn.disabled = true;
-            takeSelfieBtn.textContent = '⏳'; // Show loading indicator
-            
-            // ** Simulating the AI call **
-            setTimeout(() => {
-                
-                // --- SUCCESS BLOCK (SIMULATED AI RESULT) ---
-                
-                // Replace the image source with a simulated AI-processed result
-                // NOTE: Ensure the path below is correct, or use another placeholder image
-                aiResultImg.src = SIMULATED_AI_RESULT_PATH; 
-                
-                takeSelfieBtn.textContent = "🔄"; // Change to Re-capture icon
-                takeSelfieBtn.disabled = false;
-                statusMessage.textContent = `Done! Your new look is ready. Tap the button to take a new selfie.`;
-                
-            }, 3000);
-            
-        } 
-        // State Check 5: AI Result -> Start Camera/Re-capture ('🔄' button)
-        else if (takeSelfieBtn.textContent === '🔄') {
+        
+        // State C: AI Result -> Restart Camera (🔄 button)
+        else if (captureBtn.textContent === '🔄') {
             capturedImageBase64 = null;
             videoFeed.style.display = 'block';
             aiResultImg.style.display = 'none';
-            takeSelfieBtn.textContent = '📸'; 
+            
+            captureBtn.textContent = '📸'; // Restart button becomes Capture
+            generateBtn.classList.add('hidden-btn'); // Hide Generate button
+            
             statusMessage.textContent = "Camera ready for a new look! Select a style and capture!";
         }
+    });
+    
+    // 2. GENERATE / TRY ON
+    generateBtn.addEventListener('click', () => {
+        // Only run if the Generate button is visible and a capture has happened
+        if (generateBtn.classList.contains('hidden-btn')) return;
+
+        // State D: Captured Image -> AI Processing (✨ button)
+        statusMessage.textContent = `Applying your selected style... This may take a moment.`;
+        captureBtn.disabled = true;
+        generateBtn.disabled = true;
+        generateBtn.textContent = '⏳'; // Show loading indicator
+        
+        // ** Simulating the AI call **
+        setTimeout(() => {
+            
+            // --- SUCCESS BLOCK (FIXED: Use the selected style's thumbnail for demonstration) ---
+            const styleImgElement = document.querySelector('.style-option.selected .style-thumbnail');
+            if (styleImgElement) {
+                // Use the style thumbnail as the final result image
+                aiResultImg.src = styleImgElement.src; 
+            }
+            
+            // State Transition: AI Result Ready
+            generateBtn.textContent = '✨'; // Reset Generate text
+            generateBtn.classList.add('hidden-btn'); // Hide Generate button
+            captureBtn.disabled = false;
+            captureBtn.textContent = "🔄"; // Show Restart button
+            
+            statusMessage.textContent = `Done! Your new look is ready. Tap the restart button (🔄) to take a new selfie.`;
+            
+        }, 3000);
     });
 
     // Initialize complexions and state on load
