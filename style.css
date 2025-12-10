@@ -20,17 +20,20 @@ body {
     user-select: none;
 }
 
-/* --- Header and Logo Styling (MINIMAL BANNER UPDATE) --- */
+/* --- Header and Logo Styling (MINIMAL BANNER) --- */
 #app-header {
-    /* 🚨 Reduced padding from 8px to 4px for a much thinner look */
-    padding: 4px 0; 
+    /* 🚨 Minimal padding for maximum condensation */
+    padding: 0; 
     background-color: #FFFFFF;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
-    margin-bottom: 5px; 
+    /* Reduced margin to stick controls closer to logo */
+    margin-bottom: 2px; 
 }
 #main-logo {
     max-width: 100px; 
-    height: auto;
+    /* Ensures the logo itself is not stretched and defines minimum header height */
+    height: 35px; 
+    object-fit: contain; 
 }
 
 /* --- NEW LAYOUT: Single Screen Focused --- */
@@ -41,11 +44,11 @@ body {
     max-width: 600px;
     margin: 0 auto;
     padding: 0 10px; 
-    /* Adjust height calculation to reflect the smaller banner */
-    height: calc(100vh - 42px); /* Assuming header height is now around 42px total */
+    /* Adjust height calculation based on condensed header */
+    height: calc(100vh - 38px); 
 }
 
-/* 1. Central Image/Video Viewport (Compact) */
+/* 1. Central Image/Video Viewport (Initially Hidden) */
 #central-viewport {
     position: relative; 
     width: 95vw;
@@ -57,6 +60,13 @@ body {
     flex-shrink: 0; 
     min-height: 250px; 
     max-height: 45vh; 
+    /* 🚨 Hide the viewport by default */
+    display: none; 
+}
+
+/* Class to show the viewport when camera starts */
+#central-viewport.active {
+    display: block;
 }
 
 #video-feed, #ai-result {
