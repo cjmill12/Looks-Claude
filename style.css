@@ -9,6 +9,7 @@
     --gallery-gap: 10px; 
     --sidebar-width: 200px; 
     --header-height: 40px;
+    --viewport-size: 300px; /* New fixed size for circular viewport */
 }
 
 body {
@@ -214,9 +215,11 @@ body {
     box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); 
 }
 
-/* --- Hairstyle Gallery (Adapted for sidebar) --- */
+/* --- Hairstyle Gallery (INSPIRATION) --- */
 #hairstyle-gallery {
     padding: 0;
+    width: 100%; /* Take full width of main content area */
+    margin-top: 20px; /* Space from controls */
 }
 #hairstyle-gallery .filter-content-group {
      padding: 10px 5px; 
@@ -245,15 +248,16 @@ body {
 /* RIGHT COLUMN ELEMENTS (Viewport and Controls) */
 /* ================================================== */
 
-/* Viewport is visible by default to show placeholder/status message */
+/* 🚨 KEY CHANGE: Fixed size and circular shape for the viewport */
 #central-viewport {
     position: relative; 
-    width: 100%;
-    max-width: 600px; 
-    min-height: 350px; 
-    max-height: 60vh;
+    width: var(--viewport-size); 
+    height: var(--viewport-size);
+    min-height: auto; /* Remove minimum height constraint */
+    max-width: none; /* Remove max width constraint */
+    max-height: none;
     margin-bottom: 20px;
-    border-radius: 8px;
+    border-radius: 50%; /* MAKE IT A CIRCLE */
     overflow: hidden;
     background-color: #eee;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
@@ -270,6 +274,7 @@ body {
 }
 
 #status-message {
+    /* Adjusted z-index to be higher than controls for visibility */
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -279,7 +284,7 @@ body {
     margin: 0;
     font-size: 0.85em;
     text-align: center;
-    z-index: 10;
+    z-index: 100; /* Ensure visibility over the circle */
 }
 
 #controls {
@@ -301,6 +306,7 @@ body {
 }
 
 #take-selfie-btn {
+    /* Positioned relative to controls, not inside the circle */
     width: 70px; 
     height: 70px;
     padding: 0;
@@ -330,36 +336,46 @@ body {
 @media (max-width: 768px) {
     
     #two-column-layout {
-        flex-direction: column; /* Stack camera/main content above filters */
+        flex-direction: column; 
         height: auto;
     }
     
     #filter-sidebar {
-        width: 100%; /* Filters take full width */
-        min-height: auto;
-        padding: 10px; /* Padding for entire section */
-        box-shadow: none; /* Remove side shadow */
-        order: 1; /* Place filters below main content */
+        width: 100%; 
+        padding: 10px; 
+        box-shadow: none; 
+        order: 1; 
+        /* Sidebar is now 100% width, filter sections need padding/margin */
     }
 
     #main-content {
         width: 100%;
         padding: 10px;
-        order: 0; /* Place camera content first */
+        order: 0; 
     }
+    
+    /* Center the circular viewport */
+    #central-viewport {
+        margin-left: auto;
+        margin-right: auto;
+        width: 90vw; /* Use viewport width for better scaling */
+        height: 90vw;
+        max-width: var(--viewport-size);
+        max-height: var(--viewport-size);
+    }
+
 
     /* Filters (The Pills) on Mobile */
     .filter-section {
-        margin: 8px auto; /* Center the filter sections */
+        margin: 8px auto; 
         padding: 0;
         background-color: #fff;
-        max-width: 95%; /* Keep controls within reasonable bounds */
+        max-width: 95%; 
     }
     
-    /* Ensure pills remain centered and at a readable width */
     .filter-section.collapsed h3 {
         width: 90%; 
-        max-width: 300px; /* Allow wider pill for finger tapping */
+        max-width: 300px; 
     }
 
     /* Complexion tiles must show text labels on mobile as space is limited */
@@ -370,15 +386,18 @@ body {
     .complexion-tile p {
         display: block; 
         font-size: 0.6em;
-        margin-top: 45px; /* Push label below the larger circle */
+        margin-top: 45px; 
         text-align: center;
         width: 40px;
         white-space: normal;
     }
 
     /* Hairstyle Gallery on Mobile */
+    #hairstyle-gallery {
+        margin-top: 10px; /* Reduced margin */
+    }
     #hairstyle-gallery .filter-content-group {
         padding: 10px;
-        overflow-x: auto; /* Ensure horizontal scrolling for the thumbnails */
+        overflow-x: auto; 
     }
 }
