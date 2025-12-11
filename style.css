@@ -98,6 +98,7 @@ body {
     width: 50%; 
     padding: 0 5px; /* Add some small horizontal padding for spacing */
     margin: 0;
+    box-sizing: border-box; /* FIX: Ensures padding is included in the 50% width */
 }
 
 /* Ensure the Hairstyle Gallery takes full width and drops to the next line */
