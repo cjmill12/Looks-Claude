@@ -16,8 +16,9 @@
     --thumbnail-size: 60px;
     --gallery-gap: 10px; 
     --header-height: 40px;
-    --viewport-size: 300px; /* Desktop circular viewport size */
-    --content-max-width: 400px; /* Max width for centered elements */
+    --viewport-size-desktop: 300px; 
+    --viewport-size-mobile: 250px; /* New fixed square size for mobile */
+    --content-max-width: 400px; 
 }
 
 body {
@@ -30,7 +31,7 @@ body {
     -webkit-user-select: none;
     user-select: none;
     overflow-x: hidden; 
-    display: flex; /* Use flexbox on body for overall layout */
+    display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
@@ -59,14 +60,14 @@ body {
 /* ================================================== */
 
 #main-app-container {
-    flex-grow: 1; /* Allows container to take up remaining space */
+    flex-grow: 1; 
     width: 100%;
     padding: 20px 0;
-    margin: 0 auto; /* Center the container on the page */
+    margin: 0 auto; 
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center content horizontally */
-    gap: 20px; /* Space between main sections (Gender, Camera, Filters) */
+    align-items: center; 
+    gap: 20px; 
 }
 
 /* --- 1. GENDER BUTTONS (Top Section) --- */
@@ -74,7 +75,7 @@ body {
     display: flex;
     justify-content: space-between;
     gap: 8px;
-    width: 90%; /* Use a percentage for responsiveness */
+    width: 90%; 
     max-width: var(--content-max-width);
     margin-bottom: 0;
     box-sizing: border-box;
@@ -121,15 +122,17 @@ body {
 
 #central-viewport {
     position: relative; 
-    width: var(--viewport-size); 
-    height: var(--viewport-size);
-    margin: 0; /* Remove old margin */
-    border-radius: 50%; 
+    /* CHANGED: Square Viewport with fixed width */
+    width: var(--viewport-size-mobile); 
+    height: var(--viewport-size-mobile);
+    max-width: var(--viewport-size-desktop); 
+    max-height: var(--viewport-size-desktop);
+    margin: 0; 
+    border-radius: 6px; /* Changed from 50% to a subtle round rectangle */
     overflow: hidden;
     background-color: #eee;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
     
-    /* Hide by default until activated */
     display: none; 
     align-items: center;
     justify-content: center;
@@ -144,6 +147,10 @@ body {
     height: 100%; 
     display: block;
     object-fit: cover;
+    /* CRITICAL: Ensure video/image doesn't go full screen */
+    object-fit: contain; 
+    max-width: 100%;
+    max-height: 100%;
 }
 
 #status-message {
@@ -190,25 +197,19 @@ body {
     line-height: 1;
 }
 
-/* Try On Hairstyle Button Styling (Now independent and larger) */
+/* Try On Hairstyle Button Styling */
 #try-on-btn {
     width: 100%; 
     max-width: 400px;
     padding: 12px 24px;
     border-radius: 8px;
-    background-color: var(--highlight-color); /* Use highlight for primary action */
+    background-color: var(--highlight-color); 
     color: var(--text-on-dark);
     font-size: 1.1em;
     font-weight: bold;
     box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
-    margin-top: 15px; /* Add space below filters */
+    margin-top: 15px; 
 }
-
-#loading-spinner {
-    /* Style for a simple loading spinner if you add one */
-    display: none; 
-}
-
 
 /* --- 3. FILTER SECTION (Bottom Section) --- */
 
@@ -251,12 +252,10 @@ body {
     background-color: #f0f0f0; 
     color: #666;
     border-radius: 20px; 
-    
     height: 40px; 
     width: 90%; 
-    max-width: 100%; /* Important for centering in the wrapper */
+    max-width: 100%; 
     padding: 0 10px; 
-    
     justify-content: center;
     overflow: hidden; 
     margin: 0 auto; 
@@ -354,10 +353,10 @@ body {
 }
 /* FIX FOR HORIZONTAL SCROLL */
 #hairstyle-gallery .filter-options-group {
-    display: flex; /* Ensure it's a flex container */
-    flex-wrap: nowrap; /* CRUCIAL: Forces all items onto one line */
+    display: flex; 
+    flex-wrap: nowrap; 
     white-space: nowrap; 
-    overflow-x: scroll; /* Enables horizontal scrolling */
+    overflow-x: scroll; 
     overflow-y: hidden; 
     scroll-snap-type: x mandatory;
     gap: 8px;
@@ -373,7 +372,6 @@ body {
     text-align: center;
     width: 45px;
     flex-shrink: 0;
-    /* Added CSS for the selected visual state for inspiration images */
     border: 2px solid transparent; 
     transition: border-color 0.2s;
 }
@@ -410,7 +408,6 @@ body {
         gap: 15px; 
     }
     
-    /* Ensure content sections take full width on mobile, and center the camera */
     .gender-buttons-container,
     #central-section,
     #filter-section-wrapper {
@@ -420,17 +417,17 @@ body {
         padding: 0 10px;
     }
     
-    /* Shrink the circular viewport */
+    /* CRITICAL: Ensure square viewport is mobile-friendly */
     #central-viewport {
-        width: 65vw; 
-        height: 65vw;
+        width: 80vw; /* Take up 80% of viewport width */
+        height: 80vw;
         max-width: 300px; 
         max-height: 300px;
     }
     
     /* Mobile filter styles adjustments */
     .filter-section.collapsed h3 {
-        width: 95%; /* Make pills slightly wider */
+        width: 95%; 
     }
 
     /* Complexion tiles must show text labels on mobile */
@@ -575,7 +572,7 @@ body {
                 </div>
             </div>
             
-            <button id="try-on-btn" class="main-action-btn" style="display: none;">Try On Hairstyle</button>
+            <button id="try-on-btn" class="main-action-btn" style="display: none;">Generate My New Look</button>
 
         </div> </div> <canvas id="hidden-canvas" style="display: none;"></canvas>
 
@@ -615,18 +612,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Helper Functions ---
     
-    // Function to check if Try On button should be visible
+    // Function to check if Try On button should be visible (CRITICAL FIX)
     function updateTryOnButtonVisibility() {
-        // Try On button is visible only when an image is captured AND a prompt/complexion is selected
+        // Try On button is visible only when an image is captured AND a style AND complexion are selected
         if (capturedImageBase64 && selectedPrompt && selectedComplexion) {
             tryOnBtn.style.display = 'block';
             tryOnBtn.disabled = false;
+            if (statusMessage.textContent.includes('Ready to capture') || statusMessage.textContent.includes('Processing')) {
+                 // Do not overwrite key messages
+            } else {
+                 statusMessage.textContent = "All set! Click 'Generate My New Look' below.";
+            }
         } else {
             tryOnBtn.style.display = 'none';
         }
     }
 
-    // Function to handle gender selection (New)
+    // Function to handle gender selection 
     function handleGenderSelect(gender) {
         selectedGender = gender;
 
@@ -672,50 +674,55 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTryOnButtonVisibility(); 
         
         if (capturedImageBase64) {
-            statusMessage.textContent = `Style selected: ${selectedPrompt}. Select a Complexion, then click 'Try On'.`;
+             statusMessage.textContent = `Style selected. Choose a complexion to unlock the 'Generate' button.`;
         }
     }
     
-    // Function to start camera stream (UPDATED)
+    // Function to start camera stream (UPDATED for square viewport)
     async function startCamera() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            // Request the specific resolution to better fit the container (optional, but helps)
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: {
+                    facingMode: 'user', // Use front camera
+                    width: { ideal: 320 }, 
+                    height: { ideal: 240 }
+                }
+            });
             videoFeed.srcObject = stream;
             cameraStarted = true;
             
-            // 1. Display video feed in the circle
             centralViewport.classList.add('active'); 
             aiResultImg.style.display = 'none'; 
             videoFeed.style.display = 'block'; 
             
-            // 2. Change main button to Capture
             takeSelfieBtn.textContent = "📸"; 
             
-            // 3. Update status
-            statusMessage.textContent = "Adjust your face in the circle, then click 📸 to capture.";
+            statusMessage.textContent = "Adjust your face in the box, then click 📸 to capture.";
             
-            // Hide Try On button
+            // Hide Try On button immediately
             tryOnBtn.style.display = 'none';
 
         } catch (error) {
             console.error('Error accessing camera:', error);
             statusMessage.textContent = `Error: Could not start camera. Check permissions. (${error.name})`;
             
-            // Reset main button on error
             takeSelfieBtn.textContent = "▶️";
+            centralViewport.classList.remove('active');
         }
     }
     
     // Function to stop camera stream 
     function stopCamera() {
         if (videoFeed.srcObject) {
+            // This is crucial for stopping the stream and releasing the camera
             videoFeed.srcObject.getTracks().forEach(track => track.stop());
             videoFeed.srcObject = null;
         }
         cameraStarted = false;
     }
     
-    // Function to capture image (UPDATED)
+    // Function to capture image 
     function captureImage() {
         const context = canvas.getContext('2d');
         const width = videoFeed.videoWidth;
@@ -727,25 +734,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         capturedImageBase64 = canvas.toDataURL('image/jpeg').split(',')[1];
         
-        // 1. Show captured image (hides video)
+        // Show captured image (hides video)
         videoFeed.style.display = 'none'; 
         aiResultImg.style.display = 'block';
         aiResultImg.src = canvas.toDataURL('image/jpeg');
         
-        // 2. Stop camera stream immediately
+        // Stop camera stream immediately
         stopCamera();
         
-        // 3. Update status
-        statusMessage.textContent = "Image captured. Select a hairstyle and complexion, then click 'Try On'.";
+        // Update status
+        statusMessage.textContent = "Image captured. Select a hairstyle and complexion, then click 'Generate'.";
         
-        // 4. Update control buttons
+        // Update control buttons
         takeSelfieBtn.style.display = 'none'; // Hide the capture button
         
-        // CRITICAL: Check and show the Try On button if filters are ready
+        // Check and show the Try On button now that the image is captured
         updateTryOnButtonVisibility(); 
     }
     
-    // Try On button logic (remains the same)
+    // Try On button logic (Updated button text)
     tryOnBtn.addEventListener('click', async () => {
         if (!capturedImageBase64 || !selectedPrompt || !selectedComplexion) {
             statusMessage.textContent = "Please capture a selfie, select a style, and choose a complexion first.";
@@ -756,7 +763,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tryOnBtn.disabled = true;
         tryOnBtn.style.display = 'none';
         spinner.style.display = 'block';
-        statusMessage.textContent = "Processing your new look...";
+        statusMessage.textContent = "Processing your new look... This may take a moment.";
         
         const finalPrompt = `A high quality, professional studio portrait of a ${selectedGender} model with a ${selectedComplexion} complexion, featuring a new hairstyle: ${selectedPrompt}. The face should be clear and well-lit.`;
         
@@ -783,8 +790,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // --- SUCCESS BLOCK ---
             aiResultImg.src = `data:image/jpeg;base64,${data.generatedImageBase64}`;
             aiResultImg.style.display = 'block';
+            videoFeed.style.display = 'none';
             
-            statusMessage.textContent = `Done! Your new look is ready. Click the Play button to take a new selfie.`;
+            statusMessage.textContent = `Success! Your new look is ready. Click the Play button to start a new session.`;
             
             // Show the Play button again for a new session
             takeSelfieBtn.style.display = 'block'; 
@@ -802,7 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tryOnBtn.disabled = false; 
             tryOnBtn.style.display = 'block'; 
             spinner.style.display = 'none'; 
-            takeSelfieBtn.style.display = 'none'; // Keep Capture button hidden
+            takeSelfieBtn.style.display = 'none'; 
         }
     });
 
@@ -845,7 +853,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Camera/Selfie button logic (UPDATED)
+    // Camera/Selfie button logic
     takeSelfieBtn.addEventListener('click', () => {
         if (!cameraStarted) {
             // If camera is off, start it (▶️ -> 📸)
@@ -864,6 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
     takeSelfieBtn.textContent = "▶️";
     spinner.style.display = 'none';
     tryOnBtn.style.display = 'none';
+    centralViewport.classList.add('active'); // Keep the box visible, showing status message
 });
     </script>
 </body>
