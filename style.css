@@ -262,9 +262,17 @@ body {
     overflow: hidden;
     background-color: #eee;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-    display: flex;
+    
+    /* FIX 1 (New Request): Hide by default */
+    display: none; 
+    
     align-items: center;
     justify-content: center;
+}
+
+/* FIX 2 (New Request): Show when 'active' class is added by JS on camera start */
+#central-viewport.active {
+    display: flex;
 }
 
 #video-feed, #ai-result {
