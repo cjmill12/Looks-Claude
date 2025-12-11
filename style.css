@@ -63,13 +63,9 @@ body {
     box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
     padding: 10px;
     overflow-y: auto; 
-    
-    /* MODIFICATION FOR SIDE-BY-SIDE FILTERS: Change direction and allow wrap */
+    /* Desktop default: Stacked */
     display: flex;
-    flex-direction: row; 
-    flex-wrap: wrap;
-    justify-content: space-between; /* Ensures the 10px gap is split evenly between the two columns */
-    align-items: flex-start; 
+    flex-direction: column;
 }
 
 /* --- 2. Main Content (RIGHT) --- */
@@ -84,30 +80,13 @@ body {
 
 /* --- FILTER SECTION STYLES (Larger Pill Buttons) --- */
 
-/* Base filter section now needs to be overridden for Gender/Complexion in the new row layout */
 .filter-section {
-    /* Base width 100% removed here to apply it only when needed */
+    width: 100%;
     margin: 0 0 10px 0; 
     padding: 0;
     background-color: #fff;
     border-radius: 6px;
     text-align: left; 
-}
-
-/* Make Gender and Complexion take up 50% width each when side-by-side on desktop */
-#gender-selector, #complexion-selector {
-    /* FIX: Use calc(50% - 5px) to fit two items with a 10px gap in a 200px space */
-    width: calc(50% - 5px); 
-    padding: 0; 
-    margin: 0;
-    box-sizing: border-box; 
-}
-
-/* Ensure the Hairstyle Gallery takes full width and drops to the next line */
-#hairstyle-gallery {
-    padding: 0;
-    width: 100%; 
-    margin-top: 10px; 
 }
 
 /* Accordion Button/Header Style */
@@ -133,14 +112,12 @@ body {
     border-radius: 20px; 
     
     height: 40px; 
-    /* Adjust width to fit within 50% of the sidebar. Max 80px seems fine for 95px container */
-    width: 80px; 
-    max-width: 80px; 
-    padding: 0 5px; 
+    width: 90%; 
+    max-width: 180px; 
+    padding: 0 10px; 
     
     justify-content: center;
     overflow: hidden; 
-    /* Center within their 50% container */
     margin: 0 auto 10px auto; 
 }
 
@@ -157,11 +134,9 @@ body {
 }
 
 /* --- EXPANDED (Active Pill/Block Appearance) --- */
-/* Expanded pills should always take the full width of their container (which is 50% for Gender/Complexion, 100% for Gallery) */
 .filter-section.expanded h3 {
     background-color: var(--primary-color); 
     color: var(--text-on-dark);
-    /* For side-by-side elements, we want squared edges on the inner side, round on the outer side */
     border-radius: 6px 6px 0 0; 
     height: auto;
     width: 100%;
@@ -243,12 +218,15 @@ body {
 }
 
 /* --- Hairstyle Gallery (INSPIRATION) --- */
+#hairstyle-gallery {
+    padding: 0;
+    width: 100%; 
+    margin-top: 20px; 
+}
 #hairstyle-gallery .filter-content-group {
      padding: 10px 5px; 
 }
 #hairstyle-gallery .filter-options-group {
-    /* FIX: Prevents wrapping, forcing the flex items onto a single line */
-    flex-wrap: nowrap; 
     white-space: nowrap; 
     overflow-x: scroll; 
     overflow-y: hidden; 
@@ -366,22 +344,16 @@ body {
     
     #filter-sidebar {
         width: 100%; 
-        padding: 10px 0; 
+        padding: 10px; /* Use full padding for spacing on sides */
         box-shadow: none; 
         order: 1; 
         
-        /* Revert to column stacking for Mobile/narrow screens */
-        flex-direction: column;
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-    }
-    
-    /* Revert width for mobile to 100% of the sidebar (90% of screen width) */
-    #gender-selector, #complexion-selector {
-        width: 90%; 
-        max-width: 350px;
-        margin: 8px auto; 
-        padding: 0;
+        /* FIX 1: Enable flex row layout for side-by-side elements */
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-start;
     }
 
     #main-content {
@@ -402,19 +374,32 @@ body {
         margin-top: 10px;
     }
 
+    /* FIX 2: Set GENDER and COMPLEXION to fit side-by-side */
+    #gender-selector, #complexion-selector {
+        width: calc(50% - 5px); /* Forces two items to fit with a 10px gap in between (handled by space-between) */
+        margin: 0;
+        box-sizing: border-box;
+    }
+    
+    /* FIX 3: Ensure Inspiration Gallery takes full width and wraps below */
+    #hairstyle-gallery {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+
     /* MOBILE FILTER PILLS (Centering and using fixed percentage for compactness) */
     .filter-section {
-        margin: 8px auto; 
+        /* Remove width constraints for Gender/Complexion, handled by their IDs above */
+        margin: 8px 0; 
         padding: 0;
         background-color: #fff;
-        /* Reduce max width for a more centralized/compact look */
-        width: 90%; 
-        max-width: 350px; 
+        max-width: none; 
     }
     
     .filter-section.collapsed h3 {
-        /* Keep pill width constrained */
-        width: 95%; 
+        /* Make collapsed pills fit within their new calc(50% - 5px) container */
+        width: 90%; 
         max-width: none; 
         border-radius: 20px; 
         margin: 0 auto;
@@ -442,17 +427,15 @@ body {
     
     /* INSPIRATION GALLERY OPTIMIZATION */
     #hairstyle-gallery {
-        margin-top: 10px; 
         padding-bottom: 20px;
-        width: 100%; 
         max-width: none; 
     }
     
     #hairstyle-gallery .filter-options-group {
         overflow-x: scroll;
         padding-bottom: 5px; 
-        padding-left: 10px; 
-        padding-right: 10px;
+        padding-left: 0; 
+        padding-right: 0;
     }
 
     .style-thumbnail {
