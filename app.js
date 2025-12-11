@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('hidden-canvas');
     const centralViewport = document.getElementById('central-viewport');
     
-    // Buttons and Controls - CORRECTED IDs
-    const startCameraBtn = document.getElementById('start-camera-btn'); // New
-    const captureSelfieBtn = document.getElementById('capture-selfie-btn'); // New
+    // Buttons and Controls - Corrected IDs and placement
+    const startCameraBtn = document.getElementById('start-camera-btn'); 
+    const captureSelfieBtn = document.getElementById('capture-selfie-btn'); 
     const tryOnBtn = document.getElementById('try-on-btn');
     const spinner = document.getElementById('loading-spinner');
     
@@ -72,7 +72,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-
+    // --- New Helper: Collects all unique styles from the entire database ---
+    function getAllStyles() {
+        const allStyles = [];
+        const seenNames = new Set();
+        
+        for (const genderKey in promptDatabase) {
+            for (const complexionKey in promptDatabase[genderKey]) {
+                promptDatabase[genderKey][complexionKey].forEach(style => {
+                    // Use style name to ensure uniqueness across the whole database
+                    if (!seenNames.has(style.name)) {
+                        allStyles.push(style);
+                        seenNames.add(style.name);
+                    }
+                });
+            }
+        }
+        return allStyles;
+    }
+    
     // --- Helper function to manage filter collapse/expand state ---
     function setFilterState(sectionElement, isExpanded) {
         sectionElement.classList.toggle('expanded', isExpanded);
@@ -111,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(stream => {
                     videoFeed.srcObject = stream;
                     
-                    centralViewport.classList.add('active'); 
+                    // The viewport is always visible, but now the video starts playing
                     videoFeed.style.display = 'block'; 
                     aiResultImg.style.display = 'none'; 
                     
@@ -130,26 +148,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.error("Camera access error (getUserMedia or play failed):", err);
                     startCameraBtn.disabled = false; 
                     statusMessage.textContent = "Error: Cannot access camera. Check browser permissions.";
-                    centralViewport.classList.remove('active'); 
                 });
         }
     }
 
     // --- INITIAL STATE SETUP ---
-    statusMessage.textContent = "Select your Gender and Complexion to begin.";
+    statusMessage.textContent = "1. Select Gender, 2. Complexion, then click Start Camera.";
     tryOnBtn.style.display = 'none'; 
-    captureSelfieBtn.style.display = 'none'; // Ensure capture button is hidden
+    captureSelfieBtn.style.display = 'none'; 
     videoFeed.style.display = 'none'; 
     tryOnBtn.disabled = true;
+    startCameraBtn.style.display = 'block'; // Ensure Start Camera button is visible initially
 
-    // All steps start collapsed (stoplight pills)
-    setFilterState(genderSelector, false); 
+    // All steps start collapsed
+    setFilterState(genderSelector, true); // Start with gender open
     setFilterState(complexionSelector, false); 
-    setFilterState(galleryContainer, false); 
+    setFilterState(galleryContainer, true); // Keep gallery open initially
     
-    // Render Step 2 and Step 3 content immediately on load so they are ready when expanded.
+    // Render Step 2 and Step 3 content immediately on load
     renderComplexionSelector(); 
-    renderFinalGallery();
+    renderFinalGallery(); // NEW: Render all styles initially
 
 
     // --- FILTER STEP 1: Gender Selection Logic ---
@@ -160,19 +178,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             selectedGender = e.currentTarget.getAttribute('data-gender');
             
-            // Reset downstream selections
+            // Reset downstream selection
             selectedComplexion = null;
-            selectedPrompt = null; 
             
             // Re-render Step 2 tiles (Complexion) to clear selection
             renderComplexionSelector(); 
             
+            // Re-render Step 3 (Gallery) to filter based on Gender
+            renderFinalGallery();
+            
             // Action: Collapse Step 1, Expand Step 2
             setFilterState(genderSelector, false);
             setFilterState(complexionSelector, true);
-            setFilterState(galleryContainer, false); // Ensure inspiration is closed until ready
             
-            statusMessage.textContent = "1. Gender selected. Now choose your 2. complexion.";
+            statusMessage.textContent = "2. Now choose your complexion, then select a style below.";
         });
     });
 
@@ -199,38 +218,54 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 selectedComplexion = e.currentTarget.getAttribute('data-complexion');
                 
-                // RENDER STEP 3 (Gallery) based on new selection
+                // RENDER STEP 3 (Gallery) based on new selection (Gender + Complexion)
                 renderFinalGallery();
 
-                // Collapse Step 2, Automatically Expand Inspiration (Step 3)
+                // Collapse Step 2, Ensure Inspiration (Step 3) is visible
                 setFilterState(complexionSelector, false);
                 setFilterState(galleryContainer, true);
 
-                statusMessage.textContent = "2. Complexion selected. Now choose your 3. Inspiration style below!";
+                statusMessage.textContent = "3. Select your style and click 'Start Camera' above!";
             });
         });
         
     }
 
 
-    // --- FINAL STEP 3: Render the Filtered Gallery ---
+    // --- FINAL STEP 3: Render the Filtered Gallery (Always show all unless Complexion is selected) ---
     function renderFinalGallery() {
         const galleryOptionsGroup = galleryContainer.querySelector('.filter-options-group');
         galleryOptionsGroup.innerHTML = ''; // Clear previous gallery styles
         
-        // Only render styles if both gender and complexion are selected
-        if (!selectedGender || !selectedComplexion) {
-            galleryOptionsGroup.innerHTML = '<p style="text-align: center; width: 100%; margin-top: 15px;">Please complete Gender and Complexion selections first.</p>';
-            return;
-        }
+        let filteredStyles = [];
         
-        const filteredStyles = promptDatabase[selectedGender] && promptDatabase[selectedGender][selectedComplexion] 
+        if (selectedGender && selectedComplexion) {
+            // Case 1: Both selected (Full filter)
+            filteredStyles = promptDatabase[selectedGender] && promptDatabase[selectedGender][selectedComplexion] 
                              ? promptDatabase[selectedGender][selectedComplexion]
                              : [];
+        } else if (selectedGender) {
+            // Case 2: Only Gender selected (Filter by gender, show all complexions for that gender)
+            let stylesForGender = [];
+            for (const complexionKey in promptDatabase[selectedGender]) {
+                stylesForGender = stylesForGender.concat(promptDatabase[selectedGender][complexionKey]);
+            }
+            // Ensure unique names
+            const seenNames = new Set();
+            filteredStyles = stylesForGender.filter(style => {
+                if (!seenNames.has(style.name)) {
+                    seenNames.add(style.name);
+                    return true;
+                }
+                return false;
+            });
+        } else {
+            // Case 3: Neither selected (Show all styles, as requested by user)
+            filteredStyles = getAllStyles();
+        }
         
         if (filteredStyles.length === 0) {
-            statusMessage.textContent = `No styles available for this selection yet. Please choose another option.`;
-            galleryOptionsGroup.innerHTML = '<p style="text-align: center; width: 100%; margin-top: 15px;">No styles found.</p>';
+            galleryOptionsGroup.innerHTML = '<p style="text-align: center; width: 100%; margin-top: 15px;">No styles found for this selection.</p>';
             return;
         }
 
@@ -256,6 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         statusMessage.textContent = "3. Select your final style and click 'Start Camera' above.";
+        // Keep inspiration visible when styles are loaded (moved to initial setup)
     }
 
     // --- Style Selection Handler ---
@@ -268,10 +304,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Action: Collapse Step 3
         setFilterState(galleryContainer, false); 
         
+        // Always show the Start Camera button if it was hidden
+        if (!cameraStarted) {
+             startCameraBtn.style.display = 'block';
+             startCameraBtn.disabled = false;
+        }
+
+
         if (capturedImageBase64) {
             // We have a photo, allow generation
             tryOnBtn.disabled = false;
-            captureSelfieBtn.style.display = 'block'; // Capture button should be visible as 'Retake Selfie'
+            captureSelfieBtn.style.display = 'block'; 
             tryOnBtn.style.display = 'block';
             statusMessage.textContent = `Style selected: ${e.currentTarget.getAttribute('data-name')}. Click 'Try On Selected Hairstyle' above!`;
         } else if (cameraStarted) {
@@ -279,7 +322,6 @@ document.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = `Style selected: ${e.currentTarget.getAttribute('data-name')}. Click 'Take Selfie' to capture.`;
         } else {
             // Camera is off, tell them to start
-            startCameraBtn.style.display = 'block';
             statusMessage.textContent = `Style selected: ${e.currentTarget.getAttribute('data-name')}. Click 'Start Camera' to begin.`;
         }
     }
@@ -360,9 +402,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    baseImage: capturedImageBase64,
                     prompt: `Edit the hair in this image using the following instruction: ${selectedPrompt}. Ensure the final result is photorealistic, seamlessly blended, and maintains the subject's face and original lighting.`,
-                    negativePrompt: NEGATIVE_PROMPT 
+                    negativePrompt: NEGATIVE_PROMPT,
+                    baseImage: capturedImageBase64 
                 })
             });
 
