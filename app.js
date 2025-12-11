@@ -185,12 +185,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const tile = document.createElement('div');
             tile.classList.add('complexion-tile');
             tile.setAttribute('data-complexion', c.id);
-            tile.style.backgroundColor = c.color;
+            
+            // Create the inner circle element (the color swatch)
+            const circle = document.createElement('div');
+            circle.classList.add('complexion-circle');
+            circle.style.backgroundColor = c.color;
             
             const label = document.createElement('p');
             label.textContent = c.name;
             
-            tile.appendChild(label);
+            tile.appendChild(circle); // Append the circle
+            tile.appendChild(label); // Append the text
             complexionGroup.appendChild(tile);
             
             tile.addEventListener('click', (e) => {
