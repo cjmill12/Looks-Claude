@@ -129,7 +129,7 @@ body {
     background-color: #eee;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
     
-    /* Hide by default */
+    /* Hide by default until activated */
     display: none; 
     align-items: center;
     justify-content: center;
@@ -190,13 +190,23 @@ body {
     line-height: 1;
 }
 
+/* Try On Hairstyle Button Styling (Now independent and larger) */
 #try-on-btn {
     width: 100%; 
     max-width: 400px;
     padding: 12px 24px;
     border-radius: 8px;
-    background-color: var(--primary-color);
+    background-color: var(--highlight-color); /* Use highlight for primary action */
     color: var(--text-on-dark);
+    font-size: 1.1em;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+    margin-top: 15px; /* Add space below filters */
+}
+
+#loading-spinner {
+    /* Style for a simple loading spinner if you add one */
+    display: none; 
 }
 
 
@@ -487,12 +497,11 @@ body {
             <div id="central-viewport">
                 <video id="video-feed" autoplay></video>
                 <img id="ai-result" style="display: none;" src="" alt="AI Hairstyle Result">
-                <p id="status-message">Click 'Start Camera' to begin.</p>
+                <p id="status-message">Click the Play button to start your camera.</p>
             </div>
             
             <div id="controls">
                 <button id="take-selfie-btn" class="main-action-btn">▶️</button>
-                <button id="try-on-btn" class="main-action-btn" style="display: none;">Try On Hairstyle</button>
                 <div id="loading-spinner" class="spinner"></div>
             </div>
         </div>
@@ -566,6 +575,8 @@ body {
                 </div>
             </div>
             
+            <button id="try-on-btn" class="main-action-btn" style="display: none;">Try On Hairstyle</button>
+
         </div> </div> <canvas id="hidden-canvas" style="display: none;"></canvas>
 
     <script>
@@ -606,6 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Function to check if Try On button should be visible
     function updateTryOnButtonVisibility() {
+        // Try On button is visible only when an image is captured AND a prompt/complexion is selected
         if (capturedImageBase64 && selectedPrompt && selectedComplexion) {
             tryOnBtn.style.display = 'block';
             tryOnBtn.disabled = false;
@@ -618,20 +630,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleGenderSelect(gender) {
         selectedGender = gender;
 
-        // Remove 'selected' class from all gender buttons
         maleGenderBtn.classList.remove('selected');
         femaleGenderBtn.classList.remove('selected');
 
-        // Add 'selected' class to the clicked button
         if (gender === 'Male') {
             maleGenderBtn.classList.add('selected');
         } else if (gender === 'Female') {
             femaleGenderBtn.classList.add('selected');
         }
-        updateTryOnButtonVisibility(); // Check button state
+        updateTryOnButtonVisibility();
     }
 
-    // Function to handle accordion collapse/expand (kept for other filters)
+    // Function to handle accordion collapse/expand 
     function toggleFilterSection(section) {
         if (section.classList.contains('collapsed')) {
             section.classList.remove('collapsed');
@@ -642,54 +652,61 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Function to handle complexion tile selection (remains the same)
+    // Function to handle complexion tile selection 
     function handleComplexionSelect(tile) {
         const complexionTiles = complexionGroup.querySelectorAll('.complexion-tile');
         complexionTiles.forEach(t => t.classList.remove('selected'));
         tile.classList.add('selected');
         selectedComplexion = tile.dataset.complexion;
-        updateTryOnButtonVisibility(); // Check button state
+        updateTryOnButtonVisibility(); 
     }
     
-    // Function to handle hairstyle selection (FIXED TO SHOW VISUAL SELECTION)
+    // Function to handle hairstyle selection
     function handleStyleSelect(styleOption) {
         const styleOptions = galleryContainer.querySelectorAll('.style-option');
         styleOptions.forEach(o => o.classList.remove('selected'));
         
-        // --- CRITICAL FIX: Add 'selected' class to the chosen style option
         styleOption.classList.add('selected'); 
-        
         selectedPrompt = styleOption.dataset.prompt;
         
-        // Update visibility based on selection state
         updateTryOnButtonVisibility(); 
         
         if (capturedImageBase64) {
-            statusMessage.textContent = `Style selected: ${selectedPrompt}. Now select a Complexion, and the 'Try On' button will appear.`;
+            statusMessage.textContent = `Style selected: ${selectedPrompt}. Select a Complexion, then click 'Try On'.`;
         }
     }
     
-    // Function to start camera stream (remains the same)
+    // Function to start camera stream (UPDATED)
     async function startCamera() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             videoFeed.srcObject = stream;
             cameraStarted = true;
-            centralViewport.classList.add('active'); // Show viewport
-            aiResultImg.style.display = 'none'; // Hide result image
-            videoFeed.style.display = 'block'; // Show video feed
+            
+            // 1. Display video feed in the circle
+            centralViewport.classList.add('active'); 
+            aiResultImg.style.display = 'none'; 
+            videoFeed.style.display = 'block'; 
+            
+            // 2. Change main button to Capture
+            takeSelfieBtn.textContent = "📸"; 
+            
+            // 3. Update status
             statusMessage.textContent = "Adjust your face in the circle, then click 📸 to capture.";
             
-            // Ensure try on button is hidden while camera is active
+            // Hide Try On button
             tryOnBtn.style.display = 'none';
-            takeSelfieBtn.style.display = 'block';
+
         } catch (error) {
             console.error('Error accessing camera:', error);
             statusMessage.textContent = `Error: Could not start camera. Check permissions. (${error.name})`;
+            
+            // Reset main button on error
+            takeSelfieBtn.textContent = "▶️";
         }
     }
     
-    // Function to stop camera stream (remains the same)
+    // Function to stop camera stream 
     function stopCamera() {
         if (videoFeed.srcObject) {
             videoFeed.srcObject.getTracks().forEach(track => track.stop());
@@ -698,7 +715,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cameraStarted = false;
     }
     
-    // Function to capture image (remains the same)
+    // Function to capture image (UPDATED)
     function captureImage() {
         const context = canvas.getContext('2d');
         const width = videoFeed.videoWidth;
@@ -708,38 +725,30 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.height = height;
         context.drawImage(videoFeed, 0, 0, width, height);
 
-        // Save image data and update UI
         capturedImageBase64 = canvas.toDataURL('image/jpeg').split(',')[1];
         
+        // 1. Show captured image (hides video)
         videoFeed.style.display = 'none'; 
         aiResultImg.style.display = 'block';
-        aiResultImg.src = canvas.toDataURL('image/jpeg'); // Show captured image
+        aiResultImg.src = canvas.toDataURL('image/jpeg');
         
+        // 2. Stop camera stream immediately
+        stopCamera();
+        
+        // 3. Update status
         statusMessage.textContent = "Image captured. Select a hairstyle and complexion, then click 'Try On'.";
         
-        // Update control buttons
-        takeSelfieBtn.style.display = 'none';
-        // CRITICAL FIX: Update visibility based on selection state
-        updateTryOnButtonVisibility(); 
+        // 4. Update control buttons
+        takeSelfieBtn.style.display = 'none'; // Hide the capture button
         
-        // Stop the camera stream after capturing the image
-        stopCamera();
+        // CRITICAL: Check and show the Try On button if filters are ready
+        updateTryOnButtonVisibility(); 
     }
     
-    // Function to run AI try-on (remains the same)
+    // Try On button logic (remains the same)
     tryOnBtn.addEventListener('click', async () => {
-        if (!capturedImageBase64) {
-            statusMessage.textContent = "Please capture a selfie first (📸).";
-            return;
-        }
-        
-        if (!selectedPrompt) {
-            statusMessage.textContent = "Please select a hairstyle from the gallery first.";
-            return;
-        }
-        
-        if (!selectedComplexion) {
-            statusMessage.textContent = "Please select a complexion first.";
+        if (!capturedImageBase64 || !selectedPrompt || !selectedComplexion) {
+            statusMessage.textContent = "Please capture a selfie, select a style, and choose a complexion first.";
             return;
         }
 
@@ -749,7 +758,6 @@ document.addEventListener('DOMContentLoaded', () => {
         spinner.style.display = 'block';
         statusMessage.textContent = "Processing your new look...";
         
-        // --- IMPORTANT: Ensure gender is included in the prompt! ---
         const finalPrompt = `A high quality, professional studio portrait of a ${selectedGender} model with a ${selectedComplexion} complexion, featuring a new hairstyle: ${selectedPrompt}. The face should be clear and well-lit.`;
         
         try {
@@ -761,7 +769,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     image: capturedImageBase64,
                     prompt: finalPrompt,
-                    // Keep the original face shape and original lighting.
                     negativePrompt: NEGATIVE_PROMPT 
                 })
             });
@@ -776,37 +783,38 @@ document.addEventListener('DOMContentLoaded', () => {
             // --- SUCCESS BLOCK ---
             aiResultImg.src = `data:image/jpeg;base64,${data.generatedImageBase64}`;
             aiResultImg.style.display = 'block';
+            
             statusMessage.textContent = `Done! Your new look is ready. Click the Play button to take a new selfie.`;
             
-            // Cleanup on successful completion (Ready for next action)
-            tryOnBtn.disabled = true; 
-            spinner.style.display = 'none'; 
-            tryOnBtn.style.display = 'none';
+            // Show the Play button again for a new session
             takeSelfieBtn.style.display = 'block'; 
             takeSelfieBtn.textContent = "▶️"; 
+            
+            spinner.style.display = 'none'; 
+            tryOnBtn.style.display = 'none';
             
         } catch (error) {
             // --- ERROR BLOCK ---
             console.error('AI Processing Error:', error);
             statusMessage.textContent = `Error during AI try-on: ${error.message}. Please try again.`;
             
-            // Cleanup on error: keep image visible, restore try-on button
+            // Restore Try On button on error
             tryOnBtn.disabled = false; 
+            tryOnBtn.style.display = 'block'; 
             spinner.style.display = 'none'; 
-            tryOnBtn.style.display = 'block';
-            takeSelfieBtn.style.display = 'none';
+            takeSelfieBtn.style.display = 'none'; // Keep Capture button hidden
         }
     });
 
 
     // --- INITIALIZATION and EVENT LISTENERS ---
 
-    // Set initial gender selection (Default to Male if buttons exist)
+    // Set initial gender selection
     if (maleGenderBtn) {
         handleGenderSelect('Male');
     }
     
-    // New Gender Button Listeners
+    // Gender Button Listeners
     if (maleGenderBtn) {
         maleGenderBtn.addEventListener('click', () => handleGenderSelect('Male'));
     }
@@ -815,7 +823,7 @@ document.addEventListener('DOMContentLoaded', () => {
         femaleGenderBtn.addEventListener('click', () => handleGenderSelect('Female'));
     }
 
-    // Toggle button listeners for remaining filters (Complexion, Hairstyle)
+    // Toggle button listeners for filters
     if (complexionSelector) {
         complexionSelector.querySelector('h3').addEventListener('click', () => toggleFilterSection(complexionSelector));
     }
@@ -837,24 +845,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Camera/Selfie button logic
+    // Camera/Selfie button logic (UPDATED)
     takeSelfieBtn.addEventListener('click', () => {
         if (!cameraStarted) {
-            // If camera is off, start it
+            // If camera is off, start it (▶️ -> 📸)
             startCamera();
-            takeSelfieBtn.textContent = "📸";
         } else {
-            // If camera is on, capture image
+            // If camera is on, capture image (📸 -> Try On Button)
             captureImage();
         }
     });
 
-    // Initial state setup for filters (Complexion collapsed, Gallery expanded)
+    // Initial state setup for filters 
     if (complexionSelector) complexionSelector.classList.add('collapsed');
     if (galleryContainer) galleryContainer.classList.add('expanded');
     
-    // Hide spinner initially
+    // Initial state setup for controls
+    takeSelfieBtn.textContent = "▶️";
     spinner.style.display = 'none';
+    tryOnBtn.style.display = 'none';
 });
     </script>
 </body>
