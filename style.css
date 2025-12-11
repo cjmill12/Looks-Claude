@@ -1,435 +1,305 @@
-/* --- Global Colors --- */
-:root {
-    --primary-color: #1D2124; 
-    --text-on-dark: #FFFFFF; 
-    --background-color: #f4f7f6;
-    --text-color: #333; 
-    --highlight-color: #28a745; 
-    --thumbnail-size: 60px;
-    --gallery-gap: 10px; 
-    --sidebar-width: 200px; 
-    --header-height: 40px;
-    --viewport-size: 300px; /* New fixed size for circular viewport */
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    /* 🚨 MOBILE FIX 1: Ensure zero padding/margin on body */
+/* RESET AND BASE STYLES */
+body, html {
     margin: 0;
-    padding: 0; 
-    text-align: center;
-    -webkit-user-select: none;
-    user-select: none;
-    overflow-x: hidden; /* 🚨 Prevent horizontal scrolling artifact */
-}
-
-/* --- Header and Logo Styling (MINIMAL BANNER) --- */
-#app-header {
-    padding: 0; 
-    background-color: #FFFFFF;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
-    margin-bottom: 0; 
-    height: var(--header-height); 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: sticky; 
-    top: 0;
-    z-index: 100;
-}
-#main-logo {
-    max-width: 100px !important; 
-    height: 35px !important; 
-    object-fit: contain; 
-}
-
-/* ================================================== */
-/* DESKTOP LAYOUT: TWO-COLUMN STRUCTURE */
-/* ================================================== */
-
-#two-column-layout {
-    display: flex;
-    width: 100%;
-    margin: 0; 
-    height: calc(100vh - var(--header-height)); 
-}
-
-/* --- 1. Filter Sidebar (LEFT) --- */
-#filter-sidebar {
-    width: var(--sidebar-width);
-    flex-shrink: 0; 
-    background-color: #fff;
-    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
-    padding: 10px;
-    overflow-y: auto; 
-    display: flex;
-    flex-direction: column;
-}
-
-/* --- 2. Main Content (RIGHT) --- */
-#main-content {
-    flex-grow: 1;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: auto; 
-}
-
-/* --- FILTER SECTION STYLES (Larger Pill Buttons) --- */
-
-.filter-section {
-    width: 100%;
-    margin: 0 0 10px 0; 
     padding: 0;
-    background-color: #fff;
-    border-radius: 6px;
-    text-align: left; 
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #1a1a2e; /* Dark theme background */
+    color: #f0f0f0;
+    height: 100%;
+    overflow-x: hidden;
 }
 
-/* Accordion Button/Header Style */
-.filter-section h3 {
-    font-size: 0.9em; 
-    font-weight: bold;
-    margin: 0; 
-    padding: 8px 10px;
-    text-transform: uppercase;
+#app-container {
     display: flex;
-    justify-content: space-between; 
+    flex-direction: column;
+    height: 100vh;
+    max-width: 500px; /* Standard mobile width */
+    margin: 0 auto;
+    background-color: #21253c; /* Slightly lighter inner container */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* HEADER AND PILLS */
+#header-bar {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    padding: 15px 20px;
+    background-color: #1a1a2e;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+#header-bar h1 {
+    font-size: 1.5rem;
+    color: #8c52ff; /* App primary color */
+}
+
+#filter-pills {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-pill {
+    background-color: #3b3f5c;
+    color: #f0f0f0;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
     cursor: pointer;
-    background-color: #fff;
-    border-radius: 6px;
-    transition: all 0.2s ease-in-out;
+    font-weight: bold;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-/* --- COLLAPSED (Pill Appearance) --- */
-.filter-section.collapsed h3 {
-    background-color: #f0f0f0; 
-    color: #666;
-    border-radius: 20px; 
-    
-    height: 40px; 
-    width: 90%; 
-    max-width: 180px; 
-    padding: 0 10px; 
-    
-    justify-content: center;
-    overflow: hidden; 
-    margin: 0 auto 10px auto; 
+.filter-pill.selected {
+    background-color: #8c52ff;
+    color: #fff;
 }
 
-/* Ensure the full text is visible when collapsed */
-.filter-section.collapsed h3 span {
-    display: inline;
-    font-size: 1.0em; 
-    line-height: 40px; 
-}
-
-/* Hide the caret icon for collapsed buttons */
-.filter-section.collapsed h3::after {
-    content: none;
-}
-
-/* --- EXPANDED (Active Pill/Block Appearance) --- */
-.filter-section.expanded h3 {
-    background-color: var(--primary-color); 
-    color: var(--text-on-dark);
-    border-radius: 6px 6px 0 0; 
-    height: auto;
-    width: 100%;
-    padding: 8px 10px;
-    margin: 0;
-    justify-content: space-between; 
-}
-
-/* Caret Icon for Collapse/Expand */
-.filter-section h3::after {
-    content: '▶'; 
-    font-size: 0.8em;
-    margin-left: 5px;
-    transition: transform 0.2s;
-    line-height: 1;
-}
-
-.filter-section.expanded h3::after {
-    content: '▼'; 
-    color: var(--text-on-dark);
-}
-
-/* Hiding the content group when collapsed */
-.filter-content-group {
-    padding: 5px 10px 10px 10px;
-    background-color: #f9f9f9;
-    border-radius: 0 0 6px 6px;
-}
-
-.filter-section.collapsed .filter-content-group {
-    display: none;
-}
-
-
-/* Filter options group */
-.filter-options-group {
-    display: flex;
-    flex-wrap: wrap; 
-    gap: 8px; 
-    justify-content: flex-start; 
-    margin-top: 5px; 
-}
-
-/* Gender/General Option Buttons (Adapted for sidebar) */
-.gender-option {
-    padding: 8px 10px;
-    border: 1px solid #ccc; 
-    font-size: 0.85em;
-    flex-grow: 1; 
-    max-width: 100%; 
-}
-
-.gender-option.selected {
-    background-color: var(--primary-color);
-    color: var(--text-on-dark);
-    border-color: var(--primary-color);
-}
-
-/* Complexion Tiles (Circular & Compact) */
-#complexion-options-group {
-    justify-content: flex-start; 
-    gap: 6px; 
-}
-
-.complexion-tile {
-    width: 30px; 
-    height: 30px; 
-    border: 2px solid transparent; 
-    flex-shrink: 0; 
-}
-
-.complexion-tile p {
-    display: none; 
-}
-
-.complexion-tile.selected {
-    border-color: var(--highlight-color);
-    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); 
-}
-
-/* --- Hairstyle Gallery (INSPIRATION) --- */
-#hairstyle-gallery {
-    padding: 0;
-    width: 100%; 
-    margin-top: 20px; 
-}
-#hairstyle-gallery .filter-content-group {
-     padding: 10px 5px; 
-}
-#hairstyle-gallery .filter-options-group {
-    white-space: nowrap; 
-    overflow-x: scroll; 
-    overflow-y: hidden; 
-    scroll-snap-type: x mandatory;
-    gap: 8px;
-    padding-bottom: 5px; 
-}
-
-.style-thumbnail {
-    width: 45px; 
-    height: 45px; 
-}
-
-.style-option p {
-    font-size: 0.75em;
-    white-space: normal;
-    word-break: break-word;
-}
-
-/* ================================================== */
-/* RIGHT COLUMN ELEMENTS (Viewport and Controls) */
-/* ================================================== */
-
-/* Desktop Circular Viewport */
+/* CENTRAL VIEWPORT (Camera/Result) */
 #central-viewport {
-    position: relative; 
-    width: var(--viewport-size); 
-    height: var(--viewport-size);
-    min-height: auto; 
-    max-width: none; 
-    max-height: none;
-    margin-bottom: 20px;
-    border-radius: 50%; /* MAKE IT A CIRCLE */
-    overflow: hidden;
-    background-color: #eee;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    position: relative;
+    width: 100%;
+    height: 350px; /* Fixed height for consistent layout */
+    background-color: #000;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+#central-viewport.active {
+    border: 3px solid #8c52ff;
 }
 
 #video-feed, #ai-result {
     width: 100%;
-    height: 100%; 
-    display: block;
+    height: 100%;
     object-fit: cover;
+    display: none; /* Controlled by JS */
+}
+
+/* STATUS MESSAGE */
+#status-container {
+    padding: 10px 20px;
+    background-color: #3b3f5c;
+    margin: 0 0 10px 0;
 }
 
 #status-message {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    padding: 8px 5px;
     margin: 0;
-    font-size: 0.85em;
+    font-size: 0.9rem;
+    color: #b0b0d0;
     text-align: center;
-    z-index: 100; 
 }
 
-#controls {
+/* FILTER AND GALLERY WRAPPER */
+#filter-selection-wrapper {
+    position: absolute;
+    top: 55px; /* Below the header */
+    width: 100%;
+    max-width: 500px;
+    background-color: #21253c;
+    z-index: 20;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    box-sizing: border-box;
+    display: none; /* Initially hidden, controlled by JS */
+}
+
+.selector-content {
+    /* Base style for filter content, hidden class manages display */
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* GENDER SELECTOR */
+#gender-selector {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+.gender-option {
+    background-color: #3b3f5c;
+    color: #f0f0f0;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.gender-option.selected {
+    background-color: #8c52ff;
+}
+
+/* COMPLEXION SELECTOR */
+#complexion-selector h3 {
+    margin-top: 0;
+    font-size: 1rem;
+    text-align: center;
+}
+#complexion-options-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.complexion-tile {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #555;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+}
+.complexion-tile:hover {
+    transform: scale(1.1);
+}
+.complexion-tile.selected {
+    border: 3px solid #8c52ff;
+    box-shadow: 0 0 5px #8c52ff;
+}
+
+/* INSPIRATION GALLERY */
+#inspiration-toggle {
+    background-color: #3b3f5c;
+    padding: 15px 20px;
+    cursor: pointer;
+    border-top: 1px solid #4a4d6b;
+}
+
+#inspiration-toggle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    font-size: 1.1rem;
+    color: #f0f0f0;
+}
+
+.toggle-icon {
+    transition: transform 0.3s;
+}
+
+#inspiration-toggle.expanded .toggle-icon {
+    transform: rotate(180deg);
+}
+
+#hairstyle-gallery {
+    padding: 15px;
+    background-color: #21253c;
+    display: none; /* Controlled by JS */
+    overflow-y: auto;
+    flex-grow: 1; /* Allows gallery to take up remaining space */
+}
+
+.filter-options-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+}
+
+.style-option {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    max-width: 500px;
-}
-
-.main-action-btn {
-    margin-bottom: 10px;
-    cursor: pointer;
-    border: none;
-    font-size: 16px; 
-    transition: all 0.2s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
-    transform: translateY(0);
-}
-
-#take-selfie-btn {
-    width: 70px; 
-    height: 70px;
-    padding: 0;
-    border-radius: 50%; 
-    background-color: var(--primary-color);
-    color: var(--text-on-dark);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px; 
-    line-height: 1;
-}
-
-#try-on-btn {
-    width: 100%; 
-    max-width: 400px;
-    padding: 12px 24px;
+    padding: 10px;
     border-radius: 8px;
-    background-color: var(--primary-color);
-    color: var(--text-on-dark);
+    background-color: #3b3f5c;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
 }
 
-/* ================================================== */
-/* 📱 MOBILE MEDIA QUERY (Final Edge-to-Edge Optimization) */
-/* ================================================== */
+.style-option:hover {
+    background-color: #4a4d6b;
+}
 
-@media (max-width: 768px) {
-    
-    #two-column-layout {
-        flex-direction: column; 
-        height: auto;
-        padding: 0; /* 🚨 Ensure wrapper has no padding */
-        margin: 0;
-    }
-    
-    #filter-sidebar {
-        width: 100%; 
-        padding: 10px 0; /* 🚨 Padding only top/bottom for full width sections */
-        box-shadow: none; 
-        order: 1; 
-    }
+.style-option.selected {
+    border: 3px solid #8c52ff;
+    box-shadow: 0 0 10px rgba(140, 82, 255, 0.7);
+    padding: 7px; /* Adjust padding for border */
+}
 
-    #main-content {
-        width: 100%;
-        padding: 10px 0; /* 🚨 Padding only top/bottom for max width camera */
-        order: 0; 
-    }
-    
-    /* MOBILE VIEWPORT OPTIMIZATION */
-    #central-viewport {
-        margin-left: auto;
-        margin-right: auto;
-        /* Use a slightly smaller percentage for safety */
-        width: 90vw; 
-        height: 90vw;
-        max-width: 450px; 
-        max-height: 450px;
-        margin-top: 10px;
-    }
+.style-thumbnail {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
 
+/* MOBILE FOOTER CONTROLS */
+#mobile-controls {
+    display: flex;
+    justify-content: center; /* Center the two buttons */
+    gap: 15px; /* Space between the two buttons */
+    padding: 15px 20px;
+    background-color: #1a1a2e;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+}
 
-    /* MOBILE FILTER PILLS (Center and use fixed percentage) */
-    .filter-section {
-        /* Centered block container */
-        margin: 8px auto; 
-        padding: 0;
-        background-color: #fff;
-        width: 98%; /* 🚨 Use 98% for container width */
-        max-width: 450px; /* Cap size on tablets */
-    }
-    
-    .filter-section.collapsed h3 {
-        /* Pill width relative to its 98% container */
-        width: 98%; 
-        max-width: none; 
-        border-radius: 20px; 
-        margin: 0 auto;
-    }
+.control-button {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    font-size: 2.5rem;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
 
-    /* Expanded Content Group within the 98% width container */
-    .filter-section.expanded .filter-content-group {
-        width: 100%;
-        box-sizing: border-box; /* Include padding in the width calculation */
-    }
-    
-    /* Complexion tiles must show text labels on mobile */
-    .complexion-tile {
-        width: 50px; 
-        height: 50px;
-    }
-    .complexion-tile p {
-        display: block; 
-        font-size: 0.6em;
-        margin-top: 55px; 
-        text-align: center;
-        width: 50px;
-        white-space: normal;
-    }
-    
-    /* INSPIRATION GALLERY OPTIMIZATION */
-    #hairstyle-gallery {
-        margin-top: 10px; 
-        padding-bottom: 20px;
-        width: 100%; 
-        max-width: none; /* Ensure it respects the container width */
-    }
-    
-    /* Ensure the horizontal scroll container is edge-to-edge if necessary, 
-       but its parent (.filter-section) handles the main width. */
-    #hairstyle-gallery .filter-options-group {
-        overflow-x: scroll;
-        padding-bottom: 5px; 
-        /* 🚨 Add padding to the left and right of the scroll view itself */
-        padding-left: 10px; 
-        padding-right: 10px;
-    }
+#capture-btn {
+    background-color: #8c52ff; /* Primary Action */
+}
 
-    .style-thumbnail {
-        width: 65px; 
-        height: 65px; 
-    }
+#capture-btn:hover {
+    background-color: #6a3ab0;
+}
 
-    .style-option p {
-        font-size: 0.8em;
-    }
+#generate-btn {
+    background-color: #ffc107; /* Secondary Action (Sparkle/Generate) */
+    color: #1a1a2e;
+}
+
+#generate-btn:hover {
+    background-color: #e0ac00;
+}
+
+.hidden-btn {
+    display: none !important;
+}
+
+/* LOADING OVERLAY */
+#loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 30;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #8c52ff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
