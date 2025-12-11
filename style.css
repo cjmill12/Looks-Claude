@@ -68,7 +68,8 @@ body {
     display: flex;
     flex-direction: row; 
     flex-wrap: wrap;
-    justify-content: center; 
+    justify-content: space-between; /* Ensures the 10px gap is split evenly between the two columns */
+    align-items: flex-start; 
 }
 
 /* --- 2. Main Content (RIGHT) --- */
@@ -95,17 +96,18 @@ body {
 
 /* Make Gender and Complexion take up 50% width each when side-by-side on desktop */
 #gender-selector, #complexion-selector {
-    width: 50%; 
-    padding: 0 5px; /* Add some small horizontal padding for spacing */
+    /* FIX: Use calc(50% - 5px) to fit two items with a 10px gap in a 200px space */
+    width: calc(50% - 5px); 
+    padding: 0; 
     margin: 0;
-    box-sizing: border-box; /* FIX: Ensures padding is included in the 50% width */
+    box-sizing: border-box; 
 }
 
 /* Ensure the Hairstyle Gallery takes full width and drops to the next line */
 #hairstyle-gallery {
     padding: 0;
     width: 100%; 
-    margin-top: 10px; /* Reduced margin since the filter sections already have margin */
+    margin-top: 10px; 
 }
 
 /* Accordion Button/Header Style */
@@ -131,7 +133,7 @@ body {
     border-radius: 20px; 
     
     height: 40px; 
-    /* Adjust width to fit two side-by-side in the sidebar (200px wide) */
+    /* Adjust width to fit within 50% of the sidebar. Max 80px seems fine for 95px container */
     width: 80px; 
     max-width: 80px; 
     padding: 0 5px; 
