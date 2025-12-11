@@ -21,7 +21,6 @@ function base64ToGenerativePart(base64Data, mimeType) {
 export async function handler(event) {
   
   const ai = new GoogleGenAI({ 
-    // Ensure the Netlify environment variable is used
     apiKey: process.env.GEMINI_API_KEY 
   }); 
 
@@ -30,7 +29,6 @@ export async function handler(event) {
   }
 
   try {
-    // We already fixed the frontend to send 'baseImage'
     const { baseImage, prompt } = JSON.parse(event.body);
 
     if (!baseImage || !prompt) {
@@ -40,17 +38,16 @@ export async function handler(event) {
     // Prepare the image part
     const imagePart = base64ToGenerativePart(baseImage, "image/jpeg");
 
-    // 💡 FIX: Reverting to the high-capability image model you mentioned
+    // Reverting to the high-capability image model that worked before
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image', // Targeting the image editing model
       contents: [
         imagePart,
-        { text: prompt }, // The explicit identity-preserving prompt from the last HTML fix
+        { text: prompt }, // The explicit identity-preserving prompt
       ],
     });
     
-    // 💡 CRITICAL FIX: The response structure that this specific image model uses
-    // This is the structure that reliably holds the generated base64 image data.
+    // Using the previously successful response structure
     const generatedImageBase64 = response.candidates[0].content.parts[0].inlineData.data;
 
     if (!generatedImageBase64) {
