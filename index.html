@@ -949,7 +949,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // --- UPDATED TRY ON BUTTON LOGIC WITH DETAILED LOADING STATES ---
+    // --- UPDATED TRY ON BUTTON LOGIC WITH AGGRESSIVELY OPTIMIZED PROMPT ---
     tryOnBtn.addEventListener('click', async () => {
         if (!capturedImageBase64 || !selectedPrompt) {
             statusMessage.textContent = "Please capture a selfie and select a hairstyle first.";
@@ -968,7 +968,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ? ` with a ${selectedComplexion} complexion`
             : ``;
 
-        const finalPrompt = `STRICTLY use the provided image as the base. DO NOT change the background, the clothing, or the subject's face/identity. ONLY apply the new hairstyle: ${selectedPrompt}. The final result must be a high quality, professional studio portrait of a ${selectedGender} model${complexionClause} with NO other changes besides the hair.`;
+        // 👇 AGGRESSIVELY OPTIMIZED PROMPT FOR STRICT INPAINTING/EDITING 👇
+        const finalPrompt = `STRICTLY operate in an inpainting/editing mode. The ONLY element to be changed is the subject's hair. PRESERVE the subject's face, identity, expression, clothing, and background EXACTLY as they appear in the original photograph. Apply the following hairstyle, matching its texture, color, and shape: ${selectedPrompt}. The final result must be a high quality, professional studio portrait of a ${selectedGender} model${complexionClause} with NO other changes besides the hair.`;
 
         try {
             // Update status right before the network call
