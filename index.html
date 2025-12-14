@@ -221,7 +221,7 @@ body {
 }
 
 .circular-action-btn {
-    /* UPDATED: Size changed from 60px to 50px */
+    /* Size is 50px */
     width: 50px; 
     height: 50px; 
     padding: 0;
@@ -231,7 +231,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* UPDATED: Font size adjusted for new button size */
     font-size: 24px; 
     line-height: 1;
     margin: 0; 
@@ -431,8 +430,8 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    /* Adjusted width to match thumbnail size */
-    width: 100px; 
+    /* UPDATED: Width to match 120px thumbnail size */
+    width: 120px; 
     flex-shrink: 0;
     border: 2px solid transparent; 
     transition: all 0.3s ease-out; 
@@ -457,12 +456,13 @@ body {
 }
 
 .style-thumbnail {
-    /* Size is 100px */
-    width: 100px; 
-    height: 100px; 
+    /* UPDATED: Size changed from 100px to 120px */
+    width: 120px; 
+    height: 120px; 
     border-radius: 50%; 
     object-fit: cover;
-    /* Removed margin to eliminate space for the label */
+    /* NEW: Prioritize the top of the image (hair) */
+    object-position: top; 
     margin-bottom: 0px; 
 }
 
