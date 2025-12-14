@@ -442,9 +442,9 @@ body {
 }
 
 /* Only subtle hover to let JS control the main scale via '.selected' */
+/* Removed hover scale to avoid conflict with the scroll selection */
 .style-option:hover {
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.1); 
-    transform: scale(1.05);
 }
 
 /* Enlargement only happens when JS applies the 'selected' class */
@@ -786,7 +786,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedGender = 'Male';
     let selectedComplexion = null;
     let imageCaptured = false;
-    let scrollTimeout; // Used for debouncing scroll handler
 
     // --- CONSTANTS ---
     const NEGATIVE_PROMPT = "extra fingers, blurry, low resolution, bad hands, deformed face, mask artifact, bad blending, unnatural hair hair color, ugly, tiling, duplicate, abstract, cartoon, distorted pupils, bad lighting, cropped, grainy, noise, poor lighting, poor composition, low quality, changed clothing, changed background, new outfit, new background, different lighting";
@@ -849,6 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return closestOption;
     }
 
+    // MODIFIED: Removed throttling/debouncing to make the selection instantaneous
     function updateStyleSelectionOnScroll(scrollContainer, allOptions) {
         const closestOption = findClosestToCenter(scrollContainer, allOptions);
 
@@ -857,7 +857,7 @@ document.addEventListener('DOMContentLoaded', () => {
             allOptions.forEach(o => o.classList.remove('selected'));
             closestOption.classList.add('selected');
             
-            // 2. Update the internal state (only if a change is detected to prevent unnecessary re-renders/checks)
+            // 2. Update the internal state (only if a change is detected)
             if (selectedPrompt !== closestOption.dataset.prompt) {
                 selectedPrompt = closestOption.dataset.prompt;
                 updateButtonVisibility(); 
@@ -866,27 +866,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const setupScrollListeners = (groupWrapper) => {
-        // Remove existing listeners before re-adding
-        groupWrapper.removeEventListener('scroll', throttledScrollHandler);
+        // Remove existing listener before re-adding (to prevent multiple listeners)
+        groupWrapper.removeEventListener('scroll', handleScrollImmediate);
 
         const allOptions = groupWrapper.querySelectorAll('.style-option');
         if (allOptions.length === 0) return;
 
-        // Ensure the initial selection is correct
-        allOptions.forEach(o => o.classList.remove('selected'));
-        allOptions[0].classList.add('selected');
-        selectedPrompt = allOptions[0].dataset.prompt;
-        
-        // Define a throttled scroll handler function
-        const throttledScrollHandler = () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                updateStyleSelectionOnScroll(groupWrapper, allOptions);
-            }, 100); 
+        // Function to handle scroll updates immediately
+        const handleScrollImmediate = () => {
+            updateStyleSelectionOnScroll(groupWrapper, allOptions);
         };
 
+        // Ensure the initial selection is correct
+        // Note: The scroll container must be fully rendered before scrollLeft=0 works reliably.
+        // We call this function once right away to select the first element.
+        updateStyleSelectionOnScroll(groupWrapper, allOptions);
+        
         // Attach the scroll listener
-        groupWrapper.addEventListener('scroll', throttledScrollHandler);
+        groupWrapper.addEventListener('scroll', handleScrollImmediate);
         
         updateButtonVisibility();
     };
@@ -907,8 +904,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Re-apply click listeners for the currently active group
         currentGroup.querySelectorAll('.style-option').forEach(option => {
-            option.removeEventListener('click', handleStyleSelect); // Remove old listener first
-            option.addEventListener('click', () => handleStyleSelect(option));
+            // Use an anonymous function to ensure we don't accidentally stack event handlers
+            const newHandler = () => handleStyleSelect(option);
+            option.removeEventListener('click', newHandler); // Attempt to remove previous instance
+            option.addEventListener('click', newHandler);
         });
     }
 
@@ -930,14 +929,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setupGalleryListeners(gender);
     }
     
-    // NEW: Function to reset the selected style visual state
-    function resetSelectedStyle() {
-        selectedPrompt = null;
-        // Clear previous selection visually from both groups
-        maleStyleOptionsGroup.querySelectorAll('.style-option').forEach(o => o.classList.remove('selected'));
-        femaleStyleOptionsGroup.querySelectorAll('.style-option').forEach(o => o.classList.remove('selected'));
-    }
-
     function toggleFilterSection(section) {
         if (section.classList.contains('collapsed')) {
             section.classList.remove('collapsed');
@@ -963,14 +954,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateButtonVisibility();
     }
 
-    // MODIFIED: Click handler to scroll the clicked item into the center
+    // Click handler to scroll the clicked item into the center
     function handleStyleSelect(styleOption) {
-        // 1. Clear all 'selected' classes and apply to the clicked one
-        const styleOptions = styleOption.closest('.hairstyle-options-group-wrapper').querySelectorAll('.style-option');
-        styleOptions.forEach(o => o.classList.remove('selected'));
-        styleOption.classList.add('selected');
-
-        // 2. Scroll the clicked item to the center of its container
+        // 1. Scroll the clicked item to the center of its container
         const scrollContainer = styleOption.closest('.hairstyle-options-group-wrapper');
         if (scrollContainer) {
             const containerWidth = scrollContainer.clientWidth;
@@ -985,9 +971,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        // 3. Update internal state
-        selectedPrompt = styleOption.dataset.prompt;
-        updateButtonVisibility();
+        // The selection logic (applying the 'selected' class and updating selectedPrompt) 
+        // is now handled by the 'scroll' listener, which will fire immediately after this
+        // smooth scroll starts or when it lands. We don't need to manually update the state here.
     }
 
     // --- Camera Functions ---
