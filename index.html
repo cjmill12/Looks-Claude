@@ -428,7 +428,7 @@ body {
 }
 
 /* Horizontal Scroll Fix for styles */
-#hairstyle-options-group {
+.hairstyle-options-group-wrapper {
     display: flex; 
     flex-wrap: nowrap; 
     white-space: nowrap; 
@@ -547,7 +547,7 @@ body {
         width: 60px;
     }
     
-    #hairstyle-options-group {
+    .hairstyle-options-group-wrapper {
         padding-left: 0;
         padding-right: 10px;
     }
@@ -575,7 +575,7 @@ body {
     <div id="main-app-container">
         
         <div class="gender-buttons-container">
-            <button id="male-gender-btn" class="gender-button">Male</button>
+            <button id="male-gender-btn" class="gender-button selected">Male</button>
             <button id="female-gender-btn" class="gender-button">Female</button>
         </div>
 
@@ -615,7 +615,8 @@ body {
 
         <div id="style-inspiration-section">
             <p>Get the Look</p>
-            <div id="hairstyle-options-group" class="filter-options-group">
+            
+            <div id="male-hairstyle-options-group" class="hairstyle-options-group-wrapper">
                 
                 <div class="style-option" data-prompt="A short haircut with a tousled and textured top, dark brown color, sharp side profile.">
                     <img class="style-thumbnail" src="styles/style1.png" alt="Tousled Short Crop">
@@ -703,6 +704,96 @@ body {
                 </div>
                 
             </div>
+
+            <div id="female-hairstyle-options-group" class="hairstyle-options-group-wrapper" style="display: none;">
+                
+                <div class="style-option" data-prompt="A shoulder-length cut with soft waves and natural volume, warm brunette color, gentle face-framing layers.">
+                    <img class="style-thumbnail" src="styles/female/style1.png" alt="Soft Wavy Layers">
+                    <p>Soft Wavy Layers</p>
+                </div>
+                <div class="style-option" data-prompt="A long layered hairstyle with loose curls, dark brown color, flowing and romantic silhouette.">
+                    <img class="style-thumbnail" src="styles/female/style2.png" alt="Long Loose Curls">
+                    <p>Long Loose Curls</p>
+                </div>
+                <div class="style-option" data-prompt="A sleek straight bob cut at chin length, jet black color, sharp and modern profile.">
+                    <img class="style-thumbnail" src="styles/female/style3.png" alt="Sleek Chin Bob">
+                    <p>Sleek Chin Bob</p>
+                </div>
+                <div class="style-option" data-prompt="A textured lob with subtle waves, ash blonde color, effortless and airy finish.">
+                    <img class="style-thumbnail" src="styles/female/style4.png" alt="Textured Wavy Lob">
+                    <p>Textured Wavy Lob</p>
+                </div>
+                <div class="style-option" data-prompt="A short pixie cut with choppy layers, platinum blonde color, bold and edgy look.">
+                    <img class="style-thumbnail" src="styles/female/style5.png" alt="Choppy Pixie Cut">
+                    <p>Choppy Pixie Cut</p>
+                </div>
+                <div class="style-option" data-prompt="A long haircut with smooth straight strands, rich chestnut color, polished and elegant feel.">
+                    <img class="style-thumbnail" src="styles/female/style6.png" alt="Long Sleek Layers">
+                    <p>Long Sleek Layers</p>
+                </div>
+                <div class="style-option" data-prompt="A curly shoulder-length style with defined ringlets, deep black color, lively and full shape.">
+                    <img class="style-thumbnail" src="styles/female/style7.png" alt="Defined Curly Cut">
+                    <p>Defined Curly Cut</p>
+                </div>
+                <div class="style-option" data-prompt="A layered shag cut with curtain bangs, honey brown color, relaxed and trendy vibe.">
+                    <img class="style-thumbnail" src="styles/female/style8.png" alt="Layered Shag Cut">
+                    <p>Layered Shag Cut</p>
+                </div>
+                <div class="style-option" data-prompt="A blunt cut with long straight hair, cool dark brown color, clean and minimalist outline.">
+                    <img class="style-thumbnail" src="styles/female/style9.png" alt="Blunt Long Cut">
+                    <p>Blunt Long Cut</p>
+                </div>
+                <div class="style-option" data-prompt="A medium-length wavy cut with beachy texture, sandy blonde color, soft and casual movement.">
+                    <img class="style-thumbnail" src="styles/female/style10.png" alt="Beachy Waves">
+                    <p>Beachy Waves</p>
+                </div>
+                <div class="style-option" data-prompt="A short bob with flipped-out ends, caramel brown color, playful and retro-inspired shape.">
+                    <img class="style-thumbnail" src="styles/female/style11.png" alt="Flipped Bob">
+                    <p>Flipped Bob</p>
+                </div>
+                <div class="style-option" data-prompt="A long hairstyle with voluminous waves, golden blonde color, glamorous and flowing look.">
+                    <img class="style-thumbnail" src="styles/female/style12.png" alt="Voluminous Waves">
+                    <p>Voluminous Waves</p>
+                </div>
+                <div class="style-option" data-prompt="A cropped pixie with tapered sides, silver blonde color, sharp and confident style.">
+                    <img class="style-thumbnail" src="styles/female/style13.png" alt="Tapered Pixie">
+                    <p>Tapered Pixie</p>
+                </div>
+                <div class="style-option" data-prompt="A medium-length straight cut with subtle layers, natural black color, smooth and balanced profile.">
+                    <img class="style-thumbnail" src="styles/female/style14.png" alt="Straight Medium Cut">
+                    <p>Straight Medium Cut</p>
+                </div>
+                <div class="style-option" data-prompt="A long curly style with layered volume, auburn brown color, soft and expressive texture.">
+                    <img class="style-thumbnail" src="styles/female/style15.png" alt="Layered Curly Long">
+                    <p>Layered Curly Long</p>
+                </div>
+                <div class="style-option" data-prompt="An asymmetrical bob with one side longer, dark espresso color, modern and fashion-forward feel.">
+                    <img class="style-thumbnail" src="styles/female/style16.png" alt="Asymmetrical Bob">
+                    <p>Asymmetrical Bob</p>
+                </div>
+                <div class="style-option" data-prompt="A shoulder-length cut with feathered layers, light brown color, airy and lightweight finish.">
+                    <img class="style-thumbnail" src="styles/female/style17.png" alt="Feathered Layers">
+                    <p>Feathered Layers</p>
+                </div>
+                <div class="style-option" data-prompt="A sleek high ponytail with smooth strands, dark brown color, clean and lifted silhouette.">
+                    <img class="style-thumbnail" src="styles/female/style18.png" alt="Sleek High Ponytail">
+                    <p>Sleek High Ponytail</p>
+                </div>
+                <div class="style-option" data-prompt="A half-up hairstyle with loose waves, soft brunette color, romantic and relaxed look.">
+                    <img class="style-thumbnail" src="styles/female/style19.png" alt="Half-Up Waves">
+                    <p>Half-Up Waves</p>
+                </div>
+                <div class="style-option" data-prompt="A braided crown hairstyle with loose tendrils, warm brown color, delicate and elegant detail.">
+                    <img class="style-thumbnail" src="styles/female/style20.png" alt="Braided Crown">
+                    <p>Braided Crown</p>
+                </div>
+                <div class="style-option" data-prompt="A long straight hairstyle with blunt bangs, deep black color, bold and striking contrast.">
+                    <img class="style-thumbnail" src="styles/female/style21.png" alt="Blunt Bangs Long">
+                    <p>Blunt Bangs Long</p>
+                </div>
+                
+            </div>
+
         </div>
 
     </div> <canvas id="hidden-canvas" style="display: none;"></canvas>
@@ -725,7 +816,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Filter elements
     const filtersAccordion = document.getElementById('additional-filters-selector');
     const complexionGroup = document.getElementById('complexion-options-group');
-    const styleOptionsGroup = document.getElementById('hairstyle-options-group');
+    
+    // MODIFIED: References to both style groups
+    const maleStyleOptionsGroup = document.getElementById('male-hairstyle-options-group');
+    const femaleStyleOptionsGroup = document.getElementById('female-hairstyle-options-group');
+    
+    // Gender buttons
     const maleGenderBtn = document.getElementById('male-gender-btn');
     const femaleGenderBtn = document.getElementById('female-gender-btn');
 
@@ -770,22 +866,50 @@ document.addEventListener('DOMContentLoaded', () => {
             if (cameraStarted) {
                 statusMessage.textContent = "Adjust your face in the box, then click 📸 to capture.";
             } else {
-                // MODIFIED: Updated status message
+                // Updated status message
                 statusMessage.textContent = "Tap the silhouette above to take a selfie"; 
             }
         }
     }
 
+    // MODIFIED: Function to handle gender selection and switch style lists
     function handleGenderSelect(gender) {
         selectedGender = gender;
+        
+        // Update button appearance
         maleGenderBtn.classList.remove('selected');
         femaleGenderBtn.classList.remove('selected');
+        
+        // Hide both lists
+        maleStyleOptionsGroup.style.display = 'none';
+        femaleStyleOptionsGroup.style.display = 'none';
+
+        // Deselect previous prompt/style
+        resetSelectedStyle();
+
         if (gender === 'Male') {
             maleGenderBtn.classList.add('selected');
+            maleStyleOptionsGroup.style.display = 'flex'; // Show male styles
         } else if (gender === 'Female') {
             femaleGenderBtn.classList.add('selected');
+            femaleStyleOptionsGroup.style.display = 'flex'; // Show female styles
         }
+        
         updateButtonVisibility();
+    }
+    
+    // NEW: Function to reset the selected style visual state
+    function resetSelectedStyle() {
+        selectedPrompt = null;
+        // Clear previous selection visually from both groups
+        maleStyleOptionsGroup.querySelectorAll('.style-option').forEach(o => {
+            o.classList.remove('selected');
+            o.style.transform = '';
+        });
+        femaleStyleOptionsGroup.querySelectorAll('.style-option').forEach(o => {
+            o.classList.remove('selected');
+            o.style.transform = '';
+        });
     }
 
     function toggleFilterSection(section) {
@@ -814,7 +938,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleStyleSelect(styleOption) {
-        const styleOptions = styleOptionsGroup.querySelectorAll('.style-option');
+        // Find the current active style group
+        const currentGroup = selectedGender === 'Male' ? maleStyleOptionsGroup : femaleStyleOptionsGroup;
+        const styleOptions = currentGroup.querySelectorAll('.style-option');
 
         styleOptions.forEach(o => {
             o.classList.remove('selected');
@@ -916,14 +1042,9 @@ document.addEventListener('DOMContentLoaded', () => {
         cameraPlaceholderIcon.style.display = 'block';
         imageCaptured = false;
         capturedImageBase64 = null;
-        selectedPrompt = null; 
         spinner.classList.remove('active');
 
-        // Clear previous selection visually
-        styleOptionsGroup.querySelectorAll('.style-option').forEach(o => {
-            o.classList.remove('selected');
-            o.style.transform = '';
-        });
+        resetSelectedStyle(); // Reset selected prompt and style visuals
 
         // Ensure filters are reset or collapsed if needed on restart
         filtersAccordion.classList.remove('expanded');
@@ -1026,8 +1147,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- INITIALIZATION and EVENT LISTENERS ---
 
+    // Gender Button Listeners
     if (maleGenderBtn) {
-        handleGenderSelect('Male');
+        // Initial state is Male (selected class already applied in HTML)
         maleGenderBtn.addEventListener('click', () => handleGenderSelect('Male'));
     }
 
@@ -1035,6 +1157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         femaleGenderBtn.addEventListener('click', () => handleGenderSelect('Female'));
     }
 
+    // Filter Listeners
     if (filtersAccordion) {
         filtersAccordion.querySelector('h3').addEventListener('click', () => toggleFilterSection(filtersAccordion));
         filtersAccordion.classList.add('collapsed');
@@ -1046,13 +1169,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (styleOptionsGroup) {
-        styleOptionsGroup.querySelectorAll('.style-option').forEach(option => {
-            option.addEventListener('click', () => handleStyleSelect(option));
-        });
-    }
+    // Style Listeners - Apply to all style options in both groups
+    const allStyleOptions = document.querySelectorAll('.style-option');
+    allStyleOptions.forEach(option => {
+        option.addEventListener('click', () => handleStyleSelect(option));
+    });
 
-    // Initial state setup
+    // Initial state setup (Male is default)
     updateButtonVisibility();
 });
     </script>
