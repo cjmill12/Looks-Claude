@@ -50,7 +50,6 @@
             margin: 10px auto 0;
         }
 
-        /* The Hero Preview Area */
         #preview-window {
             width: 100%;
             aspect-ratio: 1 / 1;
@@ -62,6 +61,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         #preview-window img {
@@ -72,7 +72,7 @@
 
         .primary-btn {
             width: 100%;
-            padding: 18px;
+            padding: 20px;
             background-color: var(--accent);
             color: white;
             border: none;
@@ -91,8 +91,9 @@
         #status-label {
             text-align: center;
             color: #666;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin-top: 15px;
+            letter-spacing: 0.05em;
         }
     </style>
 </head>
@@ -109,7 +110,7 @@
     </div>
 
     <button id="generate-btn" class="primary-btn">Try On New Look</button>
-    <div id="status-label">Powered by Nano Banana AI Engine</div>
+    <div id="status-label">POWERED BY NANO BANANA AI ENGINE</div>
 </div>
 
 <script>
@@ -119,8 +120,8 @@
     generateBtn.addEventListener('click', () => {
         generateBtn.innerText = "Generating...";
         
-        // This is where your working AI script from yesterday sits.
-        // Replace this timeout with your actual Nano Banana fetch call.
+        // This is a simple placeholder to show the button works.
+        // Your real Nano Banana fetch code goes here.
         setTimeout(() => {
             generateBtn.innerText = "Try On New Look";
         }, 2000);
