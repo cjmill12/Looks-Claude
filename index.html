@@ -2,227 +2,147 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LOOKS | AI Grooming</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOOKS | AI Virtual Try-On</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
     
     <style>
         :root {
-            --accent: #e63946; /* Signature Red */
-            --bg: #0b0b0b;     /* Deep Black */
-            --card: #161616;   /* Dark Grey */
+            --accent: #e63946;
+            --bg: #0f0f0f;
+            --card: #1a1a1a;
             --text: #ffffff;
-            --secondary: #888;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
             display: flex;
-            justify-content: center;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 450px;
-            padding: 20px;
-            display: flex;
             flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        /* --- ELEVATED "LOOKS" LOGO --- */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
         header {
-            padding: 40px 0 30px;
             text-align: center;
+            margin-bottom: 30px;
         }
 
         .logo {
             font-size: 2.5rem;
             font-weight: 900;
-            letter-spacing: 0.25em; /* Modern, spaced-out look */
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            margin: 0;
-            color: var(--text);
-            line-height: 1;
         }
 
-        .logo-accent {
-            width: 40px;
-            height: 3px;
-            background: var(--accent);
-            margin: 12px auto 0;
-            border-radius: 2px;
-        }
-
-        /* --- UI COMPONENTS --- */
-        #main-preview {
+        /* Hero Display for Nano Banana */
+        #try-on-display {
             width: 100%;
             aspect-ratio: 1/1;
             background: var(--card);
-            border-radius: 28px;
-            overflow: hidden;
-            border: 1px solid #222;
-            margin-bottom: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        #main-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .filter-bar {
+            border-radius: 20px;
             display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 20px;
-            scrollbar-width: none;
-        }
-
-        .filter-btn {
-            background: #1a1a1a;
-            color: var(--secondary);
-            border: 1px solid #333;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: 0.2s;
-        }
-
-        .filter-btn.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .style-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 40px;
-        }
-
-        .style-item {
-            aspect-ratio: 1/1;
-            border-radius: 14px;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: 0.2s;
+            border: 1px solid #333;
+            margin-bottom: 25px;
         }
 
-        .style-item.active {
-            border-color: var(--accent);
-            transform: scale(0.95);
-        }
-
-        .style-item img {
+        #try-on-display img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .book-btn {
-            background: var(--accent);
+        .primary-btn {
+            width: 100%;
+            padding: 18px;
+            background-color: var(--accent);
             color: white;
             border: none;
-            padding: 20px;
-            border-radius: 18px;
+            border-radius: 12px;
             font-size: 1.1rem;
-            font-weight: 800;
+            font-weight: 700;
             cursor: pointer;
-            position: sticky;
-            bottom: 20px;
-            box-shadow: 0 10px 30px rgba(230, 57, 70, 0.4);
+            transition: transform 0.1s;
         }
 
-        /* --- MODAL STYLES --- */
+        .primary-btn:active { transform: scale(0.98); }
+
+        /* Modal Overlay */
         #booking-modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.9);
             z-index: 1000;
-            align-items: center;
             justify-content: center;
+            align-items: center;
         }
 
         .modal-content {
             background: var(--card);
-            width: 88%;
-            padding: 35px;
-            border-radius: 32px;
-            border: 1px solid #333;
-            box-sizing: border-box;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 24px;
+            position: relative;
         }
-
-        h2 { margin-top: 0; letter-spacing: -0.02em; }
 
         input, select {
             width: 100%;
-            background: #252525;
-            border: 1px solid #333;
-            padding: 16px;
-            border-radius: 12px;
+            padding: 14px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
             color: white;
-            margin-bottom: 15px;
-            font-size: 1rem;
             box-sizing: border-box;
+            margin-bottom: 15px;
         }
 
-        .confirm-btn {
+        .submit-btn {
             width: 100%;
+            padding: 16px;
             background: white;
             color: black;
             border: none;
-            padding: 18px;
-            border-radius: 14px;
-            font-weight: 900;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-weight: 800;
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
+
+        #status-msg { text-align: center; margin-top: 15px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
+<div class="container">
     <header>
         <div class="logo">LOOKS</div>
-        <div class="logo-accent"></div>
     </header>
 
-    <div id="main-preview">
-        <img id="active-look" src="https://via.placeholder.com/600/161616/ffffff?text=TRY+ON+A+STYLE" alt="Active Look">
+    <div id="try-on-display">
+        <img id="ai-result-img" src="placeholder.jpg"> 
     </div>
 
-    <div class="filter-bar">
-        <button class="filter-btn active" onclick="setFilter('all', this)">All Styles</button>
-        <button class="filter-btn" onclick="setFilter('coily', this)">Coily</button>
-        <button class="filter-btn" onclick="setFilter('curly', this)">Curly</button>
-        <button class="filter-btn" onclick="setFilter('straight', this)">Straight</button>
-    </div>
-
-    <div id="style-grid" class="style-grid">
-        </div>
-
-    <button class="book-btn" onclick="openBooking()">BOOK THIS LOOK</button>
+    <button id="open-booking-btn" class="primary-btn">Book This Style Now</button>
 </div>
 
 <div id="booking-modal">
     <div class="modal-content">
-        <h2>Confirm Booking</h2>
-        <p id="selected-style-label" style="color:var(--accent); font-weight:700; margin-bottom: 25px;"></p>
+        <h2 style="margin-top:0">Confirm Booking</h2>
         
         <input type="text" id="booking-date" placeholder="Select Date">
         <select id="booking-time">
@@ -230,89 +150,59 @@
         </select>
         <input type="text" id="client-name" placeholder="Full Name">
         <input type="email" id="client-email" placeholder="Email Address">
+
+        <button id="final-confirm-btn" class="submit-btn">Complete Appointment</button>
+        <div id="status-msg"></div>
         
-        <button class="confirm-btn" onclick="submitBooking()">Secure Appointment</button>
-        <button onclick="closeModal()" style="background:none; border:none; color:var(--secondary); width:100%; margin-top:20px; cursor:pointer; font-weight:600;">Cancel</button>
+        <button onclick="document.getElementById('booking-modal').style.display='none'" style="background:none; border:none; color:#888; width:100%; margin-top:15px; cursor:pointer;">Cancel</button>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    const hairstyles = [
-        { id: 1, name: "Textured Taper", tag: "coily", img: "https://via.placeholder.com/400/111/fff?text=Taper" },
-        { id: 2, name: "Mid Fade", tag: "straight", img: "https://via.placeholder.com/400/222/fff?text=Mid+Fade" },
-        { id: 3, name: "Curly Crop", tag: "curly", img: "https://via.placeholder.com/400/333/fff?text=Crop" },
-        { id: 4, name: "Buzz Cut", tag: "straight", img: "https://via.placeholder.com/400/444/fff?text=Buzz" },
-        { id: 5, name: "High Top", tag: "coily", img: "https://via.placeholder.com/400/555/fff?text=High+Top" },
-        { id: 6, name: "Wave Length", tag: "curly", img: "https://via.placeholder.com/400/666/fff?text=Waves" }
-    ];
-
-    let selectedStyle = null;
-
-    function render(filter = 'all') {
-        const grid = document.getElementById('style-grid');
-        grid.innerHTML = '';
-        const list = filter === 'all' ? hairstyles : hairstyles.filter(h => h.tag === filter);
-        
-        list.forEach(style => {
-            const item = document.createElement('div');
-            item.className = `style-item ${selectedStyle?.id === style.id ? 'active' : ''}`;
-            item.innerHTML = `<img src="${style.img}">`;
-            item.onclick = () => {
-                selectedStyle = style;
-                document.getElementById('active-look').src = style.img;
-                render(filter);
-            };
-            grid.appendChild(item);
-        });
-    }
-
-    function setFilter(tag, btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        render(tag);
-    }
-
-    function openBooking() {
-        if(!selectedStyle) return alert("Select a style to try on first!");
-        document.getElementById('selected-style-label').innerText = `Style: ${selectedStyle.name}`;
-        document.getElementById('booking-modal').style.display = 'flex';
-    }
-
-    function closeModal() { document.getElementById('booking-modal').style.display = 'none'; }
-
+    // Calendar Setup
     flatpickr("#booking-date", {
         minDate: "today",
         theme: "dark",
         onChange: (dates, str) => {
             const select = document.getElementById('booking-time');
-            select.innerHTML = '<option value="10:00">10:00 AM</option><option value="12:30">12:30 PM</option><option value="15:00">3:00 PM</option>';
+            select.innerHTML = '<option value="10:00">10:00 AM</option><option value="14:00">2:00 PM</option>';
         }
     });
 
-    async function submitBooking() {
-        // This connects to your Netlify function
-        const data = {
+    // Modal Controls
+    document.getElementById('open-booking-btn').onclick = () => {
+        document.getElementById('booking-modal').style.display = 'flex';
+    };
+
+    // Booking Submission
+    document.getElementById('final-confirm-btn').onclick = async () => {
+        const status = document.getElementById('status-msg');
+        status.textContent = "Saving...";
+
+        const payload = {
             name: document.getElementById('client-name').value,
             email: document.getElementById('client-email').value,
             date: document.getElementById('booking-date').value,
             time: document.getElementById('booking-time').value,
-            style: selectedStyle.name,
-            image: selectedStyle.img
+            style: "AI Selection", // Pulled from your GenAI label
+            image: document.getElementById('ai-result-img').src
         };
 
-        const res = await fetch('/.netlify/functions/save-booking', {
-            method: 'POST',
-            body: JSON.stringify(data)
-        });
-
-        if(res.ok) {
-            alert("Booking Confirmed!");
-            closeModal();
+        try {
+            const res = await fetch('/.netlify/functions/save-booking', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                status.textContent = "Confirmed!";
+                setTimeout(() => document.getElementById('booking-modal').style.display='none', 2000);
+            }
+        } catch (e) {
+            status.textContent = "Error saving booking.";
         }
-    }
-
-    render();
+    };
 </script>
+
 </body>
 </html>
