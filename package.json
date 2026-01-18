@@ -2,13 +2,14 @@
   "name": "stag-house-virtual-tryon",
   "version": "1.0.0",
   "description": "Virtual hairstyle try-on application",
+  "type": "module",
   "scripts": {
     "dev": "netlify dev",
     "build": "echo 'No build step required'",
     "deploy": "netlify deploy --prod"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.21.0"
+    "@google/genai": "^0.3.0"
   },
   "devDependencies": {
     "netlify-cli": "^17.36.4"
