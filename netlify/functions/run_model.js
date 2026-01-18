@@ -1,5 +1,7 @@
 // netlify/functions/run_model.js
-const axios = require('axios');
+// Using Google Gemini API
+
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 exports.handler = async (event, context) => {
   const headers = {
@@ -32,92 +34,75 @@ exports.handler = async (event, context) => {
       };
     }
 
-    const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN;
+    const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
-    if (!REPLICATE_API_TOKEN) {
-      throw new Error('REPLICATE_API_TOKEN not configured');
+    if (!GOOGLE_API_KEY) {
+      throw new Error('GOOGLE_API_KEY not configured');
     }
 
-    const imageDataUri = `data:image/jpeg;base64,${baseImage}`;
+    // Initialize Gemini
+    const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    console.log('Starting Replicate prediction...');
+    console.log('Starting Gemini image generation...');
 
-    const predictionResponse = await axios.post(
-      'https://api.replicate.com/v1/predictions',
-      {
-        version: 'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b',
-        input: {
-          image: imageDataUri,
-          prompt: prompt,
-          negative_prompt: negativePrompt || 'blurry, bad quality, distorted face',
-          num_inference_steps: 30,
-          guidance_scale: 7.5,
-          seed: Math.floor(Math.random() * 999999)
-        }
+    // Create the image part
+    const imagePart = {
+      inlineData: {
+        data: baseImage,
+        mimeType: 'image/jpeg',
       },
-      {
-        headers: {
-          'Authorization': `Token ${REPLICATE_API_TOKEN}`,
-          'Content-Type': 'application/json',
-        }
-      }
-    );
+    };
 
-    let prediction = predictionResponse.data;
-    console.log('Prediction created:', prediction.id);
+    // Enhanced prompt for better results
+    const fullPrompt = `You are an expert AI photo editor specializing in hairstyle transformations.
 
-    const maxAttempts = 60;
-    let attempts = 0;
+TASK: Transform ONLY the hair in this photo while preserving everything else.
 
-    while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && attempts < maxAttempts) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const statusResponse = await axios.get(
-        `https://api.replicate.com/v1/predictions/${prediction.id}`,
-        {
-          headers: {
-            'Authorization': `Token ${REPLICATE_API_TOKEN}`,
-          }
-        }
-      );
+STYLE TO APPLY: ${prompt}
 
-      prediction = statusResponse.data;
-      attempts++;
-      console.log(`Attempt ${attempts}: Status = ${prediction.status}`);
-    }
+CRITICAL RULES:
+- Keep face, skin tone, expression EXACTLY the same
+- Keep background, clothing, lighting EXACTLY the same  
+- ONLY change the hair to match the style description
+- Make it look natural and photorealistic
+- Match the original photo's lighting and quality
 
-    if (prediction.status === 'failed') {
-      throw new Error(prediction.error || 'Prediction failed');
-    }
+AVOID: ${negativePrompt || 'blurry, unrealistic, changed face, artifacts, poor quality'}
 
-    if (prediction.status !== 'succeeded') {
-      throw new Error('Prediction timeout');
-    }
+Describe the exact hairstyle transformation you would make in technical detail.`;
 
-    const outputUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output;
+    const result = await model.generateContent([fullPrompt, imagePart]);
+    const response = await result.response;
+    const description = response.text();
+    
+    console.log('Gemini response:', description);
 
-    const imageResponse = await axios.get(outputUrl, { responseType: 'arraybuffer' });
-    const base64Image = Buffer.from(imageResponse.data, 'binary').toString('base64');
-
+    // IMPORTANT NOTE: Gemini doesn't actually generate/edit images
+    // It only analyzes and describes them
+    // For actual image editing, you need Imagen API or another service
+    
+    // For now, return the original image with a note
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        generatedImageBase64: base64Image,
-        success: true,
-        predictionId: prediction.id
+        generatedImageBase64: baseImage,
+        aiDescription: description,
+        note: 'Gemini API can only analyze images, not edit them. For actual hairstyle changes, you need Google Imagen API or another image generation service.',
+        success: false
       }),
     };
 
   } catch (error) {
-    console.error('Error:', error.response?.data || error.message);
+    console.error('Error:', error.message);
     
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({
-        error: 'Failed to generate image',
-        details: error.response?.data || error.message,
+        error: 'Failed to process image',
+        details: error.message,
       }),
     };
   }
