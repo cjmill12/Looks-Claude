@@ -1,9 +1,28 @@
 // netlify/functions/run_model.js
-// Using Google Gemini API
+import { GoogleGenAI } from '@google/genai';
 
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+// Helper function to create the Part object for image input
+function base64ToGenerativePart(base64Data, mimeType) {
+  // Ensure only the pure base64 string is sent to the API
+  const cleanBase64 = base64Data.startsWith('data:') 
+    ? base64Data.split(',')[1] 
+    : base64Data;
+  return {
+    inlineData: {
+      data: cleanBase64,
+      mimeType
+    },
+  };
+}
 
-exports.handler = async (event, context) => {
+// Handler must be exported as 'handler' for Netlify
+export async function handler(event) {
+  
+  const ai = new GoogleGenAI({ 
+    apiKey: process.env.GEMINI_API_KEY 
+  }); 
+
+  // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -11,99 +30,71 @@ exports.handler = async (event, context) => {
     'Content-Type': 'application/json',
   };
 
+  // Handle OPTIONS request for CORS
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
-
+  
   if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
+    return { 
+      statusCode: 405, 
       headers,
-      body: JSON.stringify({ error: 'Method not allowed' }),
+      body: JSON.stringify({ error: 'Method Not Allowed' })
     };
   }
 
   try {
     const { baseImage, prompt, negativePrompt } = JSON.parse(event.body);
-
+    
     if (!baseImage || !prompt) {
-      return {
-        statusCode: 400,
+      return { 
+        statusCode: 400, 
         headers,
-        body: JSON.stringify({ error: 'Missing required fields' }),
+        body: JSON.stringify({ error: 'Missing baseImage or prompt in request body.' })
       };
     }
 
-    const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+    console.log('Processing image with Gemini 2.5 Flash Image...');
 
-    if (!GOOGLE_API_KEY) {
-      throw new Error('GOOGLE_API_KEY not configured');
+    // Prepare the image part
+    const imagePart = base64ToGenerativePart(baseImage, "image/jpeg");
+    
+    // Use the image editing model
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-image',
+      contents: [
+        imagePart,
+        { text: prompt },
+      ],
+    });
+    
+    // Extract the generated image
+    const generatedImageBase64 = response.candidates[0].content.parts[0].inlineData.data;
+    
+    if (!generatedImageBase64) {
+      throw new Error("API responded but did not return a generated image.");
     }
-
-    // Initialize Gemini
-    const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
-    console.log('Starting Gemini image generation...');
-
-    // Create the image part
-    const imagePart = {
-      inlineData: {
-        data: baseImage,
-        mimeType: 'image/jpeg',
-      },
-    };
-
-    // Enhanced prompt for better results
-    const fullPrompt = `You are an expert AI photo editor specializing in hairstyle transformations.
-
-TASK: Transform ONLY the hair in this photo while preserving everything else.
-
-STYLE TO APPLY: ${prompt}
-
-CRITICAL RULES:
-- Keep face, skin tone, expression EXACTLY the same
-- Keep background, clothing, lighting EXACTLY the same  
-- ONLY change the hair to match the style description
-- Make it look natural and photorealistic
-- Match the original photo's lighting and quality
-
-AVOID: ${negativePrompt || 'blurry, unrealistic, changed face, artifacts, poor quality'}
-
-Describe the exact hairstyle transformation you would make in technical detail.`;
-
-    const result = await model.generateContent([fullPrompt, imagePart]);
-    const response = await result.response;
-    const description = response.text();
     
-    console.log('Gemini response:', description);
-
-    // IMPORTANT NOTE: Gemini doesn't actually generate/edit images
-    // It only analyzes and describes them
-    // For actual image editing, you need Imagen API or another service
+    console.log('Image generation successful');
     
-    // For now, return the original image with a note
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        generatedImageBase64: baseImage,
-        aiDescription: description,
-        note: 'Gemini API can only analyze images, not edit them. For actual hairstyle changes, you need Google Imagen API or another image generation service.',
-        success: false
+        generatedImageBase64: generatedImageBase64,
+        success: true
       }),
     };
 
   } catch (error) {
-    console.error('Error:', error.message);
-    
+    console.error('AI Processing Error:', error);
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({
-        error: 'Failed to process image',
-        details: error.message,
+        error: 'Failed to generate image',
+        details: error.message
       }),
     };
   }
-};
+}
