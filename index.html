@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hairstyle Virtual Try-On</title>
+    <title>Looks - Virtual Hairstyle Try-On</title>
     
     <style>
 /* --- Global Colors --- */
@@ -19,7 +19,7 @@
     --viewport-size-desktop: 300px; 
     --viewport-size-mobile: 250px; 
     --content-max-width: 400px; 
-    --secondary-highlight: #007bff;
+    --secondary-highlight: #007bff; /* Blue for booking */
 }
 
 body {
@@ -37,6 +37,7 @@ body {
     min-height: 100vh;
 }
 
+/* --- Header and Logo Styling (MINIMAL BANNER) --- */
 #app-header {
     padding: 0; 
     background-color: #FFFFFF;
@@ -86,6 +87,7 @@ body {
     gap: 15px; 
 }
 
+/* --- 1. GENDER BUTTONS --- */
 .gender-buttons-container {
     display: flex;
     justify-content: space-between;
@@ -125,6 +127,7 @@ body {
     box-shadow: 0 2px 5px rgba(29, 33, 36, 0.2); 
 }
 
+/* --- 2. CAMERA SECTION --- */
 #central-section {
     width: 90%;
     max-width: var(--content-max-width);
@@ -138,10 +141,12 @@ body {
 
 #central-viewport {
     position: relative; 
-    width: 180px !important; 
-    height: 180px !important;
+    width: var(--viewport-size-mobile) !important; 
+    height: var(--viewport-size-mobile) !important;
+    max-width: var(--viewport-size-desktop) !important; 
+    max-height: var(--viewport-size-desktop) !important;
     margin: 0; 
-    border-radius: 50%; 
+    border-radius: 6px; 
     overflow: hidden;
     background-color: #e0e0e0; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
@@ -209,22 +214,7 @@ body {
     z-index: 100; 
 }
 
-.error-message {
-    background-color: #fee;
-    color: #c33;
-    padding: 12px;
-    border-radius: 6px;
-    margin: 10px auto;
-    font-size: 0.9em;
-    display: none;
-    max-width: var(--content-max-width);
-    width: 90%;
-}
-
-.error-message.visible {
-    display: block;
-}
-
+/* --- Circular Button Styling --- */
 .main-action-btn {
     cursor: pointer;
     border: none;
@@ -238,8 +228,8 @@ body {
 }
 
 .circular-action-btn {
-    width: 60px; 
-    height: 60px; 
+    width: 50px; 
+    height: 50px; 
     padding: 0;
     border-radius: 50%; 
     background-color: var(--primary-color);
@@ -247,7 +237,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px; 
+    font-size: 24px; 
     line-height: 1;
     margin: 0; 
     flex-shrink: 0;
@@ -298,29 +288,10 @@ body {
     width: 90%; 
     max-width: var(--content-max-width);
     padding: 0 10px;
-    min-height: 60px; 
+    min-height: 50px; 
     align-items: center;
     position: relative; 
     flex-wrap: wrap;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid var(--highlight-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    display: none;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.spinner.active {
-    display: block !important;
 }
 
 #loading-spinner {
@@ -330,6 +301,7 @@ body {
     transform: translate(-50%, -50%);
 }
 
+/* --- 3. FILTER SECTION --- */
 .filter-section {
     width: 90%; 
     max-width: var(--content-max-width);
@@ -445,6 +417,7 @@ body {
     box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); 
 }
 
+/* --- Hairstyle Gallery --- */
 #style-inspiration-section {
     width: 90%; 
     max-width: var(--content-max-width);
@@ -510,6 +483,7 @@ body {
     display: none; 
 }
 
+/* --- Modal Styles --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -593,6 +567,11 @@ body {
     background-color: #0056b3;
 }
 
+.modal-content button.submit-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 #reference-image-preview {
     width: 100%;
     height: auto;
@@ -622,8 +601,10 @@ body {
     }
     
     #central-viewport {
-        width: 200px !important; 
-        height: 200px !important;
+        width: 80vw !important; 
+        height: 80vw !important;
+        max-width: 300px !important; 
+        max-height: 300px !important;
     }
     
     #complexion-options-group {
@@ -652,8 +633,8 @@ body {
 <body>
     <div id="app-header">
         <div id="main-title-container">
-            <img id="header-logo" src="assets/staghouse.png" alt="Stag House Logo">
-            <h1 id="main-title">Stag House</h1>
+            <img id="header-logo" src="assets/staghouse.png" alt="Looks Logo">
+            <h1 id="main-title">Looks</h1>
         </div>
     </div>
 
@@ -679,20 +660,31 @@ body {
         
         <div id="central-section">
             <div id="central-viewport">
-                <div id="camera-placeholder-icon"></div>
+                <div id="camera-placeholder-icon">
+                </div>
+                
                 <video id="video-feed" autoplay playsinline></video>
                 <img id="ai-result" style="display: none;" src="" alt="AI Hairstyle Result">
                 <p id="status-message">Tap the silhouette above to take a selfie.</p>
             </div>
-            <div id="error-container" class="error-message"></div>
         </div>
         
+        <div id="controls-footer-row">
+            <button id="camera-capture-btn" class="circular-action-btn main-action-btn" disabled>📸</button> 
+            <button id="redo-selfie-btn" class="circular-action-btn main-action-btn" style="display: none;">🔄</button>
+            <button id="generate-look-btn" class="circular-action-btn main-action-btn" style="display: none;">✨</button>
+            <div id="loading-spinner" class="spinner" style="display: none;"></div>
+            <button id="book-appointment-btn" class="main-action-btn" style="display: none;">Book Appointment</button>
+        </div>
+
         <div id="style-inspiration-section">
             <p>Get the Look</p>
             
-            <div id="male-hairstyle-options-group" class="hairstyle-options-group-wrapper"></div>
+            <div id="male-hairstyle-options-group" class="hairstyle-options-group-wrapper">
+                </div>
             
             <div id="female-hairstyle-options-group" class="hairstyle-options-group-wrapper" style="display: none;">
+                
                 <div class="style-option" data-prompt="A shoulder-length cut with soft waves and natural volume, warm brunette color, gentle face-framing layers.">
                     <img class="style-thumbnail" src="styles/female/style1.png" alt="Soft Wavy Layers">
                     <p>Soft Wavy Layers</p>
@@ -777,19 +769,12 @@ body {
                     <img class="style-thumbnail" src="styles/female/style21.png" alt="Blunt Bangs Long">
                     <p>Blunt Bangs Long</p>
                 </div>
+                
             </div>
-        </div>
-        
-        <div id="controls-footer-row">
-            <button id="camera-capture-btn" class="circular-action-btn main-action-btn" disabled>📸</button> 
-            <button id="redo-selfie-btn" class="circular-action-btn main-action-btn" style="display: none;">🔄</button>
-            <button id="generate-look-btn" class="circular-action-btn main-action-btn" style="display: none;">✨</button>
-            <div id="loading-spinner" class="spinner"></div>
-            <button id="book-appointment-btn" class="main-action-btn" style="display: none;">Book Appointment</button>
-        </div>
-    </div>
-    
-    <canvas id="hidden-canvas" style="display: none;"></canvas>
+            
+            </div>
+
+    </div> <canvas id="hidden-canvas" style="display: none;"></canvas>
 
     <div id="booking-modal-overlay" class="modal-overlay">
         <div class="booking-modal">
@@ -812,7 +797,7 @@ body {
 
                     <label for="time">Select Time</label>
                     <select id="time" name="time" required>
-                        <option value="">Loading availability...</option>
+                        <option value="">Select a date first...</option>
                     </select>
 
                     <button type="submit" class="submit-btn" disabled>Confirm Booking</button>
@@ -821,32 +806,39 @@ body {
             </div>
         </div>
     </div>
-    
     <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Get DOM elements
     const videoFeed = document.getElementById('video-feed');
     const aiResultImg = document.getElementById('ai-result');
     const canvas = document.getElementById('hidden-canvas');
     const cameraPlaceholderIcon = document.getElementById('camera-placeholder-icon');
+
     const cameraCaptureBtn = document.getElementById('camera-capture-btn');
     const redoSelfieBtn = document.getElementById('redo-selfie-btn');
     const generateLookBtn = document.getElementById('generate-look-btn');
     const bookAppointmentBtn = document.getElementById('book-appointment-btn'); 
     const spinner = document.getElementById('loading-spinner');
     const statusMessage = document.getElementById('status-message');
-    const errorContainer = document.getElementById('error-container');
+
     const filtersAccordion = document.getElementById('additional-filters-selector');
     const complexionGroup = document.getElementById('complexion-options-group');
+    
     const maleStyleOptionsGroup = document.getElementById('male-hairstyle-options-group');
     const femaleStyleOptionsGroup = document.getElementById('female-hairstyle-options-group');
+    
     const maleGenderBtn = document.getElementById('male-gender-btn');
     const femaleGenderBtn = document.getElementById('female-gender-btn');
+    
     const bookingModalOverlay = document.getElementById('booking-modal-overlay');
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const bookingForm = document.getElementById('booking-form');
     const referenceImagePreview = document.getElementById('reference-image-preview');
     const selectedStyleNameSpan = document.getElementById('selected-style-name');
+    const dateInput = document.getElementById('date');
+    const timeSelect = document.getElementById('time');
 
+    // State tracking variables
     let capturedImageBase64 = null;
     let selectedPrompt = null;
     let selectedStyleLabel = null; 
@@ -900,18 +892,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { code: 'ds', src: "styles/male/ds/18.png", label: "Short Afro Crop", prompt: "A short afro crop with even density, natural black tone." }
     ];
 
-    function showError(message, duration = 5000) {
-        errorContainer.textContent = message;
-        errorContainer.classList.add('visible');
-        statusMessage.textContent = 'Error occurred. Please try again.';
-        
-        if (duration > 0) {
-            setTimeout(() => {
-                errorContainer.classList.remove('visible');
-            }, duration);
-        }
-    }
-
     function shuffle(array) {
         let currentIndex = array.length, randomIndex;
         while (currentIndex !== 0) {
@@ -962,7 +942,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const shuffledStyles = shuffle([...filteredStyles]);
         renderStyles(maleStyleOptionsGroup, shuffledStyles);
-        
         selectedPrompt = null;
         selectedStyleLabel = null;
         updateButtonVisibility();
@@ -973,7 +952,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cameraCaptureBtn.style.display = 'none';
         redoSelfieBtn.style.display = 'none';
         generateLookBtn.style.display = 'none';
-        bookAppointmentBtn.style.display = 'none'; 
+        bookAppointmentBtn.style.display = 'none';
         spinner.style.display = 'none';
 
         if (spinner.classList.contains('active')) {
@@ -1132,35 +1111,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cameraStarted) return; 
         statusMessage.textContent = "Requesting camera access...";
         cameraCaptureBtn.disabled = true;
-        errorContainer.classList.remove('visible');
 
         try {
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                throw new Error('Camera access not supported on this device/browser');
-            }
-            
             const constraints = {
                 video: {
                     facingMode: 'user', 
-                    width: { ideal: 640 },
-                    height: { ideal: 640 }
+                    width: { ideal: 250 },
+                    height: { ideal: 250 }
                 }
             };
             const stream = await navigator.mediaDevices.getUserMedia(constraints);
             videoFeed.srcObject = stream;
             
-            await new Promise((resolve, reject) => {
+            await new Promise(resolve => {
                 videoFeed.onloadedmetadata = () => {
-                    videoFeed.play()
-                        .then(resolve)
-                        .catch(reject);
+                    videoFeed.play();
+                    resolve();
                 };
-                setTimeout(() => reject(new Error('Camera initialization timeout')), 10000);
             });
 
             cameraStarted = true;
             imageCaptured = false;
-            aiGenerationComplete = false;
+            aiGenerationComplete = false; 
 
             cameraPlaceholderIcon.style.display = 'none'; 
             aiResultImg.style.display = 'none';
@@ -1169,20 +1141,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateButtonVisibility();
         } catch (error) {
             console.error('Error accessing camera:', error);
-            
-            let errorMessage = 'Camera Error: ';
-            
-            if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-                errorMessage += 'Camera permission denied. Please enable camera access in your browser settings.';
-            } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
-                errorMessage += 'No camera found on this device.';
-            } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
-                errorMessage += 'Camera is already in use by another application.';
-            } else {
-                errorMessage += error.message;
-            }
-            
-            showError(errorMessage, 0);
+            statusMessage.textContent = `Error: Cannot start camera. Check permissions/device settings. (${error.name})`;
             cameraPlaceholderIcon.style.display = 'block';
             videoFeed.style.display = 'none';
             cameraStarted = false;
@@ -1202,12 +1161,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!cameraStarted) return;
 
         const context = canvas.getContext('2d');
-        const width = videoFeed.videoWidth || 640; 
-        const height = videoFeed.videoHeight || 640;
+        const width = videoFeed.videoWidth || 250; 
+        const height = videoFeed.videoHeight || 250;
 
         canvas.width = width;
         canvas.height = height;
-        context.drawImage(videoFeed, 0, 0, width, height); 
+        context.drawImage(videoFeed, 0, 0, width, width); 
 
         const fullDataURL = canvas.toDataURL('image/jpeg');
         const parts = fullDataURL.split(',');
@@ -1246,13 +1205,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     cameraCaptureBtn.addEventListener('click', captureImage);
-    
     cameraPlaceholderIcon.addEventListener('click', () => {
         if (!cameraStarted && !imageCaptured) {
             startCamera();
         }
     });
-    
     redoSelfieBtn.addEventListener('click', () => {
         resetSession();
         startCamera(); 
@@ -1264,7 +1221,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        errorContainer.classList.remove('visible');
         spinner.classList.add('active');
         updateButtonVisibility();
         statusMessage.textContent = "Uploading image and defining style...";
@@ -1276,64 +1232,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalPrompt = `STRICTLY operate in an inpainting/editing mode. The ONLY element to be changed is the subject's hair. PRESERVE the subject's face, identity, expression, clothing, and background EXACTLY as they appear in the original photograph. Apply the following hairstyle, matching its texture, color, and shape: ${selectedPrompt}. The final result must be a high quality, professional studio portrait of a ${selectedGender} model${complexionClause} with NO other changes besides the hair.`;
 
         try {
-            statusMessage.textContent = "Processing your new look (this may take 30-60 seconds)...";
-            
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 90000);
-            
+            statusMessage.textContent = "Processing your new look"; 
             const response = await fetch('/.netlify/functions/run_model', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     baseImage: capturedImageBase64,
                     prompt: finalPrompt,
-                    negativePrompt: NEGATIVE_PROMPT
-                }),
-                signal: controller.signal
+                    negativePrompt: NEGATIVE_PROMPT 
+                })
             });
-
-            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.details || errorData.error || `Server error: ${response.status}`);
+                throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
             }
 
             const data = await response.json();
-
-            if (!data.generatedImageBase64) {
-                throw new Error('No image data received from server');
-            }
 
             aiResultImg.src = `data:image/jpeg;base64,${data.generatedImageBase64}`;
             aiResultImg.style.display = 'block';
             videoFeed.style.display = 'none';
             cameraPlaceholderIcon.style.display = 'none';
 
-            aiGenerationComplete = true;
-            imageCaptured = true;
+            aiGenerationComplete = true; 
+            imageCaptured = true; 
             capturedImageBase64 = data.generatedImageBase64; 
             
             spinner.classList.remove('active');
             updateButtonVisibility();
-            statusMessage.textContent = "✨ Success! Your new look is ready.";
 
         } catch (error) {
             console.error('AI Processing Error:', error);
-            
-            let errorMessage = 'An error occurred during AI processing. ';
-            
-            if (error.name === 'AbortError') {
-                errorMessage += 'Request timed out. Please try again.';
-            } else if (error.message.includes('Failed to fetch')) {
-                errorMessage += 'Network error. Check your internet connection.';
-            } else if (error.message.includes('REPLICATE_API_TOKEN')) {
-                errorMessage += 'API configuration error. Please contact support.';
-            } else {
-                errorMessage += error.message;
-            }
-            
-            showError(errorMessage, 10000);
+            statusMessage.textContent = `Error during AI try-on: ${error.message}. Please check console and retry.`;
             spinner.classList.remove('active');
             updateButtonVisibility();
         }
@@ -1347,6 +1278,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         referenceImagePreview.src = aiResultImg.src;
         selectedStyleNameSpan.textContent = selectedStyleLabel;
+        
+        // Set minimum date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        dateInput.min = tomorrow.toISOString().split('T')[0];
+        
         bookingModalOverlay.classList.add('visible');
     });
 
@@ -1354,7 +1291,50 @@ document.addEventListener('DOMContentLoaded', () => {
         bookingModalOverlay.classList.remove('visible');
     });
 
-    bookingForm.addEventListener('submit', (e) => {
+    // NEW: Date change handler for loading availability
+    dateInput.addEventListener('change', async (e) => {
+        const selectedDate = e.target.value;
+        const submitButton = bookingForm.querySelector('.submit-btn');
+        
+        if (!selectedDate) return;
+        
+        timeSelect.innerHTML = '<option value="">Loading availability...</option>';
+        submitButton.disabled = true;
+        
+        try {
+            const response = await fetch('/.netlify/functions/get-availability', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ date: selectedDate })
+            });
+            
+            const data = await response.json();
+            
+            if (data.availableSlots && data.availableSlots.length > 0) {
+                timeSelect.innerHTML = '<option value="">Select a time...</option>';
+                data.availableSlots.forEach(slot => {
+                    const option = document.createElement('option');
+                    option.value = slot.time;
+                    option.textContent = slot.time;
+                    timeSelect.appendChild(option);
+                });
+            } else {
+                timeSelect.innerHTML = '<option value="">No times available for this date</option>';
+            }
+        } catch (error) {
+            console.error('Error fetching availability:', error);
+            timeSelect.innerHTML = '<option value="">Error loading times - please try again</option>';
+        }
+    });
+
+    // NEW: Time select handler to enable submit button
+    timeSelect.addEventListener('change', (e) => {
+        const submitButton = bookingForm.querySelector('.submit-btn');
+        submitButton.disabled = !e.target.value;
+    });
+
+    // NEW: Updated booking form submit handler with Airtable integration
+    bookingForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const bookingStatusMessage = document.getElementById('booking-status-message');
         const submitButton = bookingForm.querySelector('.submit-btn');
@@ -1362,7 +1342,7 @@ document.addEventListener('DOMContentLoaded', () => {
         submitButton.textContent = "Processing...";
         submitButton.disabled = true;
         bookingStatusMessage.style.color = '#ffc107';
-        bookingStatusMessage.textContent = "Connecting to scheduling service...";
+        bookingStatusMessage.textContent = "Creating your appointment...";
         
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
@@ -1374,19 +1354,45 @@ document.addEventListener('DOMContentLoaded', () => {
             lastName: name.split(' ').slice(1).join(' ') || '',
             email: email,
             datetime: `${date}T${time}:00`,
-            appointmentType: selectedGender === 'Male' ? 'Men\'s Cut' : 'Women\'s Cut', 
+            appointmentType: selectedGender === 'Male' ? "Men's Cut" : "Women's Cut",
             styleName: selectedStyleLabel,
             stylePrompt: selectedPrompt,
-            imageReference: aiResultImg.src, 
+            imageReference: aiResultImg.src
         };
         
-        console.log("Booking data prepared:", bookingData);
-
-        setTimeout(() => {
-            bookingStatusMessage.style.color = 'var(--highlight-color)'; 
-            bookingStatusMessage.textContent = "Booking Confirmed! Check your email for details.";
-            submitButton.textContent = "Confirmed!";
-        }, 2000); 
+        try {
+            const response = await fetch('/.netlify/functions/create-booking', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bookingData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                bookingStatusMessage.style.color = 'var(--highlight-color)';
+                bookingStatusMessage.textContent = "✅ Booking Confirmed! We'll contact you soon.";
+                submitButton.textContent = "Confirmed!";
+                
+                // Reset form after 3 seconds
+                setTimeout(() => {
+                    bookingModalOverlay.classList.remove('visible');
+                    bookingForm.reset();
+                    submitButton.textContent = "Confirm Booking";
+                    submitButton.disabled = true;
+                    bookingStatusMessage.textContent = "";
+                    timeSelect.innerHTML = '<option value="">Select a date first...</option>';
+                }, 3000);
+            } else {
+                throw new Error(result.error || 'Booking failed');
+            }
+        } catch (error) {
+            console.error('Booking error:', error);
+            bookingStatusMessage.style.color = '#dc3545';
+            bookingStatusMessage.textContent = `❌ Error: ${error.message}. Please try again.`;
+            submitButton.textContent = "Try Again";
+            submitButton.disabled = false;
+        }
     });
 
     function initialize() {
