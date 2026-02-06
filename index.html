@@ -6,291 +6,370 @@
     <title>Looks - Virtual Hairstyle Try-On</title>
     
     <style>
-/* --- Global Colors --- */
+/* --- PROFESSIONAL COLOR SCHEME --- */
 :root {
-    --primary-color: #1D2124; 
-    --text-on-dark: #FFFFFF; 
-    --background-color: #f4f7f6;
-    --text-color: #333; 
-    --highlight-color: #28a745; 
-    --thumbnail-size: 60px;
-    --gallery-gap: 10px; 
-    --header-height: 45px; 
-    --viewport-size-desktop: 300px; 
-    --viewport-size-mobile: 250px; 
-    --content-max-width: 400px; 
-    --secondary-highlight: #007bff; /* Blue for booking */
+    /* Updated Professional Colors */
+    --primary-color: #1a1f36;
+    --primary-light: #2d3548;
+    --accent-color: #00d4ff;
+    --accent-hover: #00b8e6;
+    --success-color: #10b981;
+    --success-hover: #059669;
+    --text-on-dark: #FFFFFF;
+    --background-color: #fafafa;
+    --surface-color: #FFFFFF;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    
+    /* Sizing */
+    --header-height: 64px;
+    --viewport-size-desktop: 320px;
+    --viewport-size-mobile: 280px;
+    --content-max-width: 440px;
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-full: 9999px;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
     background-color: var(--background-color);
-    color: var(--text-color);
+    color: var(--text-primary);
     margin: 0;
-    padding: 0; 
+    padding: 0;
     text-align: center;
     -webkit-user-select: none;
     user-select: none;
-    overflow-x: hidden; 
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    line-height: 1.6;
 }
 
-/* --- Header and Logo Styling (MINIMAL BANNER) --- */
+/* --- PROFESSIONAL HEADER --- */
 #app-header {
-    padding: 0; 
-    background-color: #FFFFFF;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
-    height: var(--header-height); 
+    padding: 0 20px;
+    background-color: var(--surface-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    height: var(--header-height);
     display: flex;
     align-items: center;
     justify-content: center;
-    position: sticky; 
+    position: sticky;
     top: 0;
     z-index: 100;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95);
 }
 
 #main-title-container {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     margin: 0;
     padding: 0;
-}
-
-#header-logo {
-    height: 30px;
-    width: 30px; 
-    object-fit: contain;
-    flex-shrink: 0;
 }
 
 #main-title {
     color: var(--primary-color);
-    font-size: 1.8em; 
-    font-weight: bold;
+    font-size: 2em;
+    font-weight: 700;
     line-height: 1;
     margin: 0;
     padding: 0;
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    letter-spacing: -0.02em;
 }
 
+/* Remove logo - using text only */
+#header-logo {
+    display: none;
+}
+
+/* --- MAIN CONTAINER WITH BETTER SPACING --- */
 #main-app-container {
-    flex-grow: 1; 
+    flex-grow: 1;
     width: 100%;
-    padding: 20px 0;
-    margin: 0 auto; 
+    padding: 32px 0 40px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    align-items: center; 
-    gap: 15px; 
+    align-items: center;
+    gap: 24px;
 }
 
-/* --- 1. GENDER BUTTONS --- */
+/* --- GENDER BUTTONS - IMPROVED --- */
 .gender-buttons-container {
     display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    width: 90%; 
+    justify-content: center;
+    gap: 12px;
+    width: 90%;
     max-width: var(--content-max-width);
-    margin-bottom: 0;
-    box-sizing: border-box;
-    padding: 0 10px;
+    margin-bottom: 8px;
+    padding: 0 16px;
 }
 
 .gender-button {
-    flex-grow: 1;
-    padding: 7px 10px; 
-    border: 1px solid #ddd; 
-    background-color: #ffffff; 
-    color: var(--text-color);
-    border-radius: 20px; 
+    flex: 1;
+    max-width: 160px;
+    padding: 14px 24px;
+    border: 2px solid var(--border-color);
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    border-radius: var(--border-radius-full);
     cursor: pointer;
-    font-size: 0.8em; 
-    font-weight: 500; 
+    font-size: 1em;
+    font-weight: 600;
     text-align: center;
-    transition: all 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     user-select: none;
-    line-height: 1;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .gender-button:hover {
-    background-color: #f0f0f0;
+    background-color: #f9fafb;
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
 }
 
 .gender-button.selected {
     background-color: var(--primary-color);
     color: var(--text-on-dark);
     border-color: var(--primary-color);
-    box-shadow: 0 2px 5px rgba(29, 33, 36, 0.2); 
+    box-shadow: 0 4px 12px rgba(26, 31, 54, 0.25);
 }
 
-/* --- 2. CAMERA SECTION --- */
+/* --- CAMERA SECTION - POLISHED --- */
 #central-section {
     width: 90%;
     max-width: var(--content-max-width);
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 15px;
-    padding: 0 10px;
+    gap: 20px;
+    padding: 0 16px;
 }
 
 #central-viewport {
-    position: relative; 
-    width: var(--viewport-size-mobile) !important; 
-    height: var(--viewport-size-mobile) !important;
-    max-width: var(--viewport-size-desktop) !important; 
-    max-height: var(--viewport-size-desktop) !important;
-    margin: 0; 
-    border-radius: 6px; 
+    position: relative;
+    width: var(--viewport-size-mobile);
+    height: var(--viewport-size-mobile);
+    max-width: var(--viewport-size-desktop);
+    max-height: var(--viewport-size-desktop);
+    margin: 0;
+    border-radius: var(--border-radius-lg);
     overflow: hidden;
-    background-color: #e0e0e0; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-    display: flex; 
+    background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer; 
-    flex-shrink: 0; 
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#central-viewport:hover {
+    transform: scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15), 0 5px 12px rgba(0, 0, 0, 0.1);
 }
 
 #camera-placeholder-icon {
     position: relative;
-    width: 60%; 
-    height: 60%; 
+    width: 60%;
+    height: 60%;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    border: 3px dashed #777; 
-    border-radius: 6px;
-    background-color: #e8e8e8;
+    border: 3px dashed var(--text-secondary);
+    border-radius: var(--border-radius-md);
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 #camera-placeholder-icon::before {
     content: '';
     position: absolute;
-    top: 15%; 
+    top: 15%;
     width: 40%;
     height: 40%;
-    background-color: #aaa;
+    background-color: var(--text-secondary);
     border-radius: 50%;
 }
 
 #camera-placeholder-icon::after {
     content: '';
     position: absolute;
-    bottom: -15%; 
+    bottom: -15%;
     width: 80%;
     height: 60%;
-    background-color: #aaa;
-    border-radius: 50% 50% 0 0; 
+    background-color: var(--text-secondary);
+    border-radius: 50% 50% 0 0;
 }
 
 #video-feed, #ai-result {
-    width: 100% !important;
-    height: 100% !important; 
+    width: 100%;
+    height: 100%;
     display: block;
-    object-fit: cover !important; 
-    max-width: 100% !important;
-    max-height: 100% !important;
-    z-index: 1; 
-    display: none; 
+    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    z-index: 1;
+    display: none;
 }
 
 #status-message {
     position: absolute;
     bottom: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
     color: white;
-    padding: 8px 5px;
+    padding: 16px 12px 12px;
     margin: 0;
-    font-size: 0.85em;
+    font-size: 0.9em;
+    font-weight: 500;
     text-align: center;
-    z-index: 100; 
+    z-index: 100;
+    letter-spacing: 0.01em;
 }
 
-/* --- Circular Button Styling --- */
+/* --- PROFESSIONAL BUTTONS --- */
 .main-action-btn {
     cursor: pointer;
     border: none;
-    transition: all 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.main-action-btn:hover {
+    transform: translateY(-2px);
 }
 
 .main-action-btn:active {
-    transform: scale(0.9); 
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transform: translateY(0);
 }
 
 .circular-action-btn {
-    width: 50px; 
-    height: 50px; 
+    width: 64px;
+    height: 64px;
     padding: 0;
-    border-radius: 50%; 
-    background-color: var(--primary-color);
+    border-radius: 50%;
+    background-color: rgba(26, 31, 54, 0.6);
     color: var(--text-on-dark);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px; 
+    font-size: 28px;
     line-height: 1;
-    margin: 0; 
+    margin: 0;
     flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(26, 31, 54, 0.3);
 }
 
+.circular-action-btn:hover {
+    box-shadow: 0 6px 20px rgba(26, 31, 54, 0.4);
+}
+
+/* --- Camera Button (iPhone Style) --- */
 #camera-capture-btn {
-    border: 4px solid var(--text-on-dark); 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    width: 72px;
+    height: 72px;
+    background-color: transparent;
+    color: transparent;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5), 0 6px 20px rgba(0, 0, 0, 0.4);
+    position: relative;
+}
+
+#camera-capture-btn::before {
+    content: '';
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    background-color: white;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.1s ease;
+}
+
+#camera-capture-btn:hover::before {
+    background-color: #f5f5f5;
+}
+
+#camera-capture-btn:active::before {
+    transform: translate(-50%, -50%) scale(0.88);
+    background-color: #e8e8e8;
 }
 
 #generate-look-btn {
-    background-color: var(--highlight-color); 
-    color: white; 
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4); 
+    background-color: var(--accent-color);
+    color: var(--text-on-dark);
+    box-shadow: 0 4px 14px rgba(0, 212, 255, 0.4);
+}
+
+#generate-look-btn:hover {
+    background-color: var(--accent-hover);
+    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
 }
 
 #redo-selfie-btn {
-    background-color: white;
-    color: var(--primary-color); 
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    background-color: var(--surface-color);
+    color: var(--primary-color);
+    border: 2px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#redo-selfie-btn:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 #book-appointment-btn {
-    width: 100%; 
-    height: 45px;
-    padding: 0 20px;
-    border-radius: 25px;
-    background-color: var(--secondary-highlight);
-    color: white; 
+    width: 100%;
+    max-width: 320px;
+    height: 56px;
+    padding: 0 32px;
+    border-radius: var(--border-radius-full);
+    background-color: var(--success-color);
+    color: var(--text-on-dark);
     font-size: 1.1em;
-    font-weight: bold;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4); 
-    margin-top: 10px;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    margin-top: 8px;
     display: none;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#book-appointment-btn:hover {
+    background-color: var(--success-hover);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
 }
 
 #book-appointment-btn:active {
-    transform: scale(0.98); 
-    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.6);
+    transform: scale(0.98);
 }
 
 #controls-footer-row {
     display: flex;
-    justify-content: center; 
-    gap: 30px; 
-    width: 90%; 
+    justify-content: center;
+    gap: 20px;
+    width: 90%;
     max-width: var(--content-max-width);
-    padding: 0 10px;
-    min-height: 50px; 
+    padding: 0 16px;
+    min-height: 64px;
     align-items: center;
-    position: relative; 
+    position: relative;
     flex-wrap: wrap;
 }
 
@@ -299,51 +378,67 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
 }
 
-/* --- 3. FILTER SECTION --- */
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* --- FILTER SECTION - REFINED --- */
 .filter-section {
-    width: 90%; 
+    width: 90%;
     max-width: var(--content-max-width);
-    margin: 0 auto; 
-    padding: 0;
-    background-color: #fff;
-    border-radius: 6px;
-    text-align: left; 
+    margin: 0 auto;
+    padding: 0 16px;
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    text-align: left;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .filter-section h3 {
-    font-size: 0.9em; 
-    font-weight: bold;
-    margin: 0; 
-    padding: 8px 10px;
+    font-size: 0.95em;
+    font-weight: 700;
+    margin: 0;
+    padding: 16px;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    background-color: #fff;
-    border-radius: 6px;
-    transition: all 0.2s ease-in-out;
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
 }
 
 .filter-section.collapsed h3 {
-    background-color: #f0f0f0; 
-    color: #666;
-    border-radius: 15px; 
-    height: 28px; 
-    width: auto; 
-    max-width: 160px; 
-    padding: 0 15px; 
+    background-color: #f3f4f6;
+    color: var(--text-secondary);
+    border-radius: var(--border-radius-full);
+    height: 44px;
+    width: fit-content;
+    min-width: 180px;
+    max-width: 240px;
+    padding: 0 24px;
     justify-content: center;
-    overflow: hidden; 
-    margin: 0 auto 10px auto; 
-    font-size: 0.75em; 
+    overflow: hidden;
+    margin: 0 auto 16px auto;
+    font-size: 0.85em;
+    display: flex;
+    align-items: center;
 }
 
 .filter-section.collapsed h3 span {
     display: inline;
-    line-height: 28px; 
+    white-space: nowrap;
 }
 
 .filter-section.collapsed h3::after {
@@ -351,34 +446,34 @@ body {
 }
 
 .filter-section.expanded h3 {
-    background-color: var(--primary-color); 
+    background-color: var(--primary-color);
     color: var(--text-on-dark);
-    border-radius: 6px 6px 0 0; 
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
     height: auto;
     width: 100%;
-    max-width: var(--content-max-width); 
-    padding: 8px 10px;
+    max-width: var(--content-max-width);
+    padding: 16px;
     margin: 0;
-    justify-content: space-between; 
+    justify-content: space-between;
 }
 
 .filter-section h3::after {
-    content: '▶'; 
-    font-size: 0.8em;
-    margin-left: 5px;
+    content: '▶';
+    font-size: 0.75em;
+    margin-left: 8px;
     transition: transform 0.2s;
     line-height: 1;
 }
 
 .filter-section.expanded h3::after {
-    content: '▼'; 
+    content: '▼';
     color: var(--text-on-dark);
 }
 
 .filter-content-group {
-    padding: 5px 10px 10px 10px;
-    background-color: #f9f9f9;
-    border-radius: 0 0 6px 6px;
+    padding: 16px;
+    background-color: #f9fafb;
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
 }
 
 .filter-section.collapsed .filter-content-group {
@@ -387,62 +482,77 @@ body {
 
 .filter-options-group {
     display: flex;
-    flex-wrap: wrap; 
-    gap: 8px; 
-    justify-content: flex-start; 
-    margin-top: 5px; 
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-start;
+    margin-top: 8px;
 }
 
 #complexion-options-group {
-    justify-content: flex-start; 
-    gap: 6px; 
-    padding-top: 5px; 
+    justify-content: flex-start;
+    gap: 10px;
+    padding-top: 8px;
 }
 
 .complexion-tile {
-    width: 30px; 
-    height: 30px; 
-    border: 2px solid transparent; 
-    flex-shrink: 0; 
+    width: 44px;
+    height: 44px;
+    border: 3px solid transparent;
+    flex-shrink: 0;
     border-radius: 50%;
     cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.complexion-tile:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .complexion-tile p {
-    display: none; 
+    display: none;
 }
 
 .complexion-tile.selected {
-    border-color: var(--highlight-color);
-    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); 
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px var(--surface-color), 0 0 0 4px var(--accent-color);
+    transform: scale(1.15);
 }
 
-/* --- Hairstyle Gallery --- */
+/* --- HAIRSTYLE GALLERY - PREMIUM LOOK --- */
 #style-inspiration-section {
-    width: 90%; 
+    width: 90%;
     max-width: var(--content-max-width);
     margin: 0 auto;
-    padding: 0 10px;
-    text-align: center; 
+    padding: 0 16px;
+    text-align: center;
 }
 
 #style-inspiration-section p {
-    font-size: 0.9em; 
-    font-weight: bold;
-    margin: 0 0 5px 0;
+    font-size: 1.1em;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    color: var(--text-primary);
+    letter-spacing: 0.01em;
 }
 
 .hairstyle-options-group-wrapper {
-    display: flex; 
-    flex-wrap: nowrap; 
-    white-space: nowrap; 
-    overflow-x: scroll; 
-    overflow-y: hidden; 
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    gap: 8px;
-    padding-bottom: 10px; 
-    -webkit-overflow-scrolling: touch; 
+    gap: 16px;
+    padding-bottom: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.hairstyle-options-group-wrapper::-webkit-scrollbar {
+    display: none;
 }
 
 .style-option {
@@ -450,54 +560,58 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    width: 120px; 
+    width: 120px;
     flex-shrink: 0;
-    border: 2px solid transparent; 
-    transition: all 0.3s ease-out; 
+    border: 3px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    transform-origin: center bottom; 
+    transform-origin: center bottom;
+    border-radius: var(--border-radius-md);
+    padding: 4px;
 }
 
 .style-option:hover {
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1); 
+    transform: scale(1.05);
 }
 
 .style-option.selected {
-    border-color: var(--highlight-color);
-    border-radius: 10px; 
-    box-shadow: 0 0 12px rgba(40, 167, 69, 0.9) !important; 
-    transform: scale(1.2) !important; 
-    z-index: 10 !important; 
+    border-color: var(--accent-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 0 0 2px var(--surface-color), 0 0 0 5px var(--accent-color), 0 8px 20px rgba(0, 212, 255, 0.3);
+    transform: scale(1.15);
+    z-index: 10;
 }
 
 .style-thumbnail {
-    width: 120px; 
-    height: 120px; 
-    border-radius: 50%; 
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
     object-fit: cover;
-    object-position: top; 
-    margin-bottom: 0px; 
+    object-position: top;
+    margin-bottom: 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .style-option p {
-    display: none; 
+    display: none;
 }
 
-/* --- Modal Styles --- */
+/* --- MODAL - MODERN DESIGN --- */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    visibility: hidden; 
+    visibility: hidden;
     opacity: 0;
-    transition: visibility 0s, opacity 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-overlay.visible {
@@ -506,126 +620,217 @@ body {
 }
 
 .booking-modal {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
+    background: var(--surface-color);
+    padding: 32px;
+    border-radius: var(--border-radius-lg);
     width: 90%;
-    max-width: 400px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 440px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
     position: relative;
-    max-height: 80vh;
+    max-height: 85vh;
     overflow-y: auto;
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .booking-modal h2 {
     margin-top: 0;
     color: var(--primary-color);
-    font-size: 1.5em;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
+    font-size: 1.75em;
+    font-weight: 700;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .modal-close-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 20px;
+    right: 20px;
     background: none;
     border: none;
-    font-size: 1.5em;
+    font-size: 1.75em;
     cursor: pointer;
-    color: #666;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.modal-close-btn:hover {
+    background-color: #f3f4f6;
+    color: var(--primary-color);
 }
 
 .modal-content label {
     display: block;
-    margin-top: 10px;
+    margin-top: 16px;
     text-align: left;
-    font-weight: bold;
-    font-size: 0.9em;
+    font-weight: 600;
+    font-size: 0.95em;
+    color: var(--text-primary);
+    margin-bottom: 6px;
 }
 
-.modal-content input, .modal-content select, .modal-content button.submit-btn {
+.modal-content input,
+.modal-content select {
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
+    padding: 14px 16px;
+    margin-top: 0;
     box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
     font-size: 1em;
+    font-family: inherit;
+    transition: all 0.2s;
+    background-color: var(--surface-color);
+}
+
+.modal-content input:focus,
+.modal-content select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
 }
 
 .modal-content button.submit-btn {
-    margin-top: 20px;
-    background-color: var(--secondary-highlight);
-    color: white;
+    width: 100%;
+    padding: 16px 32px;
+    margin-top: 24px;
+    background-color: var(--success-color);
+    color: var(--text-on-dark);
     border: none;
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
+    font-size: 1.1em;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .modal-content button.submit-btn:hover {
-    background-color: #0056b3;
+    background-color: var(--success-hover);
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+    transform: translateY(-1px);
 }
 
 .modal-content button.submit-btn:disabled {
-    background-color: #ccc;
+    background-color: #d1d5db;
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
 #reference-image-preview {
     width: 100%;
     height: auto;
-    max-height: 100px;
+    max-height: 120px;
     object-fit: contain;
-    margin-top: 10px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
+    margin-top: 12px;
+    border-radius: var(--border-radius-sm);
+    border: 2px solid var(--border-color);
     display: block;
 }
 
+#booking-status-message {
+    margin-top: 12px;
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+/* --- MOBILE RESPONSIVE --- */
 @media (max-width: 600px) {
-    #main-app-container {
-        padding: 10px 0;
-        gap: 15px; 
+    :root {
+        --header-height: 56px;
+        --content-max-width: 100%;
     }
-    
+
+    #main-title {
+        font-size: 1.6em;
+    }
+
+    #main-app-container {
+        padding: 24px 0 32px;
+        gap: 20px;
+    }
+
     .gender-buttons-container,
     #central-section,
     #style-inspiration-section,
     #additional-filters-selector,
     #controls-footer-row {
-        width: 95%; 
+        width: 95%;
         max-width: 95%;
-        box-sizing: border-box;
-        padding: 0 10px;
+        padding: 0 12px;
     }
-    
+
     #central-viewport {
-        width: 80vw !important; 
-        height: 80vw !important;
-        max-width: 300px !important; 
-        max-height: 300px !important;
+        width: 85vw;
+        height: 85vw;
+        max-width: 300px;
+        max-height: 300px;
     }
-    
+
+    .circular-action-btn {
+        width: 56px;
+        height: 56px;
+        font-size: 24px;
+    }
+
     #complexion-options-group {
-        justify-content: space-around;
-        flex-wrap: nowrap;
-        overflow-x: scroll;
-        padding-bottom: 5px;
-        padding-top: 5px;
-        scroll-snap-type: x mandatory;
+        justify-content: flex-start;
+        gap: 12px;
+        padding-bottom: 8px;
+        padding-top: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
     }
     
+    #complexion-options-group::-webkit-scrollbar {
+        display: none;
+    }
+
     .complexion-tile {
-        width: 40px; 
-        height: 40px; 
+        width: 52px;
+        height: 52px;
         flex-shrink: 0;
-        position: relative;
     }
-    
+
     .hairstyle-options-group-wrapper {
+        gap: 12px;
         padding-left: 0;
-        padding-right: 10px;
+        padding-right: 12px;
+    }
+
+    .booking-modal {
+        padding: 24px;
+        width: 95%;
+    }
+
+    .booking-modal h2 {
+        font-size: 1.5em;
+    }
+}
+
+@media (min-width: 601px) {
+    #central-viewport {
+        width: var(--viewport-size-desktop);
+        height: var(--viewport-size-desktop);
     }
 }
     </style>
@@ -633,7 +838,6 @@ body {
 <body>
     <div id="app-header">
         <div id="main-title-container">
-            <img id="header-logo" src="assets/staghouse.png" alt="Looks Logo">
             <h1 id="main-title">Looks</h1>
         </div>
     </div>
@@ -646,9 +850,9 @@ body {
         </div>
 
         <div id="additional-filters-selector" class="filter-section collapsed">
-            <h3><span>+ Additional Filters</span><span class="icon"></span></h3>
+            <h3><span>+ Additional Filters</span></h3>
             <div class="filter-content-group">
-                <p style="font-size: 0.9em; font-weight: bold; margin-bottom: 5px;">Complexion (Optional)</p>
+                <p style="font-size: 0.95em; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">Complexion (Optional)</p>
                 <div id="complexion-options-group" class="filter-options-group">
                     <div class="complexion-tile" style="background-color: #F8D7BE;" data-complexion="Light" data-complexion-code="default"></div>
                     <div class="complexion-tile" style="background-color: #D6A476;" data-complexion="Medium" data-complexion-code="default"></div>
@@ -660,31 +864,25 @@ body {
         
         <div id="central-section">
             <div id="central-viewport">
-                <div id="camera-placeholder-icon">
-                </div>
-                
+                <div id="camera-placeholder-icon"></div>
                 <video id="video-feed" autoplay playsinline></video>
                 <img id="ai-result" style="display: none;" src="" alt="AI Hairstyle Result">
-                <p id="status-message">Tap the silhouette above to take a selfie.</p>
+                <p id="status-message">Tap above to take a selfie</p>
             </div>
         </div>
         
         <div id="controls-footer-row">
-            <button id="camera-capture-btn" class="circular-action-btn main-action-btn" disabled>📸</button> 
+            <button id="camera-capture-btn" class="circular-action-btn main-action-btn" disabled>📸</button>
             <button id="redo-selfie-btn" class="circular-action-btn main-action-btn" style="display: none;">🔄</button>
             <button id="generate-look-btn" class="circular-action-btn main-action-btn" style="display: none;">✨</button>
-            <div id="loading-spinner" class="spinner" style="display: none;"></div>
+            <div id="loading-spinner" style="display: none;"></div>
             <button id="book-appointment-btn" class="main-action-btn" style="display: none;">Book Appointment</button>
         </div>
 
         <div id="style-inspiration-section">
             <p>Get the Look</p>
-            
-            <div id="male-hairstyle-options-group" class="hairstyle-options-group-wrapper">
-                </div>
-            
+            <div id="male-hairstyle-options-group" class="hairstyle-options-group-wrapper"></div>
             <div id="female-hairstyle-options-group" class="hairstyle-options-group-wrapper" style="display: none;">
-                
                 <div class="style-option" data-prompt="A shoulder-length cut with soft waves and natural volume, warm brunette color, gentle face-framing layers.">
                     <img class="style-thumbnail" src="styles/female/style1.png" alt="Soft Wavy Layers">
                     <p>Soft Wavy Layers</p>
@@ -769,28 +967,30 @@ body {
                     <img class="style-thumbnail" src="styles/female/style21.png" alt="Blunt Bangs Long">
                     <p>Blunt Bangs Long</p>
                 </div>
-                
             </div>
-            
-            </div>
+        </div>
 
-    </div> <canvas id="hidden-canvas" style="display: none;"></canvas>
+    </div>
+
+    <canvas id="hidden-canvas" style="display: none;"></canvas>
 
     <div id="booking-modal-overlay" class="modal-overlay">
         <div class="booking-modal">
             <button class="modal-close-btn" id="modal-close-btn">&times;</button>
             <h2>Book Your Look</h2>
             <div class="modal-content">
-                <p>You are booking the style reference below:</p>
+                <p style="color: var(--text-secondary); margin-bottom: 12px;">You are booking the style reference below:</p>
                 <img id="reference-image-preview" src="" alt="AI Generated Style Reference">
-                <p style="font-size: 0.8em; margin-top: 5px; color: #555;">**Style Selected: <span id="selected-style-name"></span>**</p>
+                <p style="font-size: 0.9em; margin-top: 8px; color: var(--text-secondary); font-weight: 600;">
+                    Style: <span id="selected-style-name" style="color: var(--primary-color);"></span>
+                </p>
                 
                 <form id="booking-form">
                     <label for="name">Your Name</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" required placeholder="John Smith">
 
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" required placeholder="john@example.com">
 
                     <label for="date">Select Date</label>
                     <input type="date" id="date" name="date" required>
@@ -801,35 +1001,30 @@ body {
                     </select>
 
                     <button type="submit" class="submit-btn" disabled>Confirm Booking</button>
-                    <p id="booking-status-message" style="margin-top: 10px; color: #dc3545; font-weight: bold;"></p>
+                    <p id="booking-status-message"></p>
                 </form>
             </div>
         </div>
     </div>
+
     <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Get DOM elements
     const videoFeed = document.getElementById('video-feed');
     const aiResultImg = document.getElementById('ai-result');
     const canvas = document.getElementById('hidden-canvas');
     const cameraPlaceholderIcon = document.getElementById('camera-placeholder-icon');
-
     const cameraCaptureBtn = document.getElementById('camera-capture-btn');
     const redoSelfieBtn = document.getElementById('redo-selfie-btn');
     const generateLookBtn = document.getElementById('generate-look-btn');
-    const bookAppointmentBtn = document.getElementById('book-appointment-btn'); 
+    const bookAppointmentBtn = document.getElementById('book-appointment-btn');
     const spinner = document.getElementById('loading-spinner');
     const statusMessage = document.getElementById('status-message');
-
     const filtersAccordion = document.getElementById('additional-filters-selector');
     const complexionGroup = document.getElementById('complexion-options-group');
-    
     const maleStyleOptionsGroup = document.getElementById('male-hairstyle-options-group');
     const femaleStyleOptionsGroup = document.getElementById('female-hairstyle-options-group');
-    
     const maleGenderBtn = document.getElementById('male-gender-btn');
     const femaleGenderBtn = document.getElementById('female-gender-btn');
-    
     const bookingModalOverlay = document.getElementById('booking-modal-overlay');
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const bookingForm = document.getElementById('booking-form');
@@ -838,15 +1033,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateInput = document.getElementById('date');
     const timeSelect = document.getElementById('time');
 
-    // State tracking variables
     let capturedImageBase64 = null;
     let selectedPrompt = null;
-    let selectedStyleLabel = null; 
+    let selectedStyleLabel = null;
     let cameraStarted = false;
     let selectedGender = 'Male';
     let selectedComplexionCode = null;
     let imageCaptured = false;
-    let aiGenerationComplete = false; 
+    let aiGenerationComplete = false;
 
     const NEGATIVE_PROMPT = "extra fingers, blurry, low resolution, bad hands, deformed face, mask artifact, bad blending, unnatural hair hair color, ugly, tiling, duplicate, abstract, cartoon, distorted pupils, bad lighting, cropped, grainy, noise, poor lighting, poor composition, low quality, changed clothing, changed background, new outfit, new background, different lighting";
 
@@ -901,7 +1095,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return array;
     }
-    
+
     function createStyleElement(style) {
         const div = document.createElement('div');
         div.className = 'style-option';
@@ -922,7 +1116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         div.addEventListener('click', () => handleStyleSelect(div));
         return div;
     }
-    
+
     function renderStyles(container, stylesArray) {
         container.innerHTML = '';
         stylesArray.forEach(style => {
@@ -933,13 +1127,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateMaleStyleGallery(filterCode = null) {
         let filteredStyles;
-        
         if (filterCode) {
             filteredStyles = ALL_MALE_STYLES.filter(style => style.code === filterCode);
         } else {
             filteredStyles = ALL_MALE_STYLES;
         }
-
         const shuffledStyles = shuffle([...filteredStyles]);
         renderStyles(maleStyleOptionsGroup, shuffledStyles);
         selectedPrompt = null;
@@ -958,30 +1150,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (spinner.classList.contains('active')) {
             spinner.style.display = 'block';
         } else if (aiGenerationComplete) {
-            redoSelfieBtn.style.display = 'flex'; 
-            bookAppointmentBtn.style.display = 'flex'; 
-            statusMessage.textContent = `Success! Your new look is ready. Book an appointment or click 🔄 to redo.`;
+            redoSelfieBtn.style.display = 'flex';
+            bookAppointmentBtn.style.display = 'flex';
+            statusMessage.textContent = `Ready to book! Or try another style`;
         } else if (imageCaptured) {
-            redoSelfieBtn.style.display = 'flex'; 
+            redoSelfieBtn.style.display = 'flex';
             if (selectedPrompt) {
-                generateLookBtn.style.display = 'flex'; 
+                generateLookBtn.style.display = 'flex';
                 generateLookBtn.disabled = false;
-                const complexionStatus = selectedComplexionCode ? `(Complexion Filter Active)` : '';
-                statusMessage.textContent = `Style selected: ${selectedStyleLabel}. Click ✨ to generate ${complexionStatus}.`;
+                statusMessage.textContent = `Tap ✨ to generate your new look`;
             } else {
-                statusMessage.textContent = "Image captured. Select a hairstyle to unlock the 'Generate' button.";
+                statusMessage.textContent = "Select a hairstyle below";
             }
         } else {
             cameraCaptureBtn.style.display = 'flex';
-            cameraCaptureBtn.disabled = !cameraStarted; 
+            cameraCaptureBtn.disabled = !cameraStarted;
             if (cameraStarted) {
-                statusMessage.textContent = "Adjust your face in the box, then click 📸 to capture.";
+                statusMessage.textContent = "Position your face, then tap 📸";
             } else {
-                statusMessage.textContent = "Tap the silhouette above to take a selfie"; 
+                statusMessage.textContent = "Tap above to take a selfie";
             }
         }
     }
-    
+
     function findClosestToCenter(scrollContainer, styleOptions) {
         const containerCenter = scrollContainer.scrollLeft + (scrollContainer.clientWidth / 2);
         let closestOption = null;
@@ -990,31 +1181,26 @@ document.addEventListener('DOMContentLoaded', () => {
         styleOptions.forEach(option => {
             const optionCenter = option.offsetLeft + (option.offsetWidth / 2);
             const difference = Math.abs(optionCenter - containerCenter);
-
             if (difference < minDifference) {
                 minDifference = difference;
                 closestOption = option;
             }
         });
-
         return closestOption;
     }
 
     function updateStyleSelectionOnScroll(scrollContainer, allOptions) {
         if (scrollContainer.style.display === 'none') return;
-        
         const closestOption = findClosestToCenter(scrollContainer, allOptions);
-
         if (closestOption) {
             if (!closestOption.classList.contains('selected')) {
                 allOptions.forEach(o => o.classList.remove('selected'));
                 closestOption.classList.add('selected');
             }
-            
             if (selectedPrompt !== closestOption.dataset.prompt) {
                 selectedPrompt = closestOption.dataset.prompt;
-                selectedStyleLabel = closestOption.querySelector('p').textContent || closestOption.dataset.prompt; 
-                updateButtonVisibility(); 
+                selectedStyleLabel = closestOption.querySelector('p').textContent || closestOption.dataset.prompt;
+                updateButtonVisibility();
             }
         }
     }
@@ -1034,15 +1220,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         groupWrapper.addEventListener('scroll', scrollHandler);
         groupWrapper._scrollHandler = scrollHandler;
-        scrollHandler(); 
+        scrollHandler();
     };
 
     function handleGenderSelect(gender) {
         selectedComplexionCode = null;
         complexionGroup.querySelectorAll('.complexion-tile').forEach(t => t.classList.remove('selected'));
-        
         selectedGender = gender;
-        
         maleGenderBtn.classList.remove('selected');
         femaleGenderBtn.classList.remove('selected');
         
@@ -1051,7 +1235,7 @@ document.addEventListener('DOMContentLoaded', () => {
             maleStyleOptionsGroup.style.display = 'flex';
             femaleStyleOptionsGroup.style.display = 'none';
             filtersAccordion.style.display = 'block';
-            updateMaleStyleGallery(null); 
+            updateMaleStyleGallery(null);
         } else if (gender === 'Female') {
             femaleGenderBtn.classList.add('selected');
             maleStyleOptionsGroup.style.display = 'none';
@@ -1059,10 +1243,9 @@ document.addEventListener('DOMContentLoaded', () => {
             filtersAccordion.style.display = 'none';
             setupScrollListeners(femaleStyleOptionsGroup);
         }
-        
         if (imageCaptured) resetSession();
     }
-    
+
     function toggleFilterSection(section) {
         if (section.classList.contains('collapsed')) {
             section.classList.remove('collapsed');
@@ -1075,77 +1258,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleComplexionSelect(tile) {
         if (selectedGender !== 'Male') return;
-        
         const isSelected = tile.classList.contains('selected');
         const complexionTiles = complexionGroup.querySelectorAll('.complexion-tile');
         const code = tile.dataset.complexionCode;
-
         complexionTiles.forEach(t => t.classList.remove('selected'));
-        
         let newFilterCode = null;
-
         if (!isSelected) {
             tile.classList.add('selected');
-            newFilterCode = code; 
-        } 
-        
+            newFilterCode = code;
+        }
         selectedComplexionCode = newFilterCode;
         updateMaleStyleGallery(selectedComplexionCode);
     }
-    
+
     function handleStyleSelect(styleOption) {
         const scrollContainer = styleOption.closest('.hairstyle-options-group-wrapper');
         if (scrollContainer) {
             const containerWidth = scrollContainer.clientWidth;
             const optionWidth = styleOption.offsetWidth;
             const scrollTarget = styleOption.offsetLeft - (containerWidth / 2) + (optionWidth / 2);
-            
-            scrollContainer.scrollTo({
-                left: scrollTarget,
-                behavior: 'smooth'
-            });
+            scrollContainer.scrollTo({ left: scrollTarget, behavior: 'smooth' });
         }
     }
 
     async function startCamera() {
-        if (cameraStarted) return; 
+        if (cameraStarted) return;
         statusMessage.textContent = "Requesting camera access...";
         cameraCaptureBtn.disabled = true;
-
         try {
             const constraints = {
-                video: {
-                    facingMode: 'user', 
-                    width: { ideal: 250 },
-                    height: { ideal: 250 }
-                }
+                video: { facingMode: 'user', width: { ideal: 250 }, height: { ideal: 250 } }
             };
             const stream = await navigator.mediaDevices.getUserMedia(constraints);
             videoFeed.srcObject = stream;
-            
             await new Promise(resolve => {
                 videoFeed.onloadedmetadata = () => {
                     videoFeed.play();
                     resolve();
                 };
             });
-
             cameraStarted = true;
             imageCaptured = false;
-            aiGenerationComplete = false; 
-
-            cameraPlaceholderIcon.style.display = 'none'; 
+            aiGenerationComplete = false;
+            cameraPlaceholderIcon.style.display = 'none';
             aiResultImg.style.display = 'none';
-            videoFeed.style.display = 'block'; 
-
+            videoFeed.style.display = 'block';
             updateButtonVisibility();
         } catch (error) {
             console.error('Error accessing camera:', error);
-            statusMessage.textContent = `Error: Cannot start camera. Check permissions/device settings. (${error.name})`;
+            statusMessage.textContent = `Camera access denied. Please check permissions.`;
             cameraPlaceholderIcon.style.display = 'block';
             videoFeed.style.display = 'none';
             cameraStarted = false;
-            updateButtonVisibility(); 
+            updateButtonVisibility();
         }
     }
 
@@ -1159,26 +1324,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function captureImage() {
         if (!cameraStarted) return;
-
         const context = canvas.getContext('2d');
-        const width = videoFeed.videoWidth || 250; 
+        const width = videoFeed.videoWidth || 250;
         const height = videoFeed.videoHeight || 250;
-
         canvas.width = width;
         canvas.height = height;
-        context.drawImage(videoFeed, 0, 0, width, width); 
-
+        context.drawImage(videoFeed, 0, 0, width, width);
         const fullDataURL = canvas.toDataURL('image/jpeg');
         const parts = fullDataURL.split(',');
         capturedImageBase64 = parts.length > 1 ? parts[1] : fullDataURL;
-
         imageCaptured = true;
-        aiGenerationComplete = false; 
-
+        aiGenerationComplete = false;
         videoFeed.style.display = 'none';
         aiResultImg.style.display = 'block';
-        aiResultImg.src = fullDataURL; 
-
+        aiResultImg.src = fullDataURL;
         stopCamera();
         updateButtonVisibility();
     }
@@ -1188,19 +1347,16 @@ document.addEventListener('DOMContentLoaded', () => {
         aiResultImg.style.display = 'none';
         cameraPlaceholderIcon.style.display = 'block';
         imageCaptured = false;
-        aiGenerationComplete = false; 
+        aiGenerationComplete = false;
         capturedImageBase64 = null;
         spinner.classList.remove('active');
-
         if(selectedGender === 'Male') {
             updateMaleStyleGallery(selectedComplexionCode);
         } else {
             setupScrollListeners(femaleStyleOptionsGroup);
         }
-
         filtersAccordion.classList.remove('expanded');
         filtersAccordion.classList.add('collapsed');
-
         updateButtonVisibility();
     }
 
@@ -1212,7 +1368,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     redoSelfieBtn.addEventListener('click', () => {
         resetSession();
-        startCamera(); 
+        startCamera();
     });
 
     generateLookBtn.addEventListener('click', async () => {
@@ -1220,51 +1376,40 @@ document.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = "Please capture a selfie and select a hairstyle first.";
             return;
         }
-
         spinner.classList.add('active');
         updateButtonVisibility();
-        statusMessage.textContent = "Uploading image and defining style...";
-
+        statusMessage.textContent = "Creating your new look...";
         const complexionClause = selectedComplexionCode
             ? ` with a ${selectedComplexionCode === 'ds' ? 'darkest' : 'standard'} complexion`
             : ``;
-
         const finalPrompt = `STRICTLY operate in an inpainting/editing mode. The ONLY element to be changed is the subject's hair. PRESERVE the subject's face, identity, expression, clothing, and background EXACTLY as they appear in the original photograph. Apply the following hairstyle, matching its texture, color, and shape: ${selectedPrompt}. The final result must be a high quality, professional studio portrait of a ${selectedGender} model${complexionClause} with NO other changes besides the hair.`;
-
         try {
-            statusMessage.textContent = "Processing your new look"; 
             const response = await fetch('/.netlify/functions/run_model', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     baseImage: capturedImageBase64,
                     prompt: finalPrompt,
-                    negativePrompt: NEGATIVE_PROMPT 
+                    negativePrompt: NEGATIVE_PROMPT
                 })
             });
-
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
             }
-
             const data = await response.json();
-
             aiResultImg.src = `data:image/jpeg;base64,${data.generatedImageBase64}`;
             aiResultImg.style.display = 'block';
             videoFeed.style.display = 'none';
             cameraPlaceholderIcon.style.display = 'none';
-
-            aiGenerationComplete = true; 
-            imageCaptured = true; 
-            capturedImageBase64 = data.generatedImageBase64; 
-            
+            aiGenerationComplete = true;
+            imageCaptured = true;
+            capturedImageBase64 = data.generatedImageBase64;
             spinner.classList.remove('active');
             updateButtonVisibility();
-
         } catch (error) {
             console.error('AI Processing Error:', error);
-            statusMessage.textContent = `Error during AI try-on: ${error.message}. Please check console and retry.`;
+            statusMessage.textContent = `Error: ${error.message}. Please try again.`;
             spinner.classList.remove('active');
             updateButtonVisibility();
         }
@@ -1275,15 +1420,11 @@ document.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = "Please generate a look first before booking.";
             return;
         }
-
         referenceImagePreview.src = aiResultImg.src;
         selectedStyleNameSpan.textContent = selectedStyleLabel;
-        
-        // Set minimum date to tomorrow
         const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setDate(tomorrow.setDate() + 1);
         dateInput.min = tomorrow.toISOString().split('T')[0];
-        
         bookingModalOverlay.classList.add('visible');
     });
 
@@ -1291,25 +1432,19 @@ document.addEventListener('DOMContentLoaded', () => {
         bookingModalOverlay.classList.remove('visible');
     });
 
-    // NEW: Date change handler for loading availability
     dateInput.addEventListener('change', async (e) => {
         const selectedDate = e.target.value;
         const submitButton = bookingForm.querySelector('.submit-btn');
-        
         if (!selectedDate) return;
-        
-        timeSelect.innerHTML = '<option value="">Loading availability...</option>';
+        timeSelect.innerHTML = '<option value="">Loading...</option>';
         submitButton.disabled = true;
-        
         try {
             const response = await fetch('/.netlify/functions/get-availability', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ date: selectedDate })
             });
-            
             const data = await response.json();
-            
             if (data.availableSlots && data.availableSlots.length > 0) {
                 timeSelect.innerHTML = '<option value="">Select a time...</option>';
                 data.availableSlots.forEach(slot => {
@@ -1319,36 +1454,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     timeSelect.appendChild(option);
                 });
             } else {
-                timeSelect.innerHTML = '<option value="">No times available for this date</option>';
+                timeSelect.innerHTML = '<option value="">No times available</option>';
             }
         } catch (error) {
             console.error('Error fetching availability:', error);
-            timeSelect.innerHTML = '<option value="">Error loading times - please try again</option>';
+            timeSelect.innerHTML = '<option value="">Error - try again</option>';
         }
     });
 
-    // NEW: Time select handler to enable submit button
     timeSelect.addEventListener('change', (e) => {
         const submitButton = bookingForm.querySelector('.submit-btn');
         submitButton.disabled = !e.target.value;
     });
 
-    // NEW: Updated booking form submit handler with Airtable integration
     bookingForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const bookingStatusMessage = document.getElementById('booking-status-message');
         const submitButton = bookingForm.querySelector('.submit-btn');
-
         submitButton.textContent = "Processing...";
         submitButton.disabled = true;
-        bookingStatusMessage.style.color = '#ffc107';
+        bookingStatusMessage.style.color = '#f59e0b';
         bookingStatusMessage.textContent = "Creating your appointment...";
-        
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
         const date = document.getElementById('date').value;
         const time = document.getElementById('time').value;
-
         const bookingData = {
             firstName: name.split(' ')[0] || '',
             lastName: name.split(' ').slice(1).join(' ') || '',
@@ -1359,22 +1489,17 @@ document.addEventListener('DOMContentLoaded', () => {
             stylePrompt: selectedPrompt,
             imageReference: aiResultImg.src
         };
-        
         try {
             const response = await fetch('/.netlify/functions/create-booking', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(bookingData)
             });
-            
             const result = await response.json();
-            
             if (result.success) {
-                bookingStatusMessage.style.color = 'var(--highlight-color)';
-                bookingStatusMessage.textContent = "✅ Booking Confirmed! We'll contact you soon.";
+                bookingStatusMessage.style.color = 'var(--success-color)';
+                bookingStatusMessage.textContent = "✓ Booking confirmed!";
                 submitButton.textContent = "Confirmed!";
-                
-                // Reset form after 3 seconds
                 setTimeout(() => {
                     bookingModalOverlay.classList.remove('visible');
                     bookingForm.reset();
@@ -1382,14 +1507,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     submitButton.disabled = true;
                     bookingStatusMessage.textContent = "";
                     timeSelect.innerHTML = '<option value="">Select a date first...</option>';
-                }, 3000);
+                }, 2500);
             } else {
                 throw new Error(result.error || 'Booking failed');
             }
         } catch (error) {
             console.error('Booking error:', error);
-            bookingStatusMessage.style.color = '#dc3545';
-            bookingStatusMessage.textContent = `❌ Error: ${error.message}. Please try again.`;
+            bookingStatusMessage.style.color = '#ef4444';
+            bookingStatusMessage.textContent = `Error: ${error.message}`;
             submitButton.textContent = "Try Again";
             submitButton.disabled = false;
         }
@@ -1399,22 +1524,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (maleGenderBtn) {
             maleGenderBtn.addEventListener('click', () => handleGenderSelect('Male'));
         }
-
         if (femaleGenderBtn) {
             femaleGenderBtn.addEventListener('click', () => handleGenderSelect('Female'));
         }
-
         if (filtersAccordion) {
             filtersAccordion.querySelector('h3').addEventListener('click', () => toggleFilterSection(filtersAccordion));
             filtersAccordion.classList.add('collapsed');
         }
-
         if (complexionGroup) {
             complexionGroup.querySelectorAll('.complexion-tile').forEach(tile => {
                 tile.addEventListener('click', () => handleComplexionSelect(tile));
             });
         }
-        
         handleGenderSelect('Male');
     }
 
