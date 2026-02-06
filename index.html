@@ -24,8 +24,8 @@
     
     /* Sizing */
     --header-height: 64px;
-    --viewport-size-desktop: 320px;
-    --viewport-size-mobile: 280px;
+    --viewport-size-desktop: 340px;
+    --viewport-size-mobile: 300px;
     --content-max-width: 440px;
     --border-radius-sm: 8px;
     --border-radius-md: 12px;
@@ -96,35 +96,69 @@ body {
 #main-app-container {
     flex-grow: 1;
     width: 100%;
-    padding: 32px 0 40px;
+    padding: 16px 0 32px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 16px;
 }
 
-/* --- GENDER BUTTONS - IMPROVED --- */
-.gender-buttons-container {
+/* --- COMBINED FILTERS ROW --- */
+#filters-combined-row {
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 20px;
     width: 90%;
     max-width: var(--content-max-width);
-    margin-bottom: 8px;
+    margin: 0 auto;
     padding: 0 16px;
 }
 
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-label {
+    font-size: 0.75em;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.filter-separator {
+    width: 1px;
+    height: 50px;
+    background-color: var(--border-color);
+    flex-shrink: 0;
+}
+
+/* --- COMPACT GENDER BUTTONS --- */
+.gender-buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    width: auto;
+    margin: 0;
+    padding: 0;
+}
+
 .gender-button {
-    flex: 1;
-    max-width: 160px;
-    padding: 14px 24px;
-    border: 2px solid var(--border-color);
+    flex: 0 0 auto;
+    min-width: 90px;
+    padding: 8px 20px;
+    border: 1.5px solid var(--border-color);
     background-color: var(--surface-color);
     color: var(--text-primary);
     border-radius: var(--border-radius-full);
     cursor: pointer;
-    font-size: 1em;
+    font-size: 0.9em;
     font-weight: 600;
     text-align: center;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -136,14 +170,14 @@ body {
     background-color: #f9fafb;
     border-color: var(--primary-color);
     transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .gender-button.selected {
     background-color: var(--primary-color);
     color: var(--text-on-dark);
     border-color: var(--primary-color);
-    box-shadow: 0 4px 12px rgba(26, 31, 54, 0.25);
+    box-shadow: 0 2px 6px rgba(26, 31, 54, 0.2);
 }
 
 /* --- CAMERA SECTION - POLISHED --- */
@@ -390,94 +424,49 @@ body {
     to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* --- FILTER SECTION - REFINED --- */
+/* --- VISIBLE FILTER PILLS --- */
 .filter-section {
     width: 90%;
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 0 16px;
-    background-color: var(--surface-color);
-    border-radius: var(--border-radius-md);
-    text-align: left;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    background-color: transparent;
+    border-radius: 0;
+    text-align: center;
 }
 
 .filter-section h3 {
-    font-size: 0.95em;
-    font-weight: 700;
-    margin: 0;
-    padding: 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    background-color: var(--surface-color);
-    border-radius: var(--border-radius-md);
-    transition: all 0.2s ease;
-    color: var(--text-secondary);
-}
-
-.filter-section.collapsed h3 {
-    background-color: #f3f4f6;
-    color: var(--text-secondary);
-    border-radius: var(--border-radius-full);
-    height: 44px;
-    width: fit-content;
-    min-width: 180px;
-    max-width: 240px;
-    padding: 0 24px;
-    justify-content: center;
-    overflow: hidden;
-    margin: 0 auto 16px auto;
     font-size: 0.85em;
-    display: flex;
-    align-items: center;
-}
-
-.filter-section.collapsed h3 span {
-    display: inline;
-    white-space: nowrap;
-}
-
-.filter-section.collapsed h3::after {
-    content: none;
-}
-
-.filter-section.expanded h3 {
-    background-color: var(--primary-color);
-    color: var(--text-on-dark);
-    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
-    height: auto;
-    width: 100%;
-    max-width: var(--content-max-width);
-    padding: 16px;
+    font-weight: 600;
     margin: 0;
-    justify-content: space-between;
-}
-
-.filter-section h3::after {
-    content: '▶';
-    font-size: 0.75em;
-    margin-left: 8px;
-    transition: transform 0.2s;
-    line-height: 1;
-}
-
-.filter-section.expanded h3::after {
-    content: '▼';
-    color: var(--text-on-dark);
+    padding: 0;
+    text-transform: none;
+    letter-spacing: 0;
+    display: none; /* Hide the header, show pills directly */
 }
 
 .filter-content-group {
-    padding: 16px;
-    background-color: #f9fafb;
-    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+    padding: 0;
+    background-color: transparent;
+    border-radius: 0;
 }
 
 .filter-section.collapsed .filter-content-group {
-    display: none;
+    display: flex; /* Always show, even when "collapsed" */
+    justify-content: center;
+}
+
+.filter-section.expanded .filter-content-group {
+    display: flex;
+}
+
+/* Complexion label */
+.filter-content-group > p {
+    font-size: 0.85em;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: var(--text-secondary);
+    text-align: center;
 }
 
 .filter-options-group {
@@ -489,25 +478,27 @@ body {
 }
 
 #complexion-options-group {
-    justify-content: flex-start;
+    justify-content: center;
     gap: 10px;
-    padding-top: 8px;
+    padding: 0;
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 .complexion-tile {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border: 3px solid transparent;
     flex-shrink: 0;
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .complexion-tile:hover {
     transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .complexion-tile p {
@@ -520,21 +511,23 @@ body {
     transform: scale(1.15);
 }
 
-/* --- HAIRSTYLE GALLERY - PREMIUM LOOK --- */
+/* --- HAIRSTYLE GALLERY - SNAPCHAT STYLE --- */
 #style-inspiration-section {
-    width: 90%;
-    max-width: var(--content-max-width);
-    margin: 0 auto;
-    padding: 0 16px;
+    width: 100%;
+    max-width: 100vw;
+    margin: 0;
+    padding: 0;
     text-align: center;
+    position: relative;
 }
 
 #style-inspiration-section p {
-    font-size: 1.1em;
-    font-weight: 700;
-    margin: 0 0 16px 0;
-    color: var(--text-primary);
-    letter-spacing: 0.01em;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
 
 .hairstyle-options-group-wrapper {
@@ -545,8 +538,8 @@ body {
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    gap: 16px;
-    padding-bottom: 16px;
+    gap: 20px;
+    padding: 0 calc(50vw - 60px) 20px; /* Center first/last items */
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }
@@ -565,9 +558,11 @@ body {
     border: 3px solid transparent;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    transform-origin: center bottom;
+    transform-origin: center;
     border-radius: var(--border-radius-md);
-    padding: 4px;
+    padding: 6px;
+    scroll-snap-align: center; /* Snap to center like Snapchat */
+    scroll-snap-stop: always;
 }
 
 .style-option:hover {
@@ -578,7 +573,7 @@ body {
     border-color: var(--accent-color);
     border-radius: var(--border-radius-md);
     box-shadow: 0 0 0 2px var(--surface-color), 0 0 0 5px var(--accent-color), 0 8px 20px rgba(0, 212, 255, 0.3);
-    transform: scale(1.15);
+    transform: scale(1.2);
     z-index: 10;
 }
 
@@ -764,25 +759,43 @@ body {
     }
 
     #main-app-container {
-        padding: 24px 0 32px;
-        gap: 20px;
+        padding: 12px 0 24px;
+        gap: 14px;
     }
 
+    #filters-combined-row {
+        flex-direction: column;
+        gap: 16px;
+        width: 95%;
+        padding: 0;
+    }
+    
+    .filter-separator {
+        width: 80%;
+        height: 1px;
+        margin: 0 auto;
+    }
+    
     .gender-buttons-container,
     #central-section,
-    #style-inspiration-section,
     #additional-filters-selector,
     #controls-footer-row {
-        width: 95%;
-        max-width: 95%;
-        padding: 0 12px;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+    }
+    
+    #style-inspiration-section {
+        width: 100%;
+        max-width: 100vw;
+        padding: 0;
     }
 
     #central-viewport {
-        width: 85vw;
-        height: 85vw;
-        max-width: 300px;
-        max-height: 300px;
+        width: 80vw;
+        height: 80vw;
+        max-width: 320px;
+        max-height: 320px;
     }
 
     .circular-action-btn {
@@ -790,12 +803,22 @@ body {
         height: 56px;
         font-size: 24px;
     }
+    
+    #camera-capture-btn {
+        width: 68px;
+        height: 68px;
+    }
+    
+    #camera-capture-btn::before {
+        width: 52px;
+        height: 52px;
+    }
 
     #complexion-options-group {
-        justify-content: flex-start;
+        justify-content: center;
         gap: 12px;
-        padding-bottom: 8px;
-        padding-top: 8px;
+        padding-bottom: 0;
+        padding-top: 0;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
@@ -806,15 +829,14 @@ body {
     }
 
     .complexion-tile {
-        width: 52px;
-        height: 52px;
+        width: 44px;
+        height: 44px;
         flex-shrink: 0;
     }
 
     .hairstyle-options-group-wrapper {
-        gap: 12px;
-        padding-left: 0;
-        padding-right: 12px;
+        gap: 16px;
+        padding: 0 calc(50vw - 60px) 16px;
     }
 
     .booking-modal {
@@ -844,33 +866,17 @@ body {
 
     <div id="main-app-container">
         
-        <div class="gender-buttons-container">
-            <button id="male-gender-btn" class="gender-button">Male</button>
-            <button id="female-gender-btn" class="gender-button">Female</button>
-        </div>
-
-        <div id="additional-filters-selector" class="filter-section collapsed">
-            <h3><span>+ Additional Filters</span></h3>
-            <div class="filter-content-group">
-                <p style="font-size: 0.95em; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">Complexion (Optional)</p>
-                <div id="complexion-options-group" class="filter-options-group">
-                    <div class="complexion-tile" style="background-color: #F8D7BE;" data-complexion="Light" data-complexion-code="default"></div>
-                    <div class="complexion-tile" style="background-color: #D6A476;" data-complexion="Medium" data-complexion-code="default"></div>
-                    <div class="complexion-tile" style="background-color: #A97A52;" data-complexion="Dark" data-complexion-code="ds"></div>
-                    <div class="complexion-tile" style="background-color: #6A3E26;" data-complexion="Deep" data-complexion-code="ds"></div>
-                </div>
-            </div>
-        </div>
-        
+        <!-- SECTION 1: CAMERA/SELFIE (Hero Element) -->
         <div id="central-section">
             <div id="central-viewport">
                 <div id="camera-placeholder-icon"></div>
                 <video id="video-feed" autoplay playsinline></video>
                 <img id="ai-result" style="display: none;" src="" alt="AI Hairstyle Result">
-                <p id="status-message">Tap above to take a selfie</p>
+                <p id="status-message">Tap to take selfie</p>
             </div>
         </div>
         
+        <!-- SECTION 2: ACTION BUTTONS -->
         <div id="controls-footer-row">
             <button id="camera-capture-btn" class="circular-action-btn main-action-btn" disabled>📸</button>
             <button id="redo-selfie-btn" class="circular-action-btn main-action-btn" style="display: none;">🔄</button>
@@ -879,8 +885,37 @@ body {
             <button id="book-appointment-btn" class="main-action-btn" style="display: none;">Book Appointment</button>
         </div>
 
+        <!-- SECTION 3: FILTERS (Gender + Skin Tone on one line) -->
+        <div id="filters-combined-row">
+            <div class="filter-group">
+                <p class="filter-label">Gender</p>
+                <div class="gender-buttons-container">
+                    <button id="male-gender-btn" class="gender-button">Male</button>
+                    <button id="female-gender-btn" class="gender-button">Female</button>
+                </div>
+            </div>
+            
+            <div class="filter-separator"></div>
+            
+            <div class="filter-group">
+                <p class="filter-label">Skin Tone</p>
+                <div id="additional-filters-selector" class="filter-section collapsed">
+                    <h3><span>+ Additional Filters</span></h3>
+                    <div class="filter-content-group">
+                        <div id="complexion-options-group" class="filter-options-group">
+                            <div class="complexion-tile" style="background-color: #F8D7BE;" data-complexion="Light" data-complexion-code="default"></div>
+                            <div class="complexion-tile" style="background-color: #D6A476;" data-complexion="Medium" data-complexion-code="default"></div>
+                            <div class="complexion-tile" style="background-color: #A97A52;" data-complexion="Dark" data-complexion-code="ds"></div>
+                            <div class="complexion-tile" style="background-color: #6A3E26;" data-complexion="Deep" data-complexion-code="ds"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 5: STYLE GALLERY (Snapchat-style at bottom) -->
         <div id="style-inspiration-section">
-            <p>Get the Look</p>
+            <p>Swipe to browse styles</p>
             <div id="male-hairstyle-options-group" class="hairstyle-options-group-wrapper"></div>
             <div id="female-hairstyle-options-group" class="hairstyle-options-group-wrapper" style="display: none;">
                 <div class="style-option" data-prompt="A shoulder-length cut with soft waves and natural volume, warm brunette color, gentle face-framing layers.">
@@ -1528,8 +1563,8 @@ document.addEventListener('DOMContentLoaded', () => {
             femaleGenderBtn.addEventListener('click', () => handleGenderSelect('Female'));
         }
         if (filtersAccordion) {
-            filtersAccordion.querySelector('h3').addEventListener('click', () => toggleFilterSection(filtersAccordion));
-            filtersAccordion.classList.add('collapsed');
+            // Filters are now always visible, no toggle needed
+            filtersAccordion.classList.add('collapsed'); // Keep in collapsed state to show pills
         }
         if (complexionGroup) {
             complexionGroup.querySelectorAll('.complexion-tile').forEach(tile => {
