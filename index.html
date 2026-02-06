@@ -51,6 +51,12 @@ body {
     flex-direction: column;
     min-height: 100vh;
     line-height: 1.6;
+    transition: background-color 0.3s ease;
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 /* --- PROFESSIONAL HEADER --- */
@@ -275,11 +281,39 @@ body {
     letter-spacing: 0.01em;
 }
 
+/* --- LIVE PREVIEW OVERLAY --- */
+#style-preview-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.3), 0 8px 20px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 50;
+    object-fit: cover;
+    object-position: top;
+    display: none;
+}
+
+#style-preview-overlay.active {
+    opacity: 0.85;
+}
+
+#style-preview-overlay:hover {
+    opacity: 0.95;
+}
+
 /* --- PROFESSIONAL BUTTONS --- */
 .main-action-btn {
     cursor: pointer;
     border: none;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 600;
     letter-spacing: 0.01em;
 }
@@ -289,7 +323,8 @@ body {
 }
 
 .main-action-btn:active {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.97);
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .circular-action-btn {
@@ -883,6 +918,7 @@ body {
                 <div id="camera-placeholder-icon"></div>
                 <video id="video-feed" autoplay playsinline></video>
                 <img id="ai-result" style="display: none;" src="" alt="AI Hairstyle Result">
+                <img id="style-preview-overlay" src="" alt="Style Preview">
                 <p id="status-message">Tap to take selfie</p>
             </div>
         </div>
@@ -1065,6 +1101,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bookAppointmentBtn = document.getElementById('book-appointment-btn');
     const spinner = document.getElementById('loading-spinner');
     const statusMessage = document.getElementById('status-message');
+    const stylePreviewOverlay = document.getElementById('style-preview-overlay');
     const filtersAccordion = document.getElementById('additional-filters-selector');
     const complexionGroup = document.getElementById('complexion-options-group');
     const maleStyleOptionsGroup = document.getElementById('male-hairstyle-options-group');
@@ -1089,6 +1126,26 @@ document.addEventListener('DOMContentLoaded', () => {
     let aiGenerationComplete = false;
 
     const NEGATIVE_PROMPT = "extra fingers, blurry, low resolution, bad hands, deformed face, mask artifact, bad blending, unnatural hair hair color, ugly, tiling, duplicate, abstract, cartoon, distorted pupils, bad lighting, cropped, grainy, noise, poor lighting, poor composition, low quality, changed clothing, changed background, new outfit, new background, different lighting";
+
+    // Fun loading messages
+    const LOADING_MESSAGES = [
+        "✂️ Consulting our AI stylist...",
+        "💈 Mixing the perfect blend...",
+        "✨ Adding the finishing touches...",
+        "🎨 Creating your new look...",
+        "💇 Styling in progress...",
+        "🔮 Working some magic...",
+        "⚡ Almost there..."
+    ];
+    
+    let loadingMessageInterval = null;
+
+    // Haptic feedback helper (vibration on mobile)
+    function triggerHaptic(pattern = 10) {
+        if ('vibrate' in navigator) {
+            navigator.vibrate(pattern);
+        }
+    }
 
     const ALL_MALE_STYLES = [
         { code: 'default', src: "styles/male/style1.png", label: "Tousled Short Crop", prompt: "A short haircut with a tousled and textured top, dark brown color, sharp side profile." },
@@ -1270,6 +1327,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function handleGenderSelect(gender) {
+        triggerHaptic(10); // Light haptic on selection
         selectedComplexionCode = null;
         complexionGroup.querySelectorAll('.complexion-tile').forEach(t => t.classList.remove('selected'));
         selectedGender = gender;
@@ -1304,6 +1362,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleComplexionSelect(tile) {
         if (selectedGender !== 'Male') return;
+        
+        triggerHaptic(8); // Very light haptic for filter
+        
         const isSelected = tile.classList.contains('selected');
         const complexionTiles = complexionGroup.querySelectorAll('.complexion-tile');
         const code = tile.dataset.complexionCode;
@@ -1318,6 +1379,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleStyleSelect(styleOption) {
+        triggerHaptic(8); // Very light haptic for style tap
         const scrollContainer = styleOption.closest('.hairstyle-options-group-wrapper');
         if (scrollContainer) {
             const containerWidth = scrollContainer.clientWidth;
@@ -1407,12 +1469,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     cameraCaptureBtn.addEventListener('click', captureImage);
+    cameraCaptureBtn.addEventListener('click', () => triggerHaptic(15)); // Light haptic
     cameraPlaceholderIcon.addEventListener('click', () => {
         if (!cameraStarted && !imageCaptured) {
+            triggerHaptic(10); // Light haptic
             startCamera();
         }
     });
     redoSelfieBtn.addEventListener('click', () => {
+        triggerHaptic(10); // Light haptic
         resetSession();
         startCamera();
     });
@@ -1420,11 +1485,33 @@ document.addEventListener('DOMContentLoaded', () => {
     generateLookBtn.addEventListener('click', async () => {
         if (!capturedImageBase64 || !selectedPrompt) {
             statusMessage.textContent = "Please capture a selfie and select a hairstyle first.";
+            triggerHaptic([10, 50, 10]); // Error pattern
             return;
         }
+        
+        triggerHaptic(20); // Medium haptic for generate
+
         spinner.classList.add('active');
         updateButtonVisibility();
-        statusMessage.textContent = "Creating your new look...";
+        
+        // Fun loading messages that rotate every 2 seconds
+        const loadingMessages = [
+            "✂️ Consulting our AI stylist...",
+            "💈 Mixing the perfect blend...",
+            "🎨 Adding the finishing touches...",
+            "✨ Creating your new look...",
+            "💇 Styling your hair...",
+            "🔮 Working some magic..."
+        ];
+        
+        let messageIndex = 0;
+        statusMessage.textContent = loadingMessages[0];
+        
+        const messageInterval = setInterval(() => {
+            messageIndex = (messageIndex + 1) % loadingMessages.length;
+            statusMessage.textContent = loadingMessages[messageIndex];
+        }, 2000);
+
         const complexionClause = selectedComplexionCode
             ? ` with a ${selectedComplexionCode === 'ds' ? 'darkest' : 'standard'} complexion`
             : ``;
@@ -1444,6 +1531,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
+            
+            clearInterval(messageInterval); // Stop messages
+            
+            triggerHaptic([20, 50, 20]); // Success pattern!
+            
             aiResultImg.src = `data:image/jpeg;base64,${data.generatedImageBase64}`;
             aiResultImg.style.display = 'block';
             videoFeed.style.display = 'none';
@@ -1454,6 +1546,7 @@ document.addEventListener('DOMContentLoaded', () => {
             spinner.classList.remove('active');
             updateButtonVisibility();
         } catch (error) {
+            clearInterval(messageInterval); // Stop messages on error
             console.error('AI Processing Error:', error);
             statusMessage.textContent = `Error: ${error.message}. Please try again.`;
             spinner.classList.remove('active');
@@ -1464,8 +1557,10 @@ document.addEventListener('DOMContentLoaded', () => {
     bookAppointmentBtn.addEventListener('click', () => {
         if (!aiGenerationComplete) {
             statusMessage.textContent = "Please generate a look first before booking.";
+            triggerHaptic([10, 50, 10]); // Error pattern
             return;
         }
+        triggerHaptic(15); // Medium haptic
         referenceImagePreview.src = aiResultImg.src;
         selectedStyleNameSpan.textContent = selectedStyleLabel;
         const tomorrow = new Date();
