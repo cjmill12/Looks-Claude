@@ -1142,8 +1142,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Haptic feedback helper (vibration on mobile)
     function triggerHaptic(pattern = 10) {
-        if ('vibrate' in navigator) {
-            navigator.vibrate(pattern);
+        try {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(pattern);
+            }
+        } catch (e) {
+            // Silently fail if vibration not supported
         }
     }
 
@@ -1327,7 +1331,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function handleGenderSelect(gender) {
-        triggerHaptic(10); // Light haptic on selection
+        triggerHaptic(10); // Light haptic
         selectedComplexionCode = null;
         complexionGroup.querySelectorAll('.complexion-tile').forEach(t => t.classList.remove('selected'));
         selectedGender = gender;
@@ -1363,7 +1367,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleComplexionSelect(tile) {
         if (selectedGender !== 'Male') return;
         
-        triggerHaptic(8); // Very light haptic for filter
+        triggerHaptic(10); // Light haptic
         
         const isSelected = tile.classList.contains('selected');
         const complexionTiles = complexionGroup.querySelectorAll('.complexion-tile');
@@ -1379,7 +1383,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleStyleSelect(styleOption) {
-        triggerHaptic(8); // Very light haptic for style tap
+        triggerHaptic(8); // Very light haptic - subtle feedback
         const scrollContainer = styleOption.closest('.hairstyle-options-group-wrapper');
         if (scrollContainer) {
             const containerWidth = scrollContainer.clientWidth;
@@ -1432,6 +1436,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function captureImage() {
         if (!cameraStarted) return;
+        
+        triggerHaptic(20); // Medium haptic - satisfying capture feedback
+        
         const context = canvas.getContext('2d');
         const width = videoFeed.videoWidth || 250;
         const height = videoFeed.videoHeight || 250;
@@ -1469,7 +1476,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     cameraCaptureBtn.addEventListener('click', captureImage);
-    cameraCaptureBtn.addEventListener('click', () => triggerHaptic(15)); // Light haptic
     cameraPlaceholderIcon.addEventListener('click', () => {
         if (!cameraStarted && !imageCaptured) {
             triggerHaptic(10); // Light haptic
@@ -1477,7 +1483,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     redoSelfieBtn.addEventListener('click', () => {
-        triggerHaptic(10); // Light haptic
+        triggerHaptic(15); // Medium haptic
         resetSession();
         startCamera();
     });
@@ -1485,11 +1491,11 @@ document.addEventListener('DOMContentLoaded', () => {
     generateLookBtn.addEventListener('click', async () => {
         if (!capturedImageBase64 || !selectedPrompt) {
             statusMessage.textContent = "Please capture a selfie and select a hairstyle first.";
-            triggerHaptic([10, 50, 10]); // Error pattern
+            triggerHaptic([50, 100, 50]); // Double buzz error pattern
             return;
         }
         
-        triggerHaptic(20); // Medium haptic for generate
+        triggerHaptic(30); // Strong haptic - important action!
 
         spinner.classList.add('active');
         updateButtonVisibility();
@@ -1534,7 +1540,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             clearInterval(messageInterval); // Stop messages
             
-            triggerHaptic([20, 50, 20]); // Success pattern!
+            triggerHaptic([30, 50, 30, 50, 30]); // Triple success buzz!
             
             aiResultImg.src = `data:image/jpeg;base64,${data.generatedImageBase64}`;
             aiResultImg.style.display = 'block';
@@ -1557,10 +1563,10 @@ document.addEventListener('DOMContentLoaded', () => {
     bookAppointmentBtn.addEventListener('click', () => {
         if (!aiGenerationComplete) {
             statusMessage.textContent = "Please generate a look first before booking.";
-            triggerHaptic([10, 50, 10]); // Error pattern
+            triggerHaptic([50, 100, 50]); // Double buzz error
             return;
         }
-        triggerHaptic(15); // Medium haptic
+        triggerHaptic(20); // Medium haptic
         referenceImagePreview.src = aiResultImg.src;
         selectedStyleNameSpan.textContent = selectedStyleLabel;
         const tomorrow = new Date();
