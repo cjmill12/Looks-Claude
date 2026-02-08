@@ -243,35 +243,138 @@ body {
 
 #camera-placeholder-icon {
     position: relative;
-    width: 60%;
-    height: 60%;
+    width: 80%;
+    height: 80%;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    border: 3px dashed var(--text-secondary);
-    border-radius: var(--border-radius-md);
-    background-color: rgba(255, 255, 255, 0.5);
+    overflow: visible;
+    background-color: transparent;
 }
 
-#camera-placeholder-icon::before {
-    content: '';
-    position: absolute;
-    top: 15%;
-    width: 40%;
-    height: 40%;
-    background-color: var(--text-secondary);
-    border-radius: 50%;
-}
-
+/* Viewfinder corner brackets */
+#camera-placeholder-icon::before,
 #camera-placeholder-icon::after {
     content: '';
     position: absolute;
-    bottom: -15%;
-    width: 80%;
-    height: 60%;
-    background-color: var(--text-secondary);
-    border-radius: 50% 50% 0 0;
+    width: 50px;
+    height: 50px;
+    border: 3px solid #0ea5e9;
+}
+
+#camera-placeholder-icon::before {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 8px 0 0 0;
+    box-shadow: 
+        inset -3px 0 0 #0ea5e9,
+        inset 0 -3px 0 #0ea5e9;
+}
+
+#camera-placeholder-icon::after {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+    border-radius: 0 0 8px 0;
+}
+
+/* Face guidance oval overlay */
+#face-guide-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 65%;
+    height: 75%;
+    border: 3px dashed rgba(14, 165, 233, 0.6);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    pointer-events: none;
+    z-index: 50;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+#face-guide-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+.viewfinder-corner {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border: 3px solid #0ea5e9;
+    pointer-events: none;
+}
+
+.viewfinder-corner.top-left {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 8px 0 0 0;
+}
+
+.viewfinder-corner.top-right {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0 8px 0 0;
+}
+
+.viewfinder-corner.bottom-left {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+    border-radius: 0 0 0 8px;
+}
+
+.viewfinder-corner.bottom-right {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+    border-radius: 0 0 8px 0;
+}
+
+.viewfinder-crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    pointer-events: none;
+}
+
+.viewfinder-crosshair::before,
+.viewfinder-crosshair::after {
+    content: '';
+    position: absolute;
+    background: #0ea5e9;
+    opacity: 0.4;
+}
+
+.viewfinder-crosshair::before {
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    transform: translateY(-50%);
+}
+
+.viewfinder-crosshair::after {
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    transform: translateX(-50%);
 }
 
 #video-feed, #ai-result {
@@ -1001,10 +1104,16 @@ body {
         <!-- SECTION 1: CAMERA/SELFIE (Hero Element) -->
         <div id="central-section">
             <div id="central-viewport">
-                <div id="camera-placeholder-icon"></div>
+                <div id="camera-placeholder-icon">
+                    <span class="viewfinder-corner top-left"></span>
+                    <span class="viewfinder-corner top-right"></span>
+                    <span class="viewfinder-corner bottom-left"></span>
+                    <span class="viewfinder-corner bottom-right"></span>
+                    <span class="viewfinder-crosshair"></span>
+                </div>
                 <video id="video-feed" autoplay playsinline></video>
                 <img id="ai-result" style="display: none;" src="" alt="AI Hairstyle Result">
-                <img id="style-preview-overlay" src="" alt="Style Preview">
+                <div id="face-guide-overlay"></div>
                 <p id="status-message">Tap to take selfie</p>
             </div>
         </div>
@@ -1181,6 +1290,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiResultImg = document.getElementById('ai-result');
     const canvas = document.getElementById('hidden-canvas');
     const cameraPlaceholderIcon = document.getElementById('camera-placeholder-icon');
+    const faceGuideOverlay = document.getElementById('face-guide-overlay');
     const cameraCaptureBtn = document.getElementById('camera-capture-btn');
     const redoSelfieBtn = document.getElementById('redo-selfie-btn');
     const generateLookBtn = document.getElementById('generate-look-btn');
@@ -1515,6 +1625,11 @@ document.addEventListener('DOMContentLoaded', () => {
             cameraPlaceholderIcon.style.display = 'none';
             aiResultImg.style.display = 'none';
             videoFeed.style.display = 'block';
+            
+            // Show face guide overlay with smooth fade-in
+            faceGuideOverlay.style.display = 'block';
+            setTimeout(() => faceGuideOverlay.classList.add('active'), 50);
+            
             updateButtonVisibility();
         } catch (error) {
             console.error('Error accessing camera:', error);
@@ -1553,6 +1668,11 @@ document.addEventListener('DOMContentLoaded', () => {
         videoFeed.style.display = 'none';
         aiResultImg.style.display = 'block';
         aiResultImg.src = fullDataURL;
+        
+        // Hide face guide overlay
+        faceGuideOverlay.classList.remove('active');
+        setTimeout(() => faceGuideOverlay.style.display = 'none', 400);
+        
         stopCamera();
         updateButtonVisibility();
     }
@@ -1565,6 +1685,11 @@ document.addEventListener('DOMContentLoaded', () => {
         aiGenerationComplete = false;
         capturedImageBase64 = null;
         spinner.classList.remove('active');
+        
+        // Reset face guide overlay
+        faceGuideOverlay.classList.remove('active');
+        faceGuideOverlay.style.display = 'none';
+        
         if(selectedGender === 'Male') {
             updateMaleStyleGallery(selectedComplexionCode);
         } else {
