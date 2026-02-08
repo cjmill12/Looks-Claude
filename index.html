@@ -1329,7 +1329,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const spinner = document.getElementById('loading-spinner');
     const statusMessage = document.getElementById('status-message');
     const stylePreviewOverlay = document.getElementById('style-preview-overlay');
-    const filtersAccordion = document.getElementById('additional-filters-selector');
     const complexionGroup = document.getElementById('complexion-options-group');
     const maleStyleOptionsGroup = document.getElementById('male-hairstyle-options-group');
     const femaleStyleOptionsGroup = document.getElementById('female-hairstyle-options-group');
@@ -1624,13 +1623,11 @@ document.addEventListener('DOMContentLoaded', () => {
             maleGenderBtn.classList.add('selected');
             maleStyleOptionsGroup.style.display = 'flex';
             femaleStyleOptionsGroup.style.display = 'none';
-            filtersAccordion.style.display = 'block';
             updateMaleStyleGallery(null, null);
         } else if (gender === 'Female') {
             femaleGenderBtn.classList.add('selected');
             maleStyleOptionsGroup.style.display = 'none';
             femaleStyleOptionsGroup.style.display = 'flex';
-            filtersAccordion.style.display = 'none';
             setupScrollListeners(femaleStyleOptionsGroup);
         }
         if (imageCaptured) resetSession();
@@ -1781,8 +1778,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             setupScrollListeners(femaleStyleOptionsGroup);
         }
-        filtersAccordion.classList.remove('expanded');
-        filtersAccordion.classList.add('collapsed');
         updateButtonVisibility();
     }
 
@@ -1984,9 +1979,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (femaleGenderBtn) {
             femaleGenderBtn.addEventListener('click', () => handleGenderSelect('Female'));
-        }
-        if (filtersAccordion) {
-            filtersAccordion.classList.add('collapsed');
         }
         if (complexionGroup) {
             complexionGroup.querySelectorAll('.complexion-tile').forEach(tile => {
