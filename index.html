@@ -136,6 +136,14 @@ body {
     gap: 4px;
 }
 
+#gender-filter-group {
+    gap: 6px;
+}
+
+#gender-filter-group .filter-label {
+    font-size: 0.7em;
+}
+
 .filter-label {
     font-size: 0.65em;
     font-weight: 600;
@@ -164,14 +172,14 @@ body {
 
 .gender-button {
     flex: 0 0 auto;
-    min-width: 58px;
-    padding: 5px 12px;
+    min-width: 70px;
+    padding: 8px 16px;
     border: 1.5px solid var(--border-color);
     background-color: var(--surface-color);
     color: var(--text-primary);
     border-radius: var(--border-radius-full);
     cursor: pointer;
-    font-size: 0.75em;
+    font-size: 0.85em;
     font-weight: 600;
     text-align: center;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1244,7 +1252,7 @@ body {
         
         <!-- SECTION 4: COMPACT FILTERS (Below styles, at bottom) -->
         <div id="filters-combined-row">
-            <div class="filter-group">
+            <div class="filter-group" id="gender-filter-group">
                 <p class="filter-label">Gender</p>
                 <div class="gender-buttons-container">
                     <button id="male-gender-btn" class="gender-button">Male</button>
@@ -1262,12 +1270,8 @@ body {
                     <div class="complexion-tile" style="background-color: #A97A52;" data-complexion="Dark" data-complexion-code="ds"></div>
                     <div class="complexion-tile" style="background-color: #6A3E26;" data-complexion="Deep" data-complexion-code="ds"></div>
                 </div>
-            </div>
-            
-            <div class="filter-separator"></div>
-            
-            <div class="filter-group">
-                <p class="filter-label">Hair Color</p>
+                
+                <p class="filter-label" style="margin-top: 12px;">Hair Color</p>
                 <div id="hair-color-options-group" class="filter-options-group">
                     <div class="hair-color-tile" data-color="black" style="background-color: #1a1a1a;" title="Black"></div>
                     <div class="hair-color-tile" data-color="dark-brown" style="background-color: #3d2817;" title="Dark Brown"></div>
