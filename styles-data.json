@@ -389,6 +389,26 @@
       "prompt": "A short afro crop with even density, natural black tone.",
       "image": "male/dark/black/039.jpg",
       "tags": []
+    },
+    {
+      "id": "m_medium_black_040",
+      "name": "Bowl Cut Fringe",
+      "skinTone": "medium",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A textured bowl cut with blunt straight-across bangs, jet black color, clean rounded shape with tapered sides, modern Asian-inspired silhouette.",
+      "image": "styles/male/asian/1.png",
+      "tags": ["bowl-cut", "bangs", "textured", "asian"]
+    },
+    {
+      "id": "m_medium_black_041",
+      "name": "Textured Crop Fade",
+      "skinTone": "medium",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A short textured crop with tight fade on sides, jet black color, choppy layered top with forward styling, sharp clean hairline.",
+      "image": "styles/male/asian/2.png",
+      "tags": ["crop", "fade", "textured", "modern"]
     }
   ]
 }
