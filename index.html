@@ -133,7 +133,7 @@ body {
 #book-button-container {
     width: 100%;
     max-width: var(--content-max-width);
-    margin: 8px auto 12px;
+    margin: 0 auto 8px;
     padding: 0 20px;
     display: flex;
     justify-content: center;
@@ -187,7 +187,7 @@ body {
 }
 
 #filters-combined-row {
-    margin-top: 12px;
+    margin-top: 8px;
 }
 
 .filter-group {
@@ -823,7 +823,7 @@ body {
 #style-inspiration-section p {
     font-size: 0.75em;
     font-weight: 500;
-    margin: 0 0 8px 0;
+    margin: 0 0 6px 0;
     color: var(--text-secondary);
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -1081,8 +1081,8 @@ body {
     }
 
     #main-app-container {
-        padding: 8px 0 15px;
-        gap: 10px;
+        padding: 6px 0 12px;
+        gap: 4px;
     }
     
     #central-section {
@@ -1243,7 +1243,7 @@ body {
     
     #book-button-container {
         width: 95%;
-        margin: 6px auto 10px;
+        margin: 0 auto 8px;
         padding: 0 12px;
     }
     
@@ -1316,9 +1316,8 @@ body {
             </div>
         </div>
         
-        <!-- SECTION 2: ACTION BUTTONS (Loading spinner only) -->
-        <div id="controls-footer-row">
-            <div id="loading-spinner" style="display: none;"></div>
+        <!-- SECTION 2: ACTION BUTTONS (Empty - spinner removed) -->
+        <div id="controls-footer-row" style="display: none;">
         </div>
 
         <!-- SECTION 3: STYLE GALLERY (Snapchat-style) -->
@@ -1501,7 +1500,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const cameraPlaceholderIcon = document.getElementById('camera-placeholder-icon');
     const faceGuideOverlay = document.getElementById('face-guide-overlay');
     const bookAppointmentBtn = document.getElementById('book-appointment-btn');
-    const spinner = document.getElementById('loading-spinner');
     const statusMessage = document.getElementById('status-message');
     const stylePreviewOverlay = document.getElementById('style-preview-overlay');
     const complexionGroup = document.getElementById('complexion-options-group');
@@ -1707,11 +1705,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateButtonVisibility() {
         bookAppointmentBtn.style.display = 'none';
-        spinner.style.display = 'none';
 
-        if (spinner.classList.contains('active')) {
-            spinner.style.display = 'block';
-        } else if (aiGenerationComplete) {
+        if (aiGenerationComplete) {
             bookAppointmentBtn.style.display = 'flex';
             statusMessage.textContent = `Love it? Book now or tap another style!`;
         } else if (imageCaptured) {
@@ -1943,7 +1938,6 @@ document.addEventListener('DOMContentLoaded', () => {
         imageCaptured = false;
         aiGenerationComplete = false;
         capturedImageBase64 = null;
-        spinner.classList.remove('active');
         
         // Reset face guide overlay
         faceGuideOverlay.classList.remove('active');
@@ -1985,9 +1979,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         triggerHaptic(30); // Strong haptic - important action!
 
-        spinner.classList.add('active');
-        updateButtonVisibility();
-        
         // Fun loading messages that rotate every 2 seconds
         const loadingMessages = [
             "✂️ Consulting our AI stylist...",
@@ -2038,13 +2029,11 @@ document.addEventListener('DOMContentLoaded', () => {
             imageCaptured = true;
             // Update the base image so next generation uses this result
             capturedImageBase64 = data.generatedImageBase64;
-            spinner.classList.remove('active');
             updateButtonVisibility();
         } catch (error) {
             clearInterval(messageInterval); // Stop messages on error
             console.error('AI Processing Error:', error);
             statusMessage.textContent = `Error: ${error.message}. Please try again.`;
-            spinner.classList.remove('active');
             updateButtonVisibility();
         }
     }
