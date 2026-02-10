@@ -1843,7 +1843,6 @@ document.addEventListener('DOMContentLoaded', () => {
     async function startCamera() {
         if (cameraStarted) return;
         statusMessage.textContent = "Requesting camera access...";
-        cameraCaptureBtn.disabled = true;
         try {
             const constraints = {
                 video: { facingMode: 'user', width: { ideal: 250 }, height: { ideal: 250 } }
