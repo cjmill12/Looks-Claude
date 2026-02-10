@@ -609,20 +609,19 @@ body {
     width: 100%;
     max-width: 360px;
     height: 56px;
-    padding: 0 32px;
+    padding: 0;
     border-radius: 28px;
     background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
     background-size: 200% 100%;
     color: white;
     font-size: 1.15em;
     font-weight: 700;
-    text-align: center;
     box-shadow: 
         0 8px 24px rgba(16, 185, 129, 0.35),
         0 4px 12px rgba(16, 185, 129, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     margin-top: 0;
-    display: none;
+    display: flex;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     letter-spacing: 0.03em;
     border: none;
@@ -631,6 +630,9 @@ body {
     overflow: hidden;
     text-transform: uppercase;
     animation: shimmer 3s ease-in-out infinite;
+    /* Perfect centering */
+    align-items: center;
+    justify-content: center;
 }
 
 @keyframes shimmer {
@@ -1450,9 +1452,9 @@ body {
             </div>
         </div>
         
-        <!-- SECTION 5: BOOK APPOINTMENT BUTTON (Bottom CTA) -->
+        <!-- SECTION 5: BOOK APPOINTMENT BUTTON (Always visible CTA) -->
         <div id="book-button-container">
-            <button id="book-appointment-btn" class="main-action-btn" style="display: none;">Book Your Appointment</button>
+            <button id="book-appointment-btn" class="main-action-btn">Book Your Appointment</button>
         </div>
 
     </div>
@@ -1704,10 +1706,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateButtonVisibility() {
-        bookAppointmentBtn.style.display = 'none';
-
+        // Book button is always visible now!
+        // Just update status messages
         if (aiGenerationComplete) {
-            bookAppointmentBtn.style.display = 'flex';
             statusMessage.textContent = `Love it? Book now or tap another style!`;
         } else if (imageCaptured) {
             statusMessage.textContent = "Tap a hairstyle to see your new look!";
