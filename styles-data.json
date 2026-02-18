@@ -709,6 +709,106 @@
       "prompt": "A slick-back undercut with shine, black color, strong structure.",
       "image": "styles/male/asian/asian.10.png",
       "tags": ["slick-back", "undercut", "shine", "structured"]
+    },
+    {
+      "id": "m_indian_darkbrown_072",
+      "name": "Textured Crop",
+      "skinTone": "indian",
+      "hairColor": "dark-brown",
+      "hairColorLabel": "Dark Brown",
+      "prompt": "A short textured crop with tapered sides, dark brown color, clean outline.",
+      "image": "styles/male/indian/indian.1.png",
+      "tags": ["crop", "tapered", "textured", "clean"]
+    },
+    {
+      "id": "m_indian_blackbrown_073",
+      "name": "Smooth Side-Part",
+      "skinTone": "indian",
+      "hairColor": "black-brown",
+      "hairColorLabel": "Black Brown",
+      "prompt": "A smooth side-part hairstyle, black-brown color, professional finish.",
+      "image": "styles/male/indian/indian.2.png",
+      "tags": ["side-part", "smooth", "professional", "classic"]
+    },
+    {
+      "id": "m_indian_deepbrown_074",
+      "name": "Messy Quiff",
+      "skinTone": "indian",
+      "hairColor": "dark-brown",
+      "hairColorLabel": "Deep Brown",
+      "prompt": "A voluminous messy quiff, deep brown color, relaxed style.",
+      "image": "styles/male/indian/indian.3.png",
+      "tags": ["quiff", "voluminous", "messy", "relaxed"]
+    },
+    {
+      "id": "m_indian_warmbrown_075",
+      "name": "Low Fade Natural Curls",
+      "skinTone": "indian",
+      "hairColor": "medium-brown",
+      "hairColorLabel": "Warm Brown",
+      "prompt": "A low fade with natural curls, warm brown color, soft texture.",
+      "image": "styles/male/indian/indian.4.png",
+      "tags": ["fade", "curls", "natural", "soft"]
+    },
+    {
+      "id": "m_indian_darkbrown_076",
+      "name": "Close Buzz Cut",
+      "skinTone": "indian",
+      "hairColor": "dark-brown",
+      "hairColorLabel": "Dark Brown",
+      "prompt": "A close buzz cut with even length, dark brown color, minimal look.",
+      "image": "styles/male/indian/indian.5.png",
+      "tags": ["buzz", "minimal", "clean", "even"]
+    },
+    {
+      "id": "m_indian_blackbrown_077",
+      "name": "Short Pompadour",
+      "skinTone": "indian",
+      "hairColor": "black-brown",
+      "hairColorLabel": "Black Brown",
+      "prompt": "A short pompadour with smooth flow, black-brown color, refined shape.",
+      "image": "styles/male/indian/indian.6.png",
+      "tags": ["pompadour", "smooth", "refined", "classic"]
+    },
+    {
+      "id": "m_indian_mediumbrown_078",
+      "name": "Choppy Fringe",
+      "skinTone": "indian",
+      "hairColor": "medium-brown",
+      "hairColorLabel": "Medium Brown",
+      "prompt": "A fringe cut with choppy texture, medium brown color, casual feel.",
+      "image": "styles/male/indian/indian.7.png",
+      "tags": ["fringe", "choppy", "casual", "textured"]
+    },
+    {
+      "id": "m_indian_espresso_079",
+      "name": "Slick-Back Taper",
+      "skinTone": "indian",
+      "hairColor": "dark-brown",
+      "hairColorLabel": "Dark Espresso",
+      "prompt": "A slick-back style with taper fade, dark espresso color, clean structure.",
+      "image": "styles/male/indian/indian.8.png",
+      "tags": ["slick-back", "taper", "clean", "structured"]
+    },
+    {
+      "id": "m_indian_brownblack_080",
+      "name": "Curly Crop",
+      "skinTone": "indian",
+      "hairColor": "black-brown",
+      "hairColorLabel": "Brown Black",
+      "prompt": "A compact curly crop, brown-black color, defined shape.",
+      "image": "styles/male/indian/indian.9.png",
+      "tags": ["curly", "crop", "compact", "defined"]
+    },
+    {
+      "id": "m_indian_brownblack_081",
+      "name": "Spiky Low Fade",
+      "skinTone": "indian",
+      "hairColor": "black-brown",
+      "hairColorLabel": "Brown Black",
+      "prompt": "A spiky top with low fade, brown-black color, controlled edge.",
+      "image": "styles/male/indian/indian.10.png",
+      "tags": ["spiky", "fade", "controlled", "sharp"]
     }
   ]
 }
