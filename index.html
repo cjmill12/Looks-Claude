@@ -1578,7 +1578,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         let filteredStyles = ALL_STYLES_DATA.male;
         if (skinFilter) {
-            const skinMap = { 'default': 'light', 'ds': 'dark', 'white': 'white' };
+            const skinMap = { 'white': 'white', 'black': 'black', 'asian': 'asian', 'indian': 'indian' };
             const targetSkin = skinMap[skinFilter];
             filteredStyles = filteredStyles.filter(s => s.skinTone === targetSkin);
         }
@@ -1587,7 +1587,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         console.log(`🎨 Showing ${filteredStyles.length} styles (skin: ${skinFilter || 'all'}, hair: ${hairFilter || 'all'})`);
         const stylesForRendering = filteredStyles.map(style => ({
-            code: style.skinTone === 'dark' ? 'ds' : 'default',
+            code: style.skinTone,
             src: getActualImagePath(style.image),
             label: style.name,
             prompt: style.prompt
