@@ -609,6 +609,106 @@
       "prompt": "A tapered afro with controlled volume, matte black color, soft rounded outline.",
       "image": "styles/male/black/black.10.png",
       "tags": ["afro", "tapered", "volume", "soft"]
+    },
+    {
+      "id": "m_asian_black_062",
+      "name": "Textured Crop",
+      "skinTone": "asian",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A straight textured crop with tapered sides, jet black color, sharp outline.",
+      "image": "styles/male/asian/asian.1.png",
+      "tags": ["crop", "tapered", "textured", "sharp"]
+    },
+    {
+      "id": "m_asian_black_063",
+      "name": "Two-Block Cut",
+      "skinTone": "asian",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A classic two-block haircut with volume on top, black color, clean contrast.",
+      "image": "styles/male/asian/asian.2.png",
+      "tags": ["two-block", "volume", "classic", "contrast"]
+    },
+    {
+      "id": "m_asian_black_064",
+      "name": "Layered Fringe",
+      "skinTone": "asian",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A short fringe cut with layered texture, dark black tone, youthful look.",
+      "image": "styles/male/asian/asian.3.png",
+      "tags": ["fringe", "layered", "youthful", "textured"]
+    },
+    {
+      "id": "m_asian_black_065",
+      "name": "Neat Side-Part",
+      "skinTone": "asian",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A neat side-part with smooth finish, black color, polished profile.",
+      "image": "styles/male/asian/asian.4.png",
+      "tags": ["side-part", "polished", "neat", "smooth"]
+    },
+    {
+      "id": "m_asian_black_066",
+      "name": "Light Wave Medium",
+      "skinTone": "asian",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A medium-length cut with light waves, charcoal black color, casual flow.",
+      "image": "styles/male/asian/asian.5.png",
+      "tags": ["waves", "medium", "casual", "flow"]
+    },
+    {
+      "id": "m_asian_black_067",
+      "name": "Low Fade Straight Top",
+      "skinTone": "asian",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A low fade with straight textured top, jet black color, modern shape.",
+      "image": "styles/male/asian/asian.6.png",
+      "tags": ["fade", "straight", "modern", "textured"]
+    },
+    {
+      "id": "m_asian_black_068",
+      "name": "Soft Bowl Cut",
+      "skinTone": "asian",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A bowl-inspired cut with soft edges, black color, rounded silhouette.",
+      "image": "styles/male/asian/asian.7.png",
+      "tags": ["bowl", "soft", "rounded", "classic"]
+    },
+    {
+      "id": "m_asian_black_069",
+      "name": "Spiky Fade",
+      "skinTone": "asian",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A short spiky top with faded sides, dark black color, sharp energy.",
+      "image": "styles/male/asian/asian.8.png",
+      "tags": ["spiky", "fade", "sharp", "energy"]
+    },
+    {
+      "id": "m_asian_black_070",
+      "name": "Textured Perm",
+      "skinTone": "asian",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A textured perm style with loose curls, black color, airy volume.",
+      "image": "styles/male/asian/asian.9.png",
+      "tags": ["perm", "curls", "volume", "airy"]
+    },
+    {
+      "id": "m_asian_black_071",
+      "name": "Slick-Back Undercut",
+      "skinTone": "asian",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A slick-back undercut with shine, black color, strong structure.",
+      "image": "styles/male/asian/asian.10.png",
+      "tags": ["slick-back", "undercut", "shine", "structured"]
     }
   ]
 }
