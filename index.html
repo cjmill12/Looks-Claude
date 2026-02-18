@@ -129,17 +129,34 @@ body {
     box-shadow: none;
 }
 
-/* Book button container at bottom */
-#book-button-container {
-    width: 100%;
-    max-width: var(--content-max-width);
-    margin: 0 auto 8px;
-    padding: 0 20px;
-    display: flex;
-    justify-content: center;
+/* Book button - small overlay top-right of viewport */
+#book-appointment-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 20;
+    padding: 6px 12px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-full);
+    font-size: 0.72em;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
+    transition: all 0.2s ease;
+    display: none;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
 }
 
-/* Filters wrapper and toggle */
+#book-appointment-btn:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.5);
+}
+
+/* Filters always visible */
 #filters-section-wrapper {
     width: 100%;
     max-width: var(--content-max-width);
@@ -147,47 +164,17 @@ body {
     padding: 0 20px;
 }
 
-#filters-toggle-btn {
-    width: auto;
-    min-width: 140px;
-    padding: 8px 20px;
-    margin: 0 auto;
-    display: block;
-    background-color: var(--surface-color);
-    border: 1.5px solid var(--border-color);
-    border-radius: var(--border-radius-full);
-    color: var(--text-primary);
-    font-size: 0.85em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-#filters-toggle-btn:hover {
-    background-color: #f9fafb;
-    border-color: var(--primary-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-}
-
-#filters-toggle-btn.filters-toggle-expanded {
-    background-color: var(--primary-color);
-    color: var(--text-on-dark);
-    border-color: var(--primary-color);
-}
-
-.toggle-arrow {
-    display: inline-block;
-    transition: transform 0.2s ease;
-    margin-left: 4px;
-}
-
-#filters-toggle-btn.filters-toggle-expanded .toggle-arrow {
-    transform: rotate(180deg);
-}
-
 #filters-combined-row {
-    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: auto;
+    max-width: 95%;
+    margin: 4px auto 0;
+    padding: 6px 10px;
+    background-color: transparent;
+    border-radius: var(--border-radius-full);
 }
 
 .filter-group {
@@ -603,73 +590,6 @@ body {
 #redo-selfie-btn:hover {
     border-color: var(--primary-color);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-#book-appointment-btn {
-    width: 100%;
-    max-width: 360px;
-    height: 56px;
-    padding: 0;
-    border-radius: 28px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-    background-size: 200% 100%;
-    color: white;
-    font-size: 1.15em;
-    font-weight: 700;
-    box-shadow: 
-        0 8px 24px rgba(16, 185, 129, 0.35),
-        0 4px 12px rgba(16, 185, 129, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    margin-top: 0;
-    display: flex;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    letter-spacing: 0.03em;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-    animation: shimmer 3s ease-in-out infinite;
-    /* Perfect centering */
-    align-items: center;
-    justify-content: center;
-}
-
-@keyframes shimmer {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-}
-
-#book-appointment-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s;
-}
-
-#book-appointment-btn:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
-    background-size: 200% 100%;
-    box-shadow: 
-        0 12px 32px rgba(16, 185, 129, 0.45),
-        0 6px 16px rgba(16, 185, 129, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px) scale(1.02);
-}
-
-#book-appointment-btn:hover::before {
-    left: 100%;
-}
-
-#book-appointment-btn:active {
-    transform: translateY(0) scale(0.98);
-    box-shadow: 
-        0 4px 16px rgba(16, 185, 129, 0.4),
-        inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #controls-footer-row {
@@ -1243,30 +1163,9 @@ body {
         height: 32px;
     }
     
-    #book-button-container {
-        width: 95%;
-        margin: 0 auto 8px;
-        padding: 0 12px;
-    }
-    
     #filters-section-wrapper {
         width: 95%;
         padding: 0 12px;
-    }
-    
-    #filters-toggle-btn {
-        font-size: 0.8em;
-        padding: 7px 16px;
-        min-width: 120px;
-    }
-    
-    #book-appointment-btn {
-        width: 100%;
-        max-width: 100%;
-        height: 52px;
-        font-size: 1em;
-        padding: 0 24px;
-        border-radius: 26px;
     }
 
     .hairstyle-options-group-wrapper {
@@ -1314,6 +1213,7 @@ body {
                 <video id="video-feed" autoplay playsinline></video>
                 <img id="ai-result" style="display: none;" src="" alt="AI Hairstyle Result">
                 <div id="face-guide-overlay"></div>
+                <button id="book-appointment-btn">✂️ Book</button>
                 <p id="status-message">Tap to take selfie</p>
             </div>
         </div>
@@ -1414,13 +1314,9 @@ body {
             </div>
         </div>
         
-        <!-- SECTION 4: COMPACT FILTERS (Collapsible) -->
+        <!-- SECTION 4: ALWAYS-VISIBLE FILTERS -->
         <div id="filters-section-wrapper">
-            <button id="filters-toggle-btn" class="filters-toggle-collapsed">
-                🎨 Filters <span class="toggle-arrow">▼</span>
-            </button>
-            
-            <div id="filters-combined-row" style="display: none;">
+            <div id="filters-combined-row">
                 <div class="filter-group" id="gender-filter-group">
                     <p class="filter-label">Gender</p>
                     <div class="gender-buttons-container">
@@ -1450,11 +1346,6 @@ body {
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- SECTION 5: BOOK APPOINTMENT BUTTON (Always visible CTA) -->
-        <div id="book-button-container">
-            <button id="book-appointment-btn" class="main-action-btn">Book Your Appointment</button>
         </div>
 
     </div>
@@ -1578,43 +1469,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "styles/male/white/white.1.png": "styles/male/white/white.1.png",
         "styles/male/white/white.2.png": "styles/male/white/white.2.png",
         "styles/male/white/white.3.png": "styles/male/white/white.3.png",
-        "styles/male/white/white.4.png": "styles/male/white/white.4.png",
-        "styles/male/white/white.5.png": "styles/male/white/white.5.png",
-        "styles/male/white/white.6.png": "styles/male/white/white.6.png",
-        "styles/male/white/white.7.png": "styles/male/white/white.7.png",
-        "styles/male/white/white.8.png": "styles/male/white/white.8.png",
-        "styles/male/white/white.9.png": "styles/male/white/white.9.png",
-        "styles/male/white/white.10.png": "styles/male/white/white.10.png",
-        "styles/male/black/black.1.png": "styles/male/black/black.1.png",
-        "styles/male/black/black.2.png": "styles/male/black/black.2.png",
-        "styles/male/black/black.3.png": "styles/male/black/black.3.png",
-        "styles/male/black/black.4.png": "styles/male/black/black.4.png",
-        "styles/male/black/black.5.png": "styles/male/black/black.5.png",
-        "styles/male/black/black.6.png": "styles/male/black/black.6.png",
-        "styles/male/black/black.7.png": "styles/male/black/black.7.png",
-        "styles/male/black/black.8.png": "styles/male/black/black.8.png",
-        "styles/male/black/black.9.png": "styles/male/black/black.9.png",
-        "styles/male/black/black.10.png": "styles/male/black/black.10.png",
-        "styles/male/asian/asian.1.png": "styles/male/asian/asian.1.png",
-        "styles/male/asian/asian.2.png": "styles/male/asian/asian.2.png",
-        "styles/male/asian/asian.3.png": "styles/male/asian/asian.3.png",
-        "styles/male/asian/asian.4.png": "styles/male/asian/asian.4.png",
-        "styles/male/asian/asian.5.png": "styles/male/asian/asian.5.png",
-        "styles/male/asian/asian.6.png": "styles/male/asian/asian.6.png",
-        "styles/male/asian/asian.7.png": "styles/male/asian/asian.7.png",
-        "styles/male/asian/asian.8.png": "styles/male/asian/asian.8.png",
-        "styles/male/asian/asian.9.png": "styles/male/asian/asian.9.png",
-        "styles/male/asian/asian.10.png": "styles/male/asian/asian.10.png",
-        "styles/male/indian/indian.1.png": "styles/male/indian/indian.1.png",
-        "styles/male/indian/indian.2.png": "styles/male/indian/indian.2.png",
-        "styles/male/indian/indian.3.png": "styles/male/indian/indian.3.png",
-        "styles/male/indian/indian.4.png": "styles/male/indian/indian.4.png",
-        "styles/male/indian/indian.5.png": "styles/male/indian/indian.5.png",
-        "styles/male/indian/indian.6.png": "styles/male/indian/indian.6.png",
-        "styles/male/indian/indian.7.png": "styles/male/indian/indian.7.png",
-        "styles/male/indian/indian.8.png": "styles/male/indian/indian.8.png",
-        "styles/male/indian/indian.9.png": "styles/male/indian/indian.9.png",
-        "styles/male/indian/indian.10.png": "styles/male/indian/indian.10.png"
+        "styles/male/white/white.4.png": "styles/male/white/white.4.png"
     };
 
     function getActualImagePath(jsonPath) {
@@ -1723,7 +1578,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         let filteredStyles = ALL_STYLES_DATA.male;
         if (skinFilter) {
-            const skinMap = { 'white': 'white', 'black': 'black', 'asian': 'asian', 'indian': 'indian' };
+            const skinMap = { 'default': 'light', 'ds': 'dark', 'white': 'white' };
             const targetSkin = skinMap[skinFilter];
             filteredStyles = filteredStyles.filter(s => s.skinTone === targetSkin);
         }
@@ -1746,18 +1601,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateButtonVisibility() {
-        // Book button is always visible now!
-        // Just update status messages
+        const bookBtn = document.getElementById('book-appointment-btn');
         if (aiGenerationComplete) {
             statusMessage.textContent = `Love it? Book now or tap another style!`;
+            bookBtn.style.display = 'block';
         } else if (imageCaptured) {
             statusMessage.textContent = "Tap a hairstyle to see your new look!";
+            bookBtn.style.display = 'none';
         } else {
             if (cameraStarted) {
                 statusMessage.textContent = "Position your face, then tap to capture";
             } else {
                 statusMessage.textContent = "Tap the box to take a selfie";
             }
+            bookBtn.style.display = 'none';
         }
     }
 
@@ -2202,28 +2059,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hairColorGroup) {
             hairColorGroup.querySelectorAll('.hair-color-tile').forEach(tile => {
                 tile.addEventListener('click', () => handleHairColorSelect(tile));
-            });
-        }
-        
-        // Filters toggle functionality
-        const filtersToggleBtn = document.getElementById('filters-toggle-btn');
-        const filtersRow = document.getElementById('filters-combined-row');
-        if (filtersToggleBtn && filtersRow) {
-            filtersToggleBtn.addEventListener('click', () => {
-                triggerHaptic(10);
-                const isExpanded = filtersRow.style.display !== 'none';
-                
-                if (isExpanded) {
-                    // Collapse
-                    filtersRow.style.display = 'none';
-                    filtersToggleBtn.classList.remove('filters-toggle-expanded');
-                    filtersToggleBtn.classList.add('filters-toggle-collapsed');
-                } else {
-                    // Expand
-                    filtersRow.style.display = 'flex';
-                    filtersToggleBtn.classList.remove('filters-toggle-collapsed');
-                    filtersToggleBtn.classList.add('filters-toggle-expanded');
-                }
             });
         }
         
