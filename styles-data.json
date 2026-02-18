@@ -509,6 +509,106 @@
       "prompt": "A uniform buzz cut with clean edges, dark blonde color, bold and simple profile.",
       "image": "styles/male/white/white.10.png",
       "tags": ["buzz-cut", "minimal", "clean", "bold"]
+    },
+    {
+      "id": "m_black_black_052",
+      "name": "Low Fade Coils",
+      "skinTone": "black",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A low fade haircut with tight coils on top, natural black color, clean hairline finish.",
+      "image": "styles/male/black/black.1.png",
+      "tags": ["fade", "coils", "clean", "natural"]
+    },
+    {
+      "id": "m_black_black_053",
+      "name": "Rounded Afro",
+      "skinTone": "black",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A rounded afro with dense texture, natural black color, bold and balanced silhouette.",
+      "image": "styles/male/black/black.2.png",
+      "tags": ["afro", "bold", "natural", "volume"]
+    },
+    {
+      "id": "m_black_black_054",
+      "name": "Short Twists Fade",
+      "skinTone": "black",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "Short twists with a taper fade, deep black color, neat and modern profile.",
+      "image": "styles/male/black/black.3.png",
+      "tags": ["twists", "fade", "neat", "modern"]
+    },
+    {
+      "id": "m_black_black_055",
+      "name": "Wave Crop",
+      "skinTone": "black",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A cropped cut with defined waves brushed forward, jet black color, sharp temple lines.",
+      "image": "styles/male/black/black.4.png",
+      "tags": ["waves", "crop", "sharp", "defined"]
+    },
+    {
+      "id": "m_black_black_056",
+      "name": "High-Top Fade",
+      "skinTone": "black",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A high-top fade with structured volume, natural black color, strong vertical shape.",
+      "image": "styles/male/black/black.5.png",
+      "tags": ["high-top", "fade", "volume", "structured"]
+    },
+    {
+      "id": "m_black_black_057",
+      "name": "Edge-Up Buzz",
+      "skinTone": "black",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A buzz cut with precise edge-up, dark black color, minimal and clean look.",
+      "image": "styles/male/black/black.6.png",
+      "tags": ["buzz", "edge-up", "minimal", "clean"]
+    },
+    {
+      "id": "m_black_black_058",
+      "name": "Pulled-Back Locs",
+      "skinTone": "black",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "Medium-length locs pulled back, natural black color, relaxed and confident style.",
+      "image": "styles/male/black/black.7.png",
+      "tags": ["locs", "pulled-back", "relaxed", "confident"]
+    },
+    {
+      "id": "m_black_black_059",
+      "name": "Sponge Curl Fade",
+      "skinTone": "black",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A short curly fade with sponge-textured top, dense coils, smooth side blend.",
+      "image": "styles/male/black/black.8.png",
+      "tags": ["curly", "fade", "coils", "sponge"]
+    },
+    {
+      "id": "m_black_black_060",
+      "name": "Straight Cornrows",
+      "skinTone": "black",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "Cornrow braids with straight-back pattern, natural black color, clean scalp lines.",
+      "image": "styles/male/black/black.9.png",
+      "tags": ["cornrows", "braids", "clean", "classic"]
+    },
+    {
+      "id": "m_black_black_061",
+      "name": "Tapered Afro",
+      "skinTone": "black",
+      "hairColor": "black",
+      "hairColorLabel": "Black",
+      "prompt": "A tapered afro with controlled volume, matte black color, soft rounded outline.",
+      "image": "styles/male/black/black.10.png",
+      "tags": ["afro", "tapered", "volume", "soft"]
     }
   ]
 }
