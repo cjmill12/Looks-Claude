@@ -1213,7 +1213,7 @@ body {
                 <video id="video-feed" autoplay playsinline></video>
                 <img id="ai-result" style="display: none;" src="" alt="AI Hairstyle Result">
                 <div id="face-guide-overlay"></div>
-                <button id="book-appointment-btn">✂️ Book</button>
+                <button id="book-appointment-btn" style="display: none !important;">✂️ Book</button>
                 <p id="status-message">Tap to take selfie</p>
             </div>
         </div>
@@ -1833,7 +1833,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateButtonVisibility();
         } catch (error) {
             console.error('Error accessing camera:', error);
-            statusMessage.textContent = `Camera access denied. Please check permissions.`;
+            statusMessage.textContent = `Camera unavailable. Please allow camera access and try again.`;
             cameraPlaceholderIcon.style.display = 'block';
             videoFeed.style.display = 'none';
             cameraStarted = false;
@@ -1977,9 +1977,9 @@ document.addEventListener('DOMContentLoaded', () => {
             capturedImageBase64 = data.generatedImageBase64;
             updateButtonVisibility();
         } catch (error) {
-            clearInterval(messageInterval); // Stop messages on error
+            clearInterval(messageInterval);
             console.error('AI Processing Error:', error);
-            statusMessage.textContent = `Error: ${error.message}. Please try again.`;
+            statusMessage.textContent = `Hmm, something went wrong. Please try again! 🔄`;
             updateButtonVisibility();
         }
     }
