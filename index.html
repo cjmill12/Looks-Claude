@@ -3,7 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Looks - Virtual Hairstyle Try-On</title>
+    <title>Looks – Virtual Hairstyle Try-On</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- iOS PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Looks">
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+
+    <!-- SEO / Share -->
+    <meta name="description" content="Try on hairstyles instantly with AI. See your new look before you book.">
+    <meta property="og:title" content="Looks – Virtual Hairstyle Try-On">
+    <meta property="og:description" content="Try on hairstyles instantly with AI.">
+    <meta property="og:image" content="/assets/icons/icon-512x512.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
     
     <style>
 /* --- PROFESSIONAL COLOR SCHEME --- */
@@ -155,48 +175,6 @@ body {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(14, 165, 233, 0.5);
 }
-
-/* Share buttons row - sits above status message */
-#share-buttons-row {
-    position: absolute;
-    bottom: 36px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    z-index: 20;
-    padding: 0 12px;
-}
-
-#save-photo-btn, #share-btn {
-    flex: 1;
-    max-width: 120px;
-    padding: 7px 10px;
-    border: none;
-    border-radius: var(--border-radius-full);
-    font-size: 0.75em;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.02em;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(8px);
-}
-
-#save-photo-btn {
-    background-color: rgba(15, 23, 42, 0.75);
-    color: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-
-#share-btn {
-    background-color: rgba(14, 165, 233, 0.85);
-    color: white;
-    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
-}
-
-#save-photo-btn:hover { background-color: rgba(15, 23, 42, 0.9); transform: translateY(-1px); }
-#share-btn:hover { background-color: rgba(2, 132, 199, 0.95); transform: translateY(-1px); }
 
 /* Filters always visible */
 #filters-section-wrapper {
@@ -1255,11 +1233,7 @@ body {
                 <video id="video-feed" autoplay playsinline></video>
                 <img id="ai-result" style="display: none;" src="" alt="AI Hairstyle Result">
                 <div id="face-guide-overlay"></div>
-                <button id="book-appointment-btn" style="display: none !important;">✂️ Book</button>
-                <div id="share-buttons-row" style="display: none;">
-                    <button id="save-photo-btn">💾 Save</button>
-                    <button id="share-btn">↗ Share</button>
-                </div>
+                <button id="book-appointment-btn">✂️ Book</button>
                 <p id="status-message">Tap to take selfie</p>
             </div>
         </div>
@@ -1380,11 +1354,10 @@ body {
                         <div class="complexion-tile" style="background-color: #4A2912;" data-complexion="Black" data-complexion-code="black"></div>
                         <div class="complexion-tile" style="background-color: #D4A574;" data-complexion="Asian" data-complexion-code="asian"></div>
                         <div class="complexion-tile" style="background-color: #8B5E3C;" data-complexion="Indian" data-complexion-code="indian"></div>
-                        <div class="complexion-tile" style="background-color: #C68642;" data-complexion="Mixed" data-complexion-code="mixed"></div>
                     </div>
                     
-                    <p class="filter-label" style="margin-top: 6px; display: none;">Hair</p>
-                    <div id="hair-color-options-group" class="filter-options-group" style="display: none;">
+                    <p class="filter-label" style="margin-top: 6px;">Hair</p>
+                    <div id="hair-color-options-group" class="filter-options-group">
                         <div class="hair-color-tile" data-color="black" style="background-color: #1a1a1a;" title="Black"></div>
                         <div class="hair-color-tile" data-color="dark-brown" style="background-color: #3d2817;" title="Dark Brown"></div>
                         <div class="hair-color-tile" data-color="medium-brown" style="background-color: #6b4423;" title="Medium Brown"></div>
@@ -1468,7 +1441,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // JSON-based style system
     let ALL_STYLES_DATA = null;
 
-    const NEGATIVE_PROMPT = "changed hair color, different hair color, dyed hair, highlights, bleached hair, colored hair, changed skin tone, changed face, different person, altered clothing, changed background, changed lighting, blurry, low resolution, artifacts, bad blending, unnatural edges, cartoon, distorted face, extra fingers, deformed, ugly, grainy, cropped";
+    const NEGATIVE_PROMPT = "extra fingers, blurry, low resolution, bad hands, deformed face, mask artifact, bad blending, unnatural hair hair color, ugly, tiling, duplicate, abstract, cartoon, distorted pupils, bad lighting, cropped, grainy, noise, poor lighting, poor composition, low quality, changed clothing, changed background, new outfit, new background, different lighting";
 
     // Image path mapping - connects JSON paths to current file locations
     const IMAGE_PATH_MAPPING = {
@@ -1516,50 +1489,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "styles/male/white/white.1.png": "styles/male/white/white.1.png",
         "styles/male/white/white.2.png": "styles/male/white/white.2.png",
         "styles/male/white/white.3.png": "styles/male/white/white.3.png",
-        "styles/male/white/white.4.png": "styles/male/white/white.4.png",
-        "styles/male/white/white.5.png": "styles/male/white/white.5.png",
-        "styles/male/white/white.6.png": "styles/male/white/white.6.png",
-        "styles/male/white/white.7.png": "styles/male/white/white.7.png",
-        "styles/male/white/white.8.png": "styles/male/white/white.8.png",
-        "styles/male/white/white.9.png": "styles/male/white/white.9.png",
-        "styles/male/white/white.10.png": "styles/male/white/white.10.png",
-        "styles/male/black/black.1.png": "styles/male/black/black.1.png",
-        "styles/male/black/black.2.png": "styles/male/black/black.2.png",
-        "styles/male/black/black.3.png": "styles/male/black/black.3.png",
-        "styles/male/black/black.4.png": "styles/male/black/black.4.png",
-        "styles/male/black/black.5.png": "styles/male/black/black.5.png",
-        "styles/male/black/black.6.png": "styles/male/black/black.6.png",
-        "styles/male/black/black.7.png": "styles/male/black/black.7.png",
-        "styles/male/black/black.8.png": "styles/male/black/black.8.png",
-        "styles/male/black/black.9.png": "styles/male/black/black.9.png",
-        "styles/male/black/black.10.png": "styles/male/black/black.10.png",
-        "styles/male/asian/asian.1.png": "styles/male/asian/asian.1.png",
-        "styles/male/asian/asian.2.png": "styles/male/asian/asian.2.png",
-        "styles/male/asian/asian.3.png": "styles/male/asian/asian.3.png",
-        "styles/male/asian/asian.4.png": "styles/male/asian/asian.4.png",
-        "styles/male/asian/asian.5.png": "styles/male/asian/asian.5.png",
-        "styles/male/asian/asian.6.png": "styles/male/asian/asian.6.png",
-        "styles/male/asian/asian.7.png": "styles/male/asian/asian.7.png",
-        "styles/male/asian/asian.8.png": "styles/male/asian/asian.8.png",
-        "styles/male/asian/asian.9.png": "styles/male/asian/asian.9.png",
-        "styles/male/asian/asian.10.png": "styles/male/asian/asian.10.png",
-        "styles/male/indian/indian.1.png": "styles/male/indian/indian.1.png",
-        "styles/male/indian/indian.2.png": "styles/male/indian/indian.2.png",
-        "styles/male/indian/indian.3.png": "styles/male/indian/indian.3.png",
-        "styles/male/indian/indian.4.png": "styles/male/indian/indian.4.png",
-        "styles/male/indian/indian.5.png": "styles/male/indian/indian.5.png",
-        "styles/male/indian/indian.6.png": "styles/male/indian/indian.6.png",
-        "styles/male/indian/indian.7.png": "styles/male/indian/indian.7.png",
-        "styles/male/indian/indian.8.png": "styles/male/indian/indian.8.png",
-        "styles/male/indian/indian.9.png": "styles/male/indian/indian.9.png",
-        "styles/male/indian/indian.10.png": "styles/male/indian/indian.10.png",
-        "styles/male/mixed/mixed.1.png": "styles/male/mixed/mixed.1.png",
-        "styles/male/mixed/mixed.2.png": "styles/male/mixed/mixed.2.png",
-        "styles/male/mixed/mixed.3.png": "styles/male/mixed/mixed.3.png",
-        "styles/male/mixed/mixed.4.png": "styles/male/mixed/mixed.4.png",
-        "styles/male/mixed/mixed.5.png": "styles/male/mixed/mixed.5.png",
-        "styles/male/mixed/mixed.6.png": "styles/male/mixed/mixed.6.png",
-        "styles/male/mixed/mixed.7.png": "styles/male/mixed/mixed.7.png"
+        "styles/male/white/white.4.png": "styles/male/white/white.4.png"
     };
 
     function getActualImagePath(jsonPath) {
@@ -1667,14 +1597,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         let filteredStyles = ALL_STYLES_DATA.male;
-        if (skinFilter && skinFilter !== 'mixed') {
-            const skinMap = { 'white': 'white', 'black': 'black', 'asian': 'asian', 'indian': 'indian', 'mixed': 'mixed' };
+        if (skinFilter) {
+            const skinMap = { 'white': 'white', 'black': 'black', 'asian': 'asian', 'indian': 'indian' };
             const targetSkin = skinMap[skinFilter];
-            const skinMatches = filteredStyles.filter(s => s.skinTone === targetSkin);
-            const mixedStyles = filteredStyles.filter(s => s.skinTone === 'mixed');
-            filteredStyles = [...skinMatches, ...mixedStyles];
-        } else if (skinFilter === 'mixed') {
-            filteredStyles = filteredStyles.filter(s => s.skinTone === 'mixed');
+            filteredStyles = filteredStyles.filter(s => s.skinTone === targetSkin);
         }
         if (hairFilter) {
             filteredStyles = filteredStyles.filter(s => s.hairColor === hairFilter);
@@ -1696,15 +1622,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateButtonVisibility() {
         const bookBtn = document.getElementById('book-appointment-btn');
-        const shareRow = document.getElementById('share-buttons-row');
         if (aiGenerationComplete) {
-            statusMessage.textContent = `Looking good! Save or share your new look.`;
-            bookBtn.style.display = 'none';
-            shareRow.style.display = 'flex';
+            statusMessage.textContent = `Love it? Book now or tap another style!`;
+            bookBtn.style.display = 'block';
         } else if (imageCaptured) {
             statusMessage.textContent = "Tap a hairstyle to see your new look!";
             bookBtn.style.display = 'none';
-            shareRow.style.display = 'none';
         } else {
             if (cameraStarted) {
                 statusMessage.textContent = "Position your face, then tap to capture";
@@ -1712,7 +1635,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusMessage.textContent = "Tap the box to take a selfie";
             }
             bookBtn.style.display = 'none';
-            shareRow.style.display = 'none';
         }
     }
 
@@ -1883,7 +1805,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateButtonVisibility();
         } catch (error) {
             console.error('Error accessing camera:', error);
-            statusMessage.textContent = `Camera unavailable. Please allow camera access and try again.`;
+            statusMessage.textContent = `Camera access denied. Please check permissions.`;
             cameraPlaceholderIcon.style.display = 'block';
             videoFeed.style.display = 'none';
             cameraStarted = false;
@@ -1993,18 +1915,10 @@ document.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = loadingMessages[messageIndex];
         }, 2000);
 
-        const finalPrompt = `You are an expert hair editing AI. Your task is STRICTLY LIMITED to restyling the subject's hair shape and structure only.
-
-RULES — follow every one exactly:
-1. ONLY change the hair SHAPE, LENGTH, and STRUCTURE to match this style: ${selectedPrompt}
-2. PRESERVE the subject's exact natural hair COLOR — do not lighten, darken, or change the hue in any way
-3. PRESERVE the subject's face, skin tone, eyes, expression, and all facial features EXACTLY
-4. PRESERVE the clothing, background, and lighting EXACTLY as in the original photo
-5. Do NOT add any new colors, highlights, or dye effects
-6. Do NOT change skin tone or complexion
-7. The result must look like the same person — just with a different haircut
-
-The final output must be photorealistic and indistinguishable from a real photograph.`;
+        const complexionClause = selectedComplexionCode
+            ? ` with a ${selectedComplexionCode === 'ds' ? 'darkest' : 'standard'} complexion`
+            : ``;
+        const finalPrompt = `STRICTLY operate in an inpainting/editing mode. The ONLY element to be changed is the subject's hair. PRESERVE the subject's face, identity, expression, clothing, and background EXACTLY as they appear in the original photograph. Apply the following hairstyle, matching its texture, color, and shape: ${selectedPrompt}. The final result must be a high quality, professional studio portrait of a ${selectedGender} model${complexionClause} with NO other changes besides the hair.`;
         try {
             const response = await fetch('/.netlify/functions/run_model', {
                 method: 'POST',
@@ -2035,9 +1949,9 @@ The final output must be photorealistic and indistinguishable from a real photog
             capturedImageBase64 = data.generatedImageBase64;
             updateButtonVisibility();
         } catch (error) {
-            clearInterval(messageInterval);
+            clearInterval(messageInterval); // Stop messages on error
             console.error('AI Processing Error:', error);
-            statusMessage.textContent = `Hmm, something went wrong. Please try again! 🔄`;
+            statusMessage.textContent = `Error: ${error.message}. Please try again.`;
             updateButtonVisibility();
         }
     }
@@ -2045,90 +1959,16 @@ The final output must be photorealistic and indistinguishable from a real photog
     bookAppointmentBtn.addEventListener('click', () => {
         if (!aiGenerationComplete) {
             statusMessage.textContent = "Please generate a look first before booking.";
-            triggerHaptic([50, 100, 50]);
+            triggerHaptic([50, 100, 50]); // Double buzz error
             return;
         }
-        triggerHaptic(20);
+        triggerHaptic(20); // Medium haptic
         referenceImagePreview.src = aiResultImg.src;
         selectedStyleNameSpan.textContent = selectedStyleLabel;
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.setDate() + 1);
         dateInput.min = tomorrow.toISOString().split('T')[0];
         bookingModalOverlay.classList.add('visible');
-    });
-
-    // --- SAVE PHOTO ---
-    document.getElementById('save-photo-btn').addEventListener('click', async () => {
-        if (!aiResultImg.src) return;
-        triggerHaptic(20);
-
-        try {
-            const res = await fetch(aiResultImg.src);
-            const blob = await res.blob();
-            const file = new File([blob], `my-new-look.jpg`, { type: 'image/jpeg' });
-
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                // iOS/Android: triggers native share sheet — "Save Image" is the top option
-                await navigator.share({ files: [file], title: 'My New Look' });
-                triggerHaptic(15);
-            } else {
-                // Desktop fallback: direct download
-                const link = document.createElement('a');
-                link.download = `my-new-look-${(selectedStyleLabel || 'hairstyle').replace(/\s+/g, '-').toLowerCase()}.jpg`;
-                link.href = aiResultImg.src;
-                link.click();
-                statusMessage.textContent = '📸 Image downloaded!';
-                setTimeout(() => statusMessage.textContent = 'Looking good! Save or share your new look.', 2500);
-            }
-        } catch (err) {
-            if (err.name !== 'AbortError') {
-                // Fallback if share fails
-                const link = document.createElement('a');
-                link.download = 'my-new-look.jpg';
-                link.href = aiResultImg.src;
-                link.click();
-            }
-        }
-    });
-
-    // --- SHARE (native share sheet, fallback to save) ---
-    document.getElementById('share-btn').addEventListener('click', async () => {
-        if (!aiResultImg.src) return;
-        triggerHaptic(20);
-
-        const styleName = selectedStyleLabel || 'New Hairstyle';
-
-        // Convert base64 image to a File object for sharing
-        try {
-            const res = await fetch(aiResultImg.src);
-            const blob = await res.blob();
-            const file = new File([blob], `my-new-look.jpg`, { type: 'image/jpeg' });
-
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                // Native share sheet — works great on iOS/Android
-                await navigator.share({
-                    title: `My New Look – ${styleName}`,
-                    text: `Check out my new hairstyle! Generated with Looks ✂️`,
-                    files: [file]
-                });
-                triggerHaptic(15);
-            } else if (navigator.share) {
-                // Share without file (older browsers)
-                await navigator.share({
-                    title: `My New Look – ${styleName}`,
-                    text: `Check out my new hairstyle! Generated with Looks ✂️`
-                });
-            } else {
-                // Fallback: just save the image
-                document.getElementById('save-photo-btn').click();
-                statusMessage.textContent = 'Sharing not supported — image saved instead!';
-            }
-        } catch (err) {
-            if (err.name !== 'AbortError') {
-                // User didn't cancel — something went wrong, fall back to save
-                document.getElementById('save-photo-btn').click();
-            }
-        }
     });
 
     modalCloseBtn.addEventListener('click', () => {
@@ -2255,6 +2095,16 @@ The final output must be photorealistic and indistinguishable from a real photog
         }
     });
 });
+    </script>
+    <!-- PWA Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('✅ Service worker registered', reg.scope))
+                    .catch(err => console.log('❌ Service worker failed:', err));
+            });
+        }
     </script>
 </body>
 </html>
