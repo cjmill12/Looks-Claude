@@ -1468,7 +1468,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // JSON-based style system
     let ALL_STYLES_DATA = null;
 
-    const NEGATIVE_PROMPT = "extra fingers, blurry, low resolution, bad hands, deformed face, mask artifact, bad blending, unnatural hair hair color, ugly, tiling, duplicate, abstract, cartoon, distorted pupils, bad lighting, cropped, grainy, noise, poor lighting, poor composition, low quality, changed clothing, changed background, new outfit, new background, different lighting";
+    const NEGATIVE_PROMPT = "changed hair color, different hair color, dyed hair, highlights, bleached hair, colored hair, changed skin tone, changed face, different person, altered clothing, changed background, changed lighting, blurry, low resolution, artifacts, bad blending, unnatural edges, cartoon, distorted face, extra fingers, deformed, ugly, grainy, cropped";
 
     // Image path mapping - connects JSON paths to current file locations
     const IMAGE_PATH_MAPPING = {
@@ -1993,10 +1993,18 @@ document.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = loadingMessages[messageIndex];
         }, 2000);
 
-        const complexionClause = selectedComplexionCode
-            ? ` with a ${selectedComplexionCode === 'ds' ? 'darkest' : 'standard'} complexion`
-            : ``;
-        const finalPrompt = `STRICTLY operate in an inpainting/editing mode. The ONLY element to be changed is the subject's hair. PRESERVE the subject's face, identity, expression, clothing, and background EXACTLY as they appear in the original photograph. Apply the following hairstyle, matching its texture, color, and shape: ${selectedPrompt}. The final result must be a high quality, professional studio portrait of a ${selectedGender} model${complexionClause} with NO other changes besides the hair.`;
+        const finalPrompt = `You are an expert hair editing AI. Your task is STRICTLY LIMITED to restyling the subject's hair shape and structure only.
+
+RULES — follow every one exactly:
+1. ONLY change the hair SHAPE, LENGTH, and STRUCTURE to match this style: ${selectedPrompt}
+2. PRESERVE the subject's exact natural hair COLOR — do not lighten, darken, or change the hue in any way
+3. PRESERVE the subject's face, skin tone, eyes, expression, and all facial features EXACTLY
+4. PRESERVE the clothing, background, and lighting EXACTLY as in the original photo
+5. Do NOT add any new colors, highlights, or dye effects
+6. Do NOT change skin tone or complexion
+7. The result must look like the same person — just with a different haircut
+
+The final output must be photorealistic and indistinguishable from a real photograph.`;
         try {
             const response = await fetch('/.netlify/functions/run_model', {
                 method: 'POST',
