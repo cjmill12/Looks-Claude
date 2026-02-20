@@ -593,12 +593,77 @@
       "hairColorLabel": "Brown Black",
       "prompt": "A spiky top with low fade, brown-black color, controlled edge.",
       "image": "styles/male/indian/indian.10.png",
-      "tags": [
-        "spiky",
-        "fade",
-        "controlled",
-        "sharp"
-      ]
+      "tags": ["spiky", "fade", "controlled", "sharp"]
+    },
+    {
+      "id": "m_mixed_darkbrown_082",
+      "name": "Textured Curl Crop",
+      "skinTone": "mixed",
+      "hairColor": "dark-brown",
+      "hairColorLabel": "Dark Brown",
+      "prompt": "A short crop with textured curls, dark brown color, clean fade.",
+      "image": "styles/male/mixed/mixed.1.png",
+      "tags": ["crop", "curls", "fade", "textured"]
+    },
+    {
+      "id": "m_mixed_warmbrown_083",
+      "name": "Loose Wave Medium",
+      "skinTone": "mixed",
+      "hairColor": "medium-brown",
+      "hairColorLabel": "Warm Brown",
+      "prompt": "A medium-length cut with loose waves, warm brown color, relaxed feel.",
+      "image": "styles/male/mixed/mixed.2.png",
+      "tags": ["waves", "medium", "relaxed", "natural"]
+    },
+    {
+      "id": "m_mixed_brownblack_084",
+      "name": "Curly Undercut",
+      "skinTone": "mixed",
+      "hairColor": "black-brown",
+      "hairColorLabel": "Brown Black",
+      "prompt": "An undercut with defined curls on top, brown-black color, modern contrast.",
+      "image": "styles/male/mixed/mixed.3.png",
+      "tags": ["undercut", "curls", "modern", "contrast"]
+    },
+    {
+      "id": "m_mixed_deepbrown_085",
+      "name": "Messy Quiff Fade",
+      "skinTone": "mixed",
+      "hairColor": "dark-brown",
+      "hairColorLabel": "Deep Brown",
+      "prompt": "A messy quiff with faded sides, deep brown color, dynamic profile.",
+      "image": "styles/male/mixed/mixed.4.png",
+      "tags": ["quiff", "fade", "messy", "dynamic"]
+    },
+    {
+      "id": "m_mixed_darkbrown_086",
+      "name": "Tapered Texture",
+      "skinTone": "mixed",
+      "hairColor": "dark-brown",
+      "hairColorLabel": "Dark Brown",
+      "prompt": "A tapered short haircut with texture, dark brown color, balanced look.",
+      "image": "styles/male/mixed/mixed.5.png",
+      "tags": ["tapered", "short", "textured", "balanced"]
+    },
+    {
+      "id": "m_mixed_brownblack_087",
+      "name": "Soft Afro Fade",
+      "skinTone": "mixed",
+      "hairColor": "black-brown",
+      "hairColorLabel": "Brown Black",
+      "prompt": "A soft afro with tapered fade, brown-black color, rounded shape.",
+      "image": "styles/male/mixed/mixed.6.png",
+      "tags": ["afro", "fade", "soft", "rounded"]
+    },
+    {
+      "id": "m_mixed_chestnut_088",
+      "name": "Wavy Side-Part",
+      "skinTone": "mixed",
+      "hairColor": "medium-brown",
+      "hairColorLabel": "Chestnut",
+      "prompt": "A side-part style with subtle waves, chestnut color, polished finish.",
+      "image": "styles/male/mixed/mixed.7.png",
+      "tags": ["side-part", "waves", "polished", "classic"]
     }
   ]
 }
