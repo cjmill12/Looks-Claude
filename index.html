@@ -2050,17 +2050,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- SAVE PHOTO ---
-    document.getElementById('save-photo-btn').addEventListener('click', () => {
+    document.getElementById('save-photo-btn').addEventListener('click', async () => {
         if (!aiResultImg.src) return;
         triggerHaptic(20);
-        const link = document.createElement('a');
-        link.download = `my-new-look-${selectedStyleLabel || 'hairstyle'}.jpg`.replace(/\s+/g, '-').toLowerCase();
-        link.href = aiResultImg.src;
-        link.click();
-        statusMessage.textContent = '📸 Saved to your device!';
-        setTimeout(() => {
-            statusMessage.textContent = 'Looking good! Save or share your new look.';
-        }, 2500);
+
+        try {
+            const res = await fetch(aiResultImg.src);
+            const blob = await res.blob();
+            const file = new File([blob], `my-new-look.jpg`, { type: 'image/jpeg' });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                // iOS/Android: triggers native share sheet — "Save Image" is the top option
+                await navigator.share({ files: [file], title: 'My New Look' });
+                triggerHaptic(15);
+            } else {
+                // Desktop fallback: direct download
+                const link = document.createElement('a');
+                link.download = `my-new-look-${(selectedStyleLabel || 'hairstyle').replace(/\s+/g, '-').toLowerCase()}.jpg`;
+                link.href = aiResultImg.src;
+                link.click();
+                statusMessage.textContent = '📸 Image downloaded!';
+                setTimeout(() => statusMessage.textContent = 'Looking good! Save or share your new look.', 2500);
+            }
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                // Fallback if share fails
+                const link = document.createElement('a');
+                link.download = 'my-new-look.jpg';
+                link.href = aiResultImg.src;
+                link.click();
+            }
+        }
     });
 
     // --- SHARE (native share sheet, fallback to save) ---
