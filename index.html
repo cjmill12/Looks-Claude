@@ -1209,9 +1209,147 @@ body {
         height: var(--viewport-size-desktop);
     }
 }
+/* ================================================== */
+/* ONBOARDING OVERLAY */
+/* ================================================== */
+
+#onboarding-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.97);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 28px;
+    text-align: center;
+}
+
+#onboarding-overlay.hidden {
+    display: none;
+}
+
+#onboarding-logo {
+    font-size: 2em;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: white;
+    margin-bottom: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+}
+
+#onboarding-tagline {
+    font-size: 0.85em;
+    color: rgba(255,255,255,0.45);
+    margin: 0 0 40px 0;
+    letter-spacing: 0.05em;
+}
+
+.onboarding-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 44px;
+}
+
+.onboarding-step {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    text-align: left;
+}
+
+.step-icon-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    flex-shrink: 0;
+}
+
+.step-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.step-title {
+    font-size: 0.95em;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+}
+
+.step-desc {
+    font-size: 0.78em;
+    color: rgba(255,255,255,0.5);
+    margin: 0;
+    line-height: 1.4;
+}
+
+#onboarding-cta {
+    width: 100%;
+    max-width: 320px;
+    padding: 16px;
+    border-radius: 999px;
+    background: white;
+    color: var(--primary-color);
+    border: none;
+    font-size: 1em;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(255,255,255,0.15);
+}
+
+#onboarding-cta:active {
+    transform: scale(0.97);
+}
     </style>
 </head>
 <body>
+    <!-- ONBOARDING OVERLAY -->
+    <div id="onboarding-overlay">
+        <p id="onboarding-logo">Looks</p>
+        <p id="onboarding-tagline">AI-powered hairstyle try-on</p>
+
+        <div class="onboarding-steps">
+            <div class="onboarding-step">
+                <div class="step-icon-wrap">📷</div>
+                <div class="step-text">
+                    <p class="step-title">Tap the box to open camera</p>
+                    <p class="step-desc">Tap once to start, then tap again to take your selfie</p>
+                </div>
+            </div>
+            <div class="onboarding-step">
+                <div class="step-icon-wrap">💈</div>
+                <div class="step-text">
+                    <p class="step-title">Browse hairstyles</p>
+                    <p class="step-desc">Scroll through the gallery and tap any style to try it on</p>
+                </div>
+            </div>
+            <div class="onboarding-step">
+                <div class="step-icon-wrap">✨</div>
+                <div class="step-text">
+                    <p class="step-title">See your new look</p>
+                    <p class="step-desc">AI generates a realistic preview in seconds — save or share it with your barber</p>
+                </div>
+            </div>
+        </div>
+
+        <button id="onboarding-cta">Let's go →</button>
+    </div>
+
     <div id="app-header">
         <div id="main-title-container">
             <h1 id="main-title">Looks</h1>
@@ -2105,6 +2243,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     .catch(err => console.log('❌ Service worker failed:', err));
             });
         }
+    </script>
+
+    <!-- ONBOARDING LOGIC -->
+    <script>
+        const overlay = document.getElementById('onboarding-overlay');
+        const cta = document.getElementById('onboarding-cta');
+
+        // Show only on first visit
+        if (localStorage.getItem('looks-onboarded')) {
+            overlay.classList.add('hidden');
+        }
+
+        cta.addEventListener('click', () => {
+            overlay.classList.add('hidden');
+            localStorage.setItem('looks-onboarded', 'true');
+        });
     </script>
 </body>
 </html>
