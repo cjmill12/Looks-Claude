@@ -874,8 +874,8 @@ body {
     height: 140px;
     border-radius: 50%;
     object-fit: cover;
-    object-position: top;
-    margin-bottom: 6px;
+    object-position: center 15%;
+    margin-bottom: 0;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
     transition: box-shadow 0.3s ease;
 }
@@ -887,23 +887,9 @@ body {
         0 0 0 5px rgba(14, 165, 233, 0.4);
 }
 
-/* Style name label - fades in on selection */
+/* Style name label - hidden */
 .style-option p {
-    font-size: 0.7em;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin: 0;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-    white-space: nowrap;
-    letter-spacing: 0.02em;
-}
-
-.style-option.selected p {
-    opacity: 1;
-    transform: translateY(0);
-    color: var(--text-primary);
+    display: none;
 }
 
 /* --- MODAL - MODERN DESIGN --- */
