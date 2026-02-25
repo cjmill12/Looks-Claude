@@ -2156,7 +2156,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- SAVE PHOTO ---
-    document.getElementById('save-photo-btn').addEventListener('click', async () => {
+    document.getElementById('save-photo-btn').addEventListener('click', async (e) => {
+        e.stopPropagation();
         if (!aiResultImg.src) return;
         triggerHaptic(20);
         try {
@@ -2187,7 +2188,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- SHARE ---
-    document.getElementById('share-btn').addEventListener('click', async () => {
+    document.getElementById('share-btn').addEventListener('click', async (e) => {
+        e.stopPropagation();
         if (!aiResultImg.src) return;
         triggerHaptic(20);
         const styleName = selectedStyleLabel || 'New Hairstyle';
