@@ -49,14 +49,12 @@ export async function handler(event) {
       };
     }
 
-    console.log('Processing image with Gemini 3 Pro Image...');
+    console.log('Processing image with Gemini 2.5 Flash Image...');
 
     const imagePart = base64ToGenerativePart(baseImage, "image/jpeg");
 
-    // Gemini 3 Pro Image uses advanced reasoning to follow complex
-    // multi-rule prompts more precisely — ideal for targeted hair editing
     const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-image-preview',
+      model: 'gemini-2.5-flash-image',
       contents: [
         {
           role: 'user',
@@ -67,9 +65,7 @@ export async function handler(event) {
         }
       ],
       generationConfig: {
-        // Request highest quality output
         responseModalities: ['image'],
-        // Temperature 1 = balanced creativity vs precision (0 = robotic, 2 = chaotic)
         temperature: 1,
       }
     });
@@ -96,7 +92,7 @@ export async function handler(event) {
       throw new Error("Model responded but did not return a generated image.");
     }
 
-    console.log('Image generation successful with Gemini 3 Pro Image');
+    console.log('Image generation successful with Gemini 2.5 Flash Image');
 
     return {
       statusCode: 200,
