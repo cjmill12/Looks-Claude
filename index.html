@@ -1603,6 +1603,28 @@ body {
 
     <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // ========================================
+    // ANALYTICS TRACKING SETUP
+    // ========================================
+    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Simple tracking function
+    async function track(eventType, data = {}) {
+        try {
+            await fetch('/api/log_event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    eventType,
+                    eventData: { sessionId, ...data }
+                })
+            });
+        } catch (e) { 
+            console.error('Analytics tracking failed:', e); 
+        }
+    }
+    // ========================================
+    
     const videoFeed = document.getElementById('video-feed');
     const aiResultImg = document.getElementById('ai-result');
     const canvas = document.getElementById('hidden-canvas');
@@ -2102,6 +2124,10 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => faceGuideOverlay.style.display = 'none', 400);
         
         stopCamera();
+        
+        // TRACK: Selfie captured
+        track('image_capture', { gender: selectedGender });
+        
         updateButtonVisibility();
     }
 
@@ -2204,6 +2230,13 @@ document.addEventListener('DOMContentLoaded', () => {
             imageCaptured = true;
             // Update the base image so next generation uses this result
             capturedImageBase64 = data.generatedImageBase64;
+            
+            // TRACK: Successful generation
+            track('generation_complete', { 
+                gender: selectedGender, 
+                styleLabel: selectedStyleLabel 
+            });
+            
             updateButtonVisibility();
         } catch (error) {
             clearInterval(messageInterval); // Stop messages on error
@@ -2233,6 +2266,10 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         if (!aiResultImg.src) return;
         triggerHaptic(20);
+        
+        // TRACK: Save attempt
+        track('save_click', { styleLabel: selectedStyleLabel });
+        
         try {
             const res = await fetch(aiResultImg.src);
             const blob = await res.blob();
@@ -2266,6 +2303,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!aiResultImg.src) return;
         triggerHaptic(20);
         const styleName = selectedStyleLabel || 'New Hairstyle';
+        
+        // TRACK: Share attempt
+        track('share_click', { styleLabel: selectedStyleLabel });
+        
         try {
             const res = await fetch(aiResultImg.src);
             const blob = await res.blob();
@@ -2433,6 +2474,21 @@ document.addEventListener('DOMContentLoaded', () => {
     <script>
         const overlay = document.getElementById('onboarding-overlay');
         const cta = document.getElementById('onboarding-cta');
+
+        // TRACK: Session start when page loads
+        setTimeout(() => {
+            fetch('/api/log_event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    eventType: 'session_start',
+                    eventData: { 
+                        sessionId: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                        gender: 'Male' 
+                    }
+                })
+            }).catch(e => console.error('Track failed:', e));
+        }, 1000);
 
         // Show only on first visit
         if (localStorage.getItem('looks-onboarded')) {
