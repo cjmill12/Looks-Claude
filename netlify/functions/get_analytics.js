@@ -1,17 +1,10 @@
 // netlify/functions/get_analytics.js
-// Returns analytics from in-memory storage
+// Retrieves analytics from Netlify Blobs
+const { getStore } = require('@netlify/blobs');
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'looks2025';
 
-// Access the same global storage
-global.analytics = global.analytics || {
-    sessions: [],
-    captures: [],
-    generations: [],
-    shares: []
-};
-
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, OPTIONS'
@@ -39,7 +32,27 @@ exports.handler = async (event) => {
     }
 
     try {
-        const analytics = global.analytics;
+        // Get blob store
+        const store = getStore('analytics');
+        
+        // Get data
+        let analytics;
+        try {
+            const data = await store.get('data');
+            analytics = data ? JSON.parse(data) : {
+                sessions: [],
+                captures: [],
+                generations: [],
+                shares: []
+            };
+        } catch (e) {
+            analytics = {
+                sessions: [],
+                captures: [],
+                generations: [],
+                shares: []
+            };
+        }
         
         const sessions = analytics.sessions.length;
         const captures = analytics.captures.length;
@@ -56,8 +69,6 @@ exports.handler = async (event) => {
             shareRate: generations > 0 ? ((shares / generations) * 100).toFixed(1) : '0.0'
         };
         
-        console.log('📊 Analytics retrieved:', summary);
-        
         return {
             statusCode: 200,
             headers,
@@ -67,7 +78,7 @@ exports.handler = async (event) => {
             })
         };
     } catch (error) {
-        console.error('❌ Error retrieving analytics:', error);
+        console.error('Error:', error);
         return {
             statusCode: 500,
             headers,
