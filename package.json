@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@google/genai": "^0.3.0",
-    "@netlify/blobs": "^7.0.0"
   },
   "devDependencies": {
     "netlify-cli": "^17.36.4"
