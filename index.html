@@ -1612,7 +1612,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function track(eventType, data = {}) {
         console.log('🔍 TRACK CALLED:', eventType, data); // DEBUG
         try {
-            const response = await fetch('/api/log_event', {
+            const response = await fetch('/api/analytics', {  // CHANGED: single endpoint
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -2481,7 +2481,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('🚀 SESSION START - Firing in 1 second...'); // DEBUG
         setTimeout(() => {
             console.log('🚀 SESSION START - Sending now...'); // DEBUG
-            fetch('/api/log_event', {
+            fetch('/api/analytics', {  // CHANGED: single endpoint
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
